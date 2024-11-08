@@ -10,6 +10,7 @@ import { logo, login } from '@/constants/images' // Ensure you have the onboardi
 import Image from 'next/image'
 import CircularProgress from '@mui/joy/CircularProgress'
 import Link from 'next/link'
+import Cookies from 'js-cookie'
 
 const RegisterSchema = Yup.object().shape({
     first_name: Yup.string().required('First name is required'),
@@ -49,7 +50,6 @@ export default function RegisterPage() {
     const handleSubmit = async (values: FormData) => {
         setIsSubmitting(true)
         setFormError(null) // Reset error state
-        console.log(values)
 
         const formData = {
             first_name: values.first_name,
@@ -59,22 +59,33 @@ export default function RegisterPage() {
         }
 
         try {
-            const response = await axios.post(`${API_URL}/register`, formData, {
+            const response = await fetch(`${API_URL}/authentication/register`, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify(formData),
             })
 
-            console.log('Success:', response.data)
-            // Store the token and user data in context and local storage
-            setUser(response.data) // Set user data
-            localStorage.setItem('token', response.data.token) // Store the token if needed
-            router.push('/Dashboard') // Redirect to the dashboard
+            const data = await response.json()
+
+            console.log('Success:', data)
+
+            // Store the token in cookies with security options
+            Cookies.set('token', data.token, {
+                expires: 7, // Expires in 7 days
+                secure: process.env.NODE_ENV === 'production', // Only use secure cookies in production
+                sameSite: 'strict', // To prevent CSRF
+            })
+
+            // Store the user data in context and navigate to dashboard
+            setUser(data) // Set user data
+            router.push('/dashboard') // Redirect to the dashboard
             setIsSubmitting(false)
         } catch (error: any) {
-            // Adjusted for TypeScript
             console.error('Error:', error)
             setIsSubmitting(false)
+
             // Set a user-friendly error message
             if (
                 error.response &&

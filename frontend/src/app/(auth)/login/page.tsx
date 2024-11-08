@@ -10,6 +10,7 @@ import { logo, login } from '@/constants/images' // Ensure you have the login im
 import Image from 'next/image'
 import CircularProgress from '@mui/joy/CircularProgress'
 import Link from 'next/link'
+import Cookies from 'js-cookie'
 
 const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
@@ -34,33 +35,37 @@ export default function LoginPage() {
 
     const handleSubmit = async (values: FormData) => {
         setIsSubmitting(true)
-        console.log(values)
         const formData: FormData = {
             email: values.email,
             password: values.password,
         }
 
         try {
-            const response = await axios.post(
-                `https://lrpedwzxrl.execute-api.eu-central-1.amazonaws.com/api-v1/authentication/login`,
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            )
+            const response = await fetch(`${API_URL}/authentication/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            })
 
-            console.log('Success:', response.data)
-            // Store the token and user data in context and local storage
-            setUser(response.data) // Set user data
-            localStorage.setItem('token', response.data.token) // Store the token if needed
-            router.push('/') // Redirect to the dashboard
+            const data = await response.json()
+            console.log(data)
+
+            // Store the token in cookies with a secure flag
+            Cookies.set('token', data.token, {
+                expires: 7, // Expires in 7 days
+                secure: process.env.NODE_ENV === 'production', // Only use secure cookies in production
+                sameSite: 'strict', // To prevent CSRF
+            })
+
+            // Store the user data in context
+            setUser(data)
+            router.push('/dashboard')
             setIsSubmitting(false)
         } catch (error) {
             console.error('Error:', error)
             setIsSubmitting(false)
-            // Optionally, handle error state here (e.g., display error message)
         }
     }
 

@@ -8,23 +8,11 @@ build:
 
 	rm -rf $(ARTIFACTS_DIR)/bin
 
-build-RegisterUserFunction:
-	$(MAKE) build LAMBDA_FILE=RegisterUser/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
+build-CreateTicketFunction:
+	$(MAKE) build LAMBDA_FILE=CreateTicket/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
 
-build-LoginUserFunction:
-	$(MAKE) build LAMBDA_FILE=LoginUser/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
+build-FetchReceivedTicketsFunction:
+	$(MAKE) build LAMBDA_FILE=FetchReceivedTickets/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
 
-build-ThirdPartyLoginRequestFunction:
-	$(MAKE) build LAMBDA_FILE=ThirdPartyRequestLogin/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
-
-build-ThirdPartyLoginValidateFunction:
-	$(MAKE) build LAMBDA_FILE=ThirdPartyConfirmLogin/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
-
-build-GetUsersPublicInfoFunction:
-	$(MAKE) build LAMBDA_FILE=GetUsersPublicInfo/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
-
-build-DeleteProfileFunction:
-	$(MAKE) build LAMBDA_FILE=DeleteUserProfile/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
-
-build-UpdateUsersPublicInfoFunction:
-	$(MAKE) build LAMBDA_FILE=UpdateUsersPublicInfo/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
+build-FetchSentTicketsFunction:
+	$(MAKE) build LAMBDA_FILE=FetchSentTickets/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)

@@ -1,26 +1,24 @@
-from datetime import datetime, timezone, timedelta
 from boto3 import resource, client
 from os import environ
 import jwt
 import logging
-import bcrypt
 import boto3
 import logging
 import json
 
 from aws_lambda_powertools.middleware_factory import lambda_handler_decorator
 
-logger = logging.getLogger("UserCommon")
+logger = logging.getLogger("SupportCommon")
 logger.setLevel(logging.INFO)
 
-_LAMBDA_USERS_TABLE_RESOURCE = {
+_LAMBDA_TICKETS_TABLE_RESOURCE = {
     "resource" : resource('dynamodb'),
-    "table_name" : environ.get("USERS_TABLE_NAME", "test_table")
+    "table_name" : environ.get("TICKETS_TABLE_NAME", "test_table")
 }
 
-_LAMBDA_S3_CLIENT_FOR_PROFILE_PICTURES = {
+_LAMBDA_S3_CLIENT_FOR_TICKET_PICTURES = {
     "client" : client('s3', region_name=environ.get("AWS_REGION", "eu-central-1")),
-    "bucket_name" : environ.get("PROFILE_PICTURES_BUCKET", "hakaton")
+    "bucket_name" : environ.get("TICKETS_PICTURES_BUCKET", "hakaton")
 }
 
 class LambdaS3Class:
@@ -46,26 +44,6 @@ class LambdaDynamoDBClass:
         self.resource = lambda_dynamodb_resource["resource"]
         self.table_name = lambda_dynamodb_resource["table_name"]
         self.table = self.resource.Table(self.table_name)
-
-def generate_jwt_token(email):
-    secrets = get_secrets_from_aws_secrets_manager(
-            environ.get('JWT_SECRET_NAME'),
-            environ.get('SECRETS_REGION_NAME')
-    )
-
-    expiration_time = int((datetime.now(timezone.utc) + timedelta(hours=1)).timestamp())
-
-    return jwt.encode({"email": email, "exp": expiration_time}, secrets['jwt_secret'], algorithm="HS256")
-
-def generate_refresh_token(email):
-    secrets = get_secrets_from_aws_secrets_manager(
-            environ.get('JWT_SECRET_NAME'),
-            environ.get('SECRETS_REGION_NAME')
-    )
-
-    expiration_time = int((datetime.now(timezone.utc) + timedelta(days=1)).timestamp())
-
-    return jwt.encode({"email": email, "exp": expiration_time}, secrets['refresh_secret'], algorithm="HS256")
 
 @lambda_handler_decorator
 def lambda_middleware(handler, event, context):
@@ -200,7 +178,3 @@ def build_response(status_code, body, headers=None):
         },
         'body': json.dumps(body)
     }
-
-def hash_password(password, salt_rounds=5):
-    salt = bcrypt.gensalt(rounds=salt_rounds)
-    return bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')

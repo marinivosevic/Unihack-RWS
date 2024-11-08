@@ -1,20 +1,13 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  stack for managing user lambdas
-  CONTAINS:
-  - support
+  stack for managing support lambdas
 
 Parameters:
   JwtSecretName:
     Type: String
     Description: Name of the secret in Secrets Manager that contains the JWT secret
     Default: python-lambda-app/prod/jwt-secret
-
-  ThirdPartyClientsSecretName:
-    Type: String
-    Description: Name of the secret in Secrets Manager that contains the third party clients secrets
-    Default: python-lambda-app/prod/third-party-secrets
 
   SecretsRegionName:
     Type: String
@@ -29,7 +22,7 @@ Globals:
 
 Resources:
   # S3 buckets
-  ProfileImageBucket:
+  TicketsImageBucket:
     Type: AWS::S3::Bucket
     Properties:
       CorsConfiguration:
@@ -56,25 +49,22 @@ Resources:
         AllowMethods:
           - "*"
 
-  # TODO: Change this for the support stack
   # DynamoDB Table definition
   TicketsTable:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: tickets
       AttributeDefinitions:
-        - AttributeName: email
+        - AttributeName: id
           AttributeType: S
       KeySchema:
-        - AttributeName: email
+        - AttributeName: id
           KeyType: HASH
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
 
   # Lambda Functions
-
-  # Create Ticket
   CreateTicket:
     Type: AWS::Serverless::Function
     Metadata:
@@ -85,9 +75,10 @@ Resources:
       Runtime: python3.12
       Environment:
         Variables:
-          # TODO: Change this for the support stack
-          USERS_TABLE_NAME: !Ref UsersTable
-          PROFILE_PICTURES_BUCKET: !Ref ProfileImageBucket
+          JWT_SECRET_NAME: !Ref JwtSecretName
+          SECRETS_REGION_NAME: !Ref SecretsRegionName
+          TICKETS_TABLE_NAME: !Ref TicketsTable
+          TICKETS_PICTURES_BUCKET: !Ref TicketsImageBucket
       Architectures:
         - x86_64
       Policies:
@@ -102,11 +93,10 @@ Resources:
         CreateTicketEndpoint:
           Type: HttpApi
           Properties:
-            Path: /support/create/ticket
+            Path: /support
             Method: POST
             ApiId: !Ref SupportServiceApi
 
-  # Get all sent tickets for a user
   FetchSentTickets:
     Type: AWS::Serverless::Function
     Metadata:
@@ -117,9 +107,10 @@ Resources:
       Runtime: python3.12
       Environment:
         Variables:
-          # TODO: Change this for the support stack
-          USERS_TABLE_NAME: !Ref UsersTable
-          PROFILE_PICTURES_BUCKET: !Ref ProfileImageBucket
+          JWT_SECRET_NAME: !Ref JwtSecretName
+          SECRETS_REGION_NAME: !Ref SecretsRegionName
+          TICKETS_TABLE_NAME: !Ref TicketsTable
+          TICKETS_PICTURES_BUCKET: !Ref TicketsImageBucket
       Architectures:
         - x86_64
       Policies:
@@ -134,11 +125,10 @@ Resources:
         FetchSentTicketsEndpoint:
           Type: HttpApi
           Properties:
-            Path: /support/fetch/sent/tickets
+            Path: /support/sent
             Method: GET
             ApiId: !Ref SupportServiceApi
 
-  # Get all received tickets for a user
   FetchReceivedTickets:
     Type: AWS::Serverless::Function
     Metadata:
@@ -149,9 +139,10 @@ Resources:
       Runtime: python3.12
       Environment:
         Variables:
-          # TODO: Change this for the support stack
-          USERS_TABLE_NAME: !Ref UsersTable
-          PROFILE_PICTURES_BUCKET: !Ref ProfileImageBucket
+          JWT_SECRET_NAME: !Ref JwtSecretName
+          SECRETS_REGION_NAME: !Ref SecretsRegionName
+          TICKETS_TABLE_NAME: !Ref TicketsTable
+          TICKETS_PICTURES_BUCKET: !Ref TicketsImageBucket
       Architectures:
         - x86_64
       Policies:
@@ -166,26 +157,25 @@ Resources:
         FetchReceivedTicketsEndpoint:
           Type: HttpApi
           Properties:
-            Path: /support/fetch/received/tickets
+            Path: /support/received/{city}
             Method: GET
             ApiId: !Ref SupportServiceApi
 
-#TODO: Change this for the support stack
 Outputs:
-  UsersTableArn:
-    Description: "Users table ARN"
-    Value: !GetAtt UsersTable.Arn
+  TicketsTableArn:
+    Description: "Tickets table ARN"
+    Value: !GetAtt TicketsTable.Arn
     Export:
-      Name: !Sub "${AWS::StackName}-UsersTableArn"
+      Name: !Sub "${AWS::StackName}-TicketsTableArn"
 
-  UsersTableName:
-    Description: "Users table NAME"
-    Value: !Ref UsersTable
+  TicketsTableName:
+    Description: "Tickets table NAME"
+    Value: !Ref TicketsTable
     Export:
-      Name: !Sub "${AWS::StackName}-UsersTableName"
+      Name: !Sub "${AWS::StackName}-TicketsTableName"
 
   EndpointURI:
     Description: "API Endpoint URL"
-    Value: !Sub "https://${UserServiceApi}.execute-api.${AWS::Region}.amazonaws.com/api-v1"
+    Value: !Sub "https://${SupportServiceApi}.execute-api.${AWS::Region}.amazonaws.com/api-v1"
     Export:
       Name: SupportServiceApi

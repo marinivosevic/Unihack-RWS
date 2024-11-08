@@ -1,4 +1,5 @@
 import logging
+import uuid
 
 logger = logging.getLogger("CreateTicket")
 logger.setLevel(logging.INFO)
@@ -11,10 +12,10 @@ from common.common import (
     LambdaDynamoDBClass
 )
 
-
 @lambda_middleware
 def lambda_handler(event, context):
     try:
+        # Getting email from jwt token
         jwt_token = event.get('headers').get('x-access-token')
         email = get_email_from_jwt_token(jwt_token)
 
@@ -22,30 +23,31 @@ def lambda_handler(event, context):
             return build_response(
                 400,
                 {
-                    'error_msg': 'Failed to extract email from JWT token.',
                     'message': 'We could not create your ticket. Please try again or contact support.'
                 }
             )
 
-        receiver = event.get('receiver')
-        text = event.get('text')
-        base64_image = event.get('base64_image', None)
-
-        if not receiver or not text:
+        # Setting up table for tickets
+        global _LAMBDA_TICKETS_TABLE_RESOURCE
+        dynamodb = LambdaDynamoDBClass(_LAMBDA_TICKETS_TABLE_RESOURCE)
+        
+        try:
+            city = event['city']
+            ticket = event['ticket']
+            picture = event['picture']
+        except Exception as e:
             return build_response(
                 400,
                 {
-                    'message': 'The following parameters are missing: receiver, text'
+                    'message': f'{e} is missing'
                 }
             )
 
-        global _LAMBDA_TICKETS_TABLE_RESOURCE
-        dynamodb = LambdaDynamoDBClass(_LAMBDA_TICKETS_TABLE_RESOURCE)
-
-        return create_ticket(dynamodb, email, receiver, text, base64_image)
+        return create_ticket(dynamodb, email, city, ticket, picture)
 
     except Exception as e:
         logger.error(f"Couldn't create ticket: {str(e)}")
+
         return build_response(
             400,
             {
@@ -54,28 +56,15 @@ def lambda_handler(event, context):
         )
 
 
-def create_ticket(dynamodb, sender, receiver, text, base64_image):
-    if not check_if_user_exists(dynamodb, sender):
-        return build_response(
-            400,
-            {
-                'message': 'Sender does not exist.'
-            }
-        )
-
-    if not check_if_city_exists(dynamodb, receiver):
-        return build_response(
-            400,
-            {
-                'message': 'Receiver does not exist.'
-            }
-        )
-
+def create_ticket(dynamodb, sender, city, ticket, picture):
+    id = str(uuid.uuid4())
+    
     add_ticket_to_the_table(dynamodb, {
+        'id': id,
         'sender': sender,
-        'receiver': receiver,
-        'text': text,
-        'base64_image': base64_image
+        'city': city,
+        'ticket': ticket,
+        'picture': picture
     })
 
     logger.info('Ticket created successfully.')
@@ -83,34 +72,9 @@ def create_ticket(dynamodb, sender, receiver, text, base64_image):
     return build_response(
         201,
         {
-            'message': 'Ticket created successfully.'
+            'message': f'Ticket with id: {id} created successfully.'
         }
     )
-
-
-def check_if_user_exists(dynamodb, email):
-    logger.info('Checking if user exists.')
-
-    response = dynamodb.table.get_item(
-        Key={
-            'email': email
-        }
-    )
-
-    return response.get('Item') is not None
-
-
-def check_if_city_exists(dynamodb, city):
-    logger.info('Checking if city exists.')
-
-    response = dynamodb.table.get_item(
-        Key={
-            'city': city
-        }
-    )
-
-    return response.get('Item') is not None
-
 
 def add_ticket_to_the_table(dynamodb, ticket_item):
     logger.info('Adding ticket to the table.')

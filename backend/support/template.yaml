@@ -1,0 +1,127 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  stack for managing user lambdas
+  CONTAINS:
+  - support
+
+Parameters:
+  JwtSecretName:
+    Type: String
+    Description: Name of the secret in Secrets Manager that contains the JWT secret
+    Default: python-lambda-app/prod/jwt-secret
+
+  ThirdPartyClientsSecretName:
+    Type: String
+    Description: Name of the secret in Secrets Manager that contains the third party clients secrets
+    Default: python-lambda-app/prod/third-party-secrets
+
+  SecretsRegionName:
+    Type: String
+    Description: Region name where the secrets are stored
+    Default: eu-central-1
+
+# Global Settings
+Globals:
+  Function:
+    Timeout: 60
+    MemorySize: 256
+
+Resources:
+  # S3 buckets
+  ProfileImageBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - "*"
+            AllowedMethods:
+              - GET
+              - PUT
+              - POST
+            AllowedOrigins:
+              - "*"
+
+  # API Gateway
+  SupportServiceApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: api-v1
+      CorsConfiguration:
+        AllowOrigins:
+          - "*"
+        AllowHeaders:
+          - "*"
+        AllowMethods:
+          - "*"
+
+  # TODO: Change this for the support stack
+  # DynamoDB Table definition
+  TicketsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: tickets
+      AttributeDefinitions:
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: email
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  # Lambda Functions
+
+  # Authentication
+  CreateTicket:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      CodeUri: ./
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      Environment:
+        Variables:
+          # TODO: Change this for the support stack
+          USERS_TABLE_NAME: !Ref UsersTable
+          PROFILE_PICTURES_BUCKET: !Ref ProfileImageBucket
+      Architectures:
+        - x86_64
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Action:
+                - "dynamodb:*"
+                - "s3:*"
+              Resource: "*"
+      Events:
+        CreateTicketEndpoint:
+          Type: HttpApi
+          Properties:
+            Path: /support/create/ticket
+            Method: POST
+            ApiId: !Ref SupportServiceApi
+
+#TODO: Change this for the support stack
+Outputs:
+  UsersTableArn:
+    Description: "Users table ARN"
+    Value: !GetAtt UsersTable.Arn
+    Export:
+      Name: !Sub "${AWS::StackName}-UsersTableArn"
+
+  UsersTableName:
+    Description: "Users table NAME"
+    Value: !Ref UsersTable
+    Export:
+      Name: !Sub "${AWS::StackName}-UsersTableName"
+
+  EndpointURI:
+    Description: "API Endpoint URL"
+    Value: !Sub "https://${UserServiceApi}.execute-api.${AWS::Region}.amazonaws.com/api-v1"
+    Export:
+      Name: UserServiceApiUrl

@@ -1,5 +1,3 @@
-SERVICE=users
-
 build:
 	mkdir -p $(ARTIFACTS_DIR)
 	cp -R $(LAMBDA_FILE) $(ARTIFACTS_DIR)/

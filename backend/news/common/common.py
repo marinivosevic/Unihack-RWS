@@ -45,20 +45,41 @@ class LambdaDynamoDBClass:
         self.table_name = lambda_dynamodb_resource["table_name"]
         self.table = self.resource.Table(self.table_name)
 
-def get_news_pictures_as_base64(title):
-    # Setting up s3 client
+def get_news_pictures_as_base64(news_id):
+    # Setting up S3 client
     s3_class = LambdaS3Class(_LAMBDA_S3_CLIENT_FOR_NEWS_PICTURES)
+    s3_client = s3_class.client
+    bucket_name = s3_class.bucket_name
 
-    image, is_fetched = get_image_from_s3(
-        s3_class.client, 
-        s3_class.bucket_name,
-        f"{title}/.jpg" # TODO: how to get all images from a folder title
-    )
-
-    if is_fetched:
-        return base64.b64encode(image).decode('utf-8')
+    # Define the prefix to specify the folder
+    prefix = f"{news_id}/"
     
-    return None
+    # List all objects in the specified folder (prefix)
+    images = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
+    
+    # Check if there are any images in the folder
+    if 'Contents' in images:
+        # Dictionary to store each image's base64 data with their file name
+        images_base64 = []
+        
+        # Loop through each object in the folder
+        for obj in images['Contents']:
+            # Only process image files based on extension
+            key = obj['Key']
+
+            # Get the image object
+            response = s3_client.get_object(Bucket=bucket_name, Key=key)
+            
+            # Read the image content and convert to base64
+            image_data = response['Body'].read()
+            converted_image = base64.b64encode(image_data).decode('utf-8')
+            
+            # Store the base64 image with its file name (or S3 key)
+            images_base64.append(converted_image)
+        
+        return images_base64
+    else:
+        return f"No images found in folder {news_id}."
     
 def delete_news_pictures(news_id):
     # Setting up S3 client

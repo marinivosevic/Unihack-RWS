@@ -127,7 +127,7 @@ Resources:
         DeleteTicketEndpoint:
           Type: HttpApi
           Properties:
-            Path: /support
+            Path: /support/{ticket_id}
             Method: DELETE
             ApiId: !Ref SupportServiceApi
 

@@ -57,7 +57,7 @@ def lambda_handler(event, context):
     )
 
     # Upload pictures to S3
-    save_news_pictures(pictures, title)
+    save_news_pictures(pictures, title, city)
     
     return build_response(
         200,

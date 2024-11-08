@@ -41,17 +41,21 @@ export default function LoginPage() {
         }
 
         try {
-            const response = await axios.post(`${API_URL}/login`, formData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
+            const response = await axios.post(
+                `https://lrpedwzxrl.execute-api.eu-central-1.amazonaws.com/api-v1/authentication/login`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            )
 
             console.log('Success:', response.data)
             // Store the token and user data in context and local storage
             setUser(response.data) // Set user data
             localStorage.setItem('token', response.data.token) // Store the token if needed
-            router.push('/Dashboard') // Redirect to the dashboard
+            router.push('/') // Redirect to the dashboard
             setIsSubmitting(false)
         } catch (error) {
             console.error('Error:', error)
@@ -125,7 +129,7 @@ export default function LoginPage() {
                                         <CircularProgress />
                                     </div>
                                 ) : (
-                                    <div className="flex justify-center items-center">
+                                    <div className="flex justify-center gap-4 items-center">
                                         <button
                                             type="submit"
                                             className="
@@ -142,6 +146,24 @@ export default function LoginPage() {
                                         >
                                             Login
                                         </button>
+                                        <Link href="https://lrpedwzxrl.execute-api.eu-central-1.amazonaws.com/api-v1/authentication/login/third-party?type_of_service=google">
+                                            <button
+                                                type="submit"
+                                                className="
+                                                    bg-gradient-to-t from-gradient-100 via-gradient-100 to-primary-400
+                                                    text-white
+                                                    px-4 py-2
+                                                    rounded
+                                                    transform
+                                                    transition
+                                                    duration-300
+                                                    ease-in-out
+                                                    hover:scale-110
+                                                "
+                                            >
+                                                Login with google
+                                            </button>
+                                        </Link>
                                     </div>
                                 )}
                             </Form>

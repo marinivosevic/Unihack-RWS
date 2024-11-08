@@ -3,8 +3,7 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   stack for managing user lambdas
   CONTAINS:
-  - authentication
-  - profile
+  - support
 
 Parameters:
   JwtSecretName:
@@ -45,7 +44,7 @@ Resources:
               - "*"
 
   # API Gateway
-  UserServiceApi:
+  SupportServiceApi:
     Type: AWS::Serverless::HttpApi
     Properties:
       StageName: api-v1
@@ -57,11 +56,12 @@ Resources:
         AllowMethods:
           - "*"
 
+  # TODO: Change this for the support stack
   # DynamoDB Table definition
-  UsersTable:
+  TicketsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: users
+      TableName: tickets
       AttributeDefinitions:
         - AttributeName: email
           AttributeType: S
@@ -75,7 +75,7 @@ Resources:
   # Lambda Functions
 
   # Authentication
-  RegisterUserFunction:
+  CreateTicket:
     Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile
@@ -85,6 +85,7 @@ Resources:
       Runtime: python3.12
       Environment:
         Variables:
+          # TODO: Change this for the support stack
           USERS_TABLE_NAME: !Ref UsersTable
           PROFILE_PICTURES_BUCKET: !Ref ProfileImageBucket
       Architectures:
@@ -98,208 +99,14 @@ Resources:
                 - "s3:*"
               Resource: "*"
       Events:
-        RegisterUserEndpoint:
+        CreateTicketEndpoint:
           Type: HttpApi
           Properties:
-            Path: /authentication/register
+            Path: /support/create/ticket
             Method: POST
-            ApiId: !Ref UserServiceApi
+            ApiId: !Ref SupportServiceApi
 
-  LoginUserFunction:
-    Type: AWS::Serverless::Function
-    Metadata:
-      BuildMethod: makefile
-    Properties:
-      CodeUri: ./
-      Handler: lambda_handler.lambda_handler
-      Runtime: python3.12
-      Environment:
-        Variables:
-          USERS_TABLE_NAME: !Ref UsersTable
-          JWT_SECRET_NAME: !Ref JwtSecretName
-          SECRETS_REGION_NAME: !Ref SecretsRegionName
-      Architectures:
-        - x86_64
-      Policies:
-        - Version: "2012-10-17"
-          Statement:
-            - Effect: "Allow"
-              Action:
-                - "dynamodb:*"
-                - "secretsmanager:GetSecretValue"
-              Resource: "*"
-      Events:
-        RequestUserLoginEndpoint:
-          Type: HttpApi
-          Properties:
-            Path: /authentication/login
-            Method: POST
-            ApiId: !Ref UserServiceApi
-
-  ThirdPartyLoginRequestFunction:
-    Type: AWS::Serverless::Function
-    Metadata:
-      BuildMethod: makefile
-    Properties:
-      CodeUri: ./
-      Handler: lambda_handler.lambda_handler
-      Runtime: python3.12
-      Environment:
-        Variables:
-          THIRD_PARTY_CLIENTS_SECRET_NAME: !Ref ThirdPartyClientsSecretName
-          SECRETS_REGION_NAME: !Ref SecretsRegionName
-      Architectures:
-        - x86_64
-      Policies:
-        - Version: "2012-10-17"
-          Statement:
-            - Effect: "Allow"
-              Action:
-                - "dynamodb:*"
-                - "secretsmanager:GetSecretValue"
-              Resource: "*"
-      Events:
-        ThirdPartyLoginRequestEndpoint:
-          Type: HttpApi
-          Properties:
-            Path: /authentication/login/third-party
-            Method: GET
-            ApiId: !Ref UserServiceApi
-
-  ThirdPartyLoginValidateFunction:
-    Type: AWS::Serverless::Function
-    Metadata:
-      BuildMethod: makefile
-    Properties:
-      CodeUri: ./
-      Handler: lambda_handler.lambda_handler
-      Runtime: python3.12
-      Environment:
-        Variables:
-          USERS_TABLE_NAME: !Ref UsersTable
-          THIRD_PARTY_CLIENTS_SECRET_NAME: !Ref ThirdPartyClientsSecretName
-          JWT_SECRET_NAME: !Ref JwtSecretName
-          PROFILE_PICTURES_BUCKET: !Ref ProfileImageBucket
-          SECRETS_REGION_NAME: !Ref SecretsRegionName
-      Architectures:
-        - x86_64
-      Policies:
-        - Version: "2012-10-17"
-          Statement:
-            - Effect: "Allow"
-              Action:
-                - "dynamodb:*"
-                - "secretsmanager:GetSecretValue"
-                - "s3:*"
-              Resource: "*"
-      Events:
-        ThirdPartyLoginValidateEndpoint:
-          Type: HttpApi
-          Properties:
-            Path: /authentication/login/third-party/confirm
-            Method: GET
-            ApiId: !Ref UserServiceApi
-
-  # Profile
-  GetUsersPublicInfoFunction:
-    Type: AWS::Serverless::Function
-    Metadata:
-      BuildMethod: makefile
-    Properties:
-      CodeUri: ./
-      Handler: lambda_handler.lambda_handler
-      Runtime: python3.12
-      Environment:
-        Variables:
-          USERS_TABLE_NAME: !Ref UsersTable
-          JWT_SECRET_NAME: !Ref JwtSecretName
-          SECRETS_REGION_NAME: !Ref SecretsRegionName
-          PROFILE_PICTURES_BUCKET: !Ref ProfileImageBucket
-      Architectures:
-        - x86_64
-      Policies:
-        - Version: "2012-10-17"
-          Statement:
-            - Effect: "Allow"
-              Action:
-                - "dynamodb:*"
-                - "secretsmanager:GetSecretValue"
-                - "s3:*"
-              Resource: "*"
-      Events:
-        GetUsersPublicInfoEndpoint:
-          Type: HttpApi
-          Properties:
-            Path: /profile/info/public
-            Method: GET
-            ApiId: !Ref UserServiceApi
-
-  DeleteProfileFunction:
-    Type: AWS::Serverless::Function
-    Metadata:
-      BuildMethod: makefile
-    Properties:
-      CodeUri: ./
-      Handler: lambda_handler.lambda_handler
-      Runtime: python3.12
-      Environment:
-        Variables:
-          USERS_TABLE_NAME: !Ref UsersTable
-          JWT_SECRET_NAME: !Ref JwtSecretName
-          SECRETS_REGION_NAME: !Ref SecretsRegionName
-          PROFILE_PICTURES_BUCKET: !Ref ProfileImageBucket
-      Architectures:
-        - x86_64
-      Policies:
-        - Version: "2012-10-17"
-          Statement:
-            - Effect: "Allow"
-              Action:
-                - "dynamodb:*"
-                - "secretsmanager:GetSecretValue"
-                - "s3:*"
-              Resource: "*"
-      Events:
-        DeleteProfileEndpoint:
-          Type: HttpApi
-          Properties:
-            Path: /profile
-            Method: DELETE
-            ApiId: !Ref UserServiceApi
-
-  UpdateUsersPublicInfoFunction:
-    Type: AWS::Serverless::Function
-    Metadata:
-      BuildMethod: makefile
-    Properties:
-      CodeUri: ./
-      Handler: lambda_handler.lambda_handler
-      Runtime: python3.12
-      Environment:
-        Variables:
-          USERS_TABLE_NAME: !Ref UsersTable
-          JWT_SECRET_NAME: !Ref JwtSecretName
-          SECRETS_REGION_NAME: !Ref SecretsRegionName
-          PROFILE_PICTURES_BUCKET: !Ref ProfileImageBucket
-      Architectures:
-        - x86_64
-      Policies:
-        - Version: "2012-10-17"
-          Statement:
-            - Effect: "Allow"
-              Action:
-                - "dynamodb:*"
-                - "secretsmanager:GetSecretValue"
-                - "s3:*"
-              Resource: "*"
-      Events:
-        UpdateUsersPublicInfoEndpoint:
-          Type: HttpApi
-          Properties:
-            Path: /profile/info/public
-            Method: PUT
-            ApiId: !Ref UserServiceApi
-
+#TODO: Change this for the support stack
 Outputs:
   UsersTableArn:
     Description: "Users table ARN"

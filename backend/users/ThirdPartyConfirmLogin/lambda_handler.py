@@ -19,7 +19,6 @@ from common.common import (
     generate_jwt_token,
     generate_refresh_token,
     _LAMBDA_USERS_TABLE_RESOURCE,
-    save_profile_picture,
     get_secrets_from_aws_secrets_manager,
     build_response,
     LambdaDynamoDBClass
@@ -116,8 +115,7 @@ def lambda_handler(event, context):
 
         user_name = user_info.get('name').split(' ')
         user_email = user_info.get('email')
-        user_profile_picture_url = user_info.get('picture', {}).get('data', {}).get('url') if state == 'facebook' else user_info.get('avatar_url') if state == 'github' else user_info.get('picture')
-
+        
         logger.info('Checking if email is empty and state is github')
 
         # In github if email field is empty call the email endpoint
@@ -141,13 +139,6 @@ def lambda_handler(event, context):
             })
 
             logger.info('Storing profile picture if found')
-            
-            fetching_profile_picture_result = requests.get(user_profile_picture_url)
-
-            if fetching_profile_picture_result.status_code == 200:
-                profile_picture_data = fetching_profile_picture_result.content
-
-                save_profile_picture(profile_picture_data, user_email, False)
 
         logger.info('Generating tokens')
 

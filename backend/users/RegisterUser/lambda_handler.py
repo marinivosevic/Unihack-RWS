@@ -6,7 +6,6 @@ logger.setLevel(logging.INFO)
 
 from common.common import (
     _LAMBDA_USERS_TABLE_RESOURCE,
-    save_profile_picture,
     build_response,
     hash_password,
     LambdaDynamoDBClass
@@ -66,17 +65,6 @@ def register_user(dynamodb, email, password, first_name, last_name, profile_pict
     })
 
     logger.info('Saving profile picture.')
-
-    if profile_picture_base64:
-        successful_upload = save_profile_picture(profile_picture_base64, email)
-
-        if not successful_upload:
-            return build_response(
-                201,
-                {
-                    'message': "User registered without profile picture."
-                }
-            )
 
     return build_response(
         201,

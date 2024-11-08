@@ -23,21 +23,6 @@ Resources:
         AllowMethods:
           - "*"
 
-  # DynamoDB Table
-  UserElectricityDataTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: user_electricity
-        AttributeDefinitions:
-        - AttributeName: id
-          AttributeType: S
-        KeySchema:
-        - AttributeName: id
-          KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 5
-          WriteCapacityUnits: 5
-
   # Lambda Function
   ElectricityBillPredictor:
     Type: AWS::Serverless::Function

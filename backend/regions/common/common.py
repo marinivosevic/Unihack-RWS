@@ -4,7 +4,7 @@ import logging
 import logging
 import json
 
-logger = logging.getLogger("UserCommon")
+logger = logging.getLogger("RegionsCommon")
 logger.setLevel(logging.INFO)
 
 _LAMBDA_REGIONS_TABLE_RESOURCE = {

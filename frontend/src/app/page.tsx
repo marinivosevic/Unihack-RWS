@@ -4,7 +4,8 @@ import Image from 'next/image'
 import React from 'react'
 import { useRouter } from 'next/navigation'
 
-import * as images from '@/app/constants/images'
+import * as images from '@/constants/images'
+import NavBar from '@/components/NavBar'
 
 function Page() {
     const router = useRouter()
@@ -16,6 +17,7 @@ function Page() {
 
     return (
         <div className="w-full min-h-screen flex flex-row justify-center bg-primary-950">
+            <NavBar />
             {/* Hero */}
             <div className="flex flex-col items-center w-1/2 p-12 mt-24">
                 <h1 className="text-5xl text-center font-bold text-white">

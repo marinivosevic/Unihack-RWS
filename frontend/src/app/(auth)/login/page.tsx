@@ -5,8 +5,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import { useUser } from '@/app/context/userContext'
-import { logo, login } from '@/app/constants/images' // Ensure you have the login image
+import { useUser } from '@/context/userContext'
+import { logo, login } from '@/constants/images' // Ensure you have the login image
 import Image from 'next/image'
 import CircularProgress from '@mui/joy/CircularProgress'
 import Link from 'next/link'

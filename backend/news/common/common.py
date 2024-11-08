@@ -74,15 +74,22 @@ def save_news_pictures(pictures, title, should_convert_from_base64=True):
     # Setting up s3 client
     s3_class = LambdaS3Class(_LAMBDA_S3_CLIENT_FOR_NEWS_PICTURES)
     
-    logger.info('Converting profile picture to data.')
-    # profile_picture_data = base64.b64decode(profile_picture) if should_convert_from_base64 else profile_picture
+    logger.info('Converting profile pictures to data.')
+    pictures_data = [base64.b64decode(picture) if should_convert_from_base64 else picture for picture in pictures]
 
-    return save_image_to_s3(
-        s3_class.client, 
-        s3_class.bucket_name,
-        f"{title}/.jpg", # TODO: how to bulk save images in a folder
-        # profile_picture_data
-    )
+    i = 0
+    for picture_data in pictures_data:
+        is_saved = save_image_to_s3(
+            s3_class.client, 
+            s3_class.bucket_name,
+            f"{title}/{i}.jpg",
+            picture_data
+        )
+
+        if not is_saved:
+            return False
+
+        i += 1
 
 @lambda_handler_decorator
 def lambda_middleware(handler, event, context):

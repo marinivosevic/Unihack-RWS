@@ -1,4 +1,6 @@
 import logging
+import json
+import uuid
 
 logger = logging.getLogger("CreateNewsForCity")
 logger.setLevel(logging.INFO)
@@ -7,7 +9,8 @@ from common.common import (
     _LAMBDA_NEWS_TABLE_RESOURCE,
     lambda_middleware,
     build_response,
-    LambdaDynamoDBClass
+    LambdaDynamoDBClass,
+    save_news_pictures
 )
 
 @lambda_middleware
@@ -23,13 +26,42 @@ def lambda_handler(event, context):
             }
         )
     
+    # Getting data for news
+    body = json.loads(event.get('body'))
+
+    try:
+        title = body['title']
+        description = body['description']
+        pictures = body['pictures']
+    except Exception as e:
+        return build_response(
+            400,
+            {
+                'message': f'{e} is required'
+            }
+        )
+    
     # Setting up table for users
     global _LAMBDA_NEWS_TABLE_RESOURCE
     dynamodb = LambdaDynamoDBClass(_LAMBDA_NEWS_TABLE_RESOURCE)
+
+    id = str(uuid.uuid4())
+    # Creating news for city
+    dynamodb.put_item(
+        Item={
+            'id': id,
+            'city': city,
+            'title': title,
+            'description': description
+        }
+    )
+
+    # Upload pictures to S3
+    save_news_pictures(pictures, title)
     
     return build_response(
         200,
         {
-            'message': 'Create news for city'
+            'message': f'Created news for city with id: {id}'
         }
     )

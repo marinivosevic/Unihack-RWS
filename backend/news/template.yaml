@@ -88,6 +88,7 @@ Resources:
               Action:
                 - "dynamodb:*"
                 - "s3:*"
+                - "secretsmanager:GetSecretValue"
               Resource: "*"
       Events:
         CreateNewsForCityEndpoint:
@@ -120,6 +121,7 @@ Resources:
               Action:
                 - "dynamodb:*"
                 - "s3:*"
+                - "secretsmanager:GetSecretValue"
               Resource: "*"
       Events:
         DeleteNewsForCityEndpoint:
@@ -152,6 +154,7 @@ Resources:
               Action:
                 - "dynamodb:*"
                 - "s3:*"
+                - "secretsmanager:GetSecretValue"
               Resource: "*"
       Events:
         UpdateNewsForCityEndpoint:
@@ -184,6 +187,7 @@ Resources:
               Action:
                 - "dynamodb:*"
                 - "s3:*"
+                - "secretsmanager:GetSecretValue"
               Resource: "*"
       Events:
         GetAllNewsForCityEndpoint:

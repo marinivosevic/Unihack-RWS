@@ -1,16 +1,20 @@
 import logging
 import uuid
 import json
+import base64
 
 logger = logging.getLogger("CreateTicket")
 logger.setLevel(logging.INFO)
 
 from common.common import (
     _LAMBDA_TICKETS_TABLE_RESOURCE,
+    _LAMBDA_S3_CLIENT_FOR_TICKET_PICTURES,
     lambda_middleware,
     get_email_from_jwt_token,
     build_response,
-    LambdaDynamoDBClass
+    LambdaDynamoDBClass,
+    LambdaS3Class,
+    save_image_to_s3
 )
 
 @lambda_middleware
@@ -67,9 +71,17 @@ def create_ticket(dynamodb, sender, city, ticket, picture):
         'id': id,
         'sender': sender,
         'city': city,
-        'ticket': ticket,
-        'picture': picture
+        'ticket': ticket
     })
+
+    logger.info('Adding ticket picture to s3.')
+
+    decoded_picture = base64.b64decode(picture)
+
+    global _LAMBDA_S3_CLIENT_FOR_TICKET_PICTURES
+    s3 = LambdaS3Class(_LAMBDA_S3_CLIENT_FOR_TICKET_PICTURES)
+
+    save_image_to_s3(s3.client, s3.bucket_name, id, decoded_picture)
 
     logger.info('Ticket created successfully.')
 

@@ -6,10 +6,13 @@ logger.setLevel(logging.INFO)
 
 from common.common import (
     _LAMBDA_TICKETS_TABLE_RESOURCE,
+    _LAMBDA_S3_CLIENT_FOR_TICKET_PICTURES,
     lambda_middleware,
     get_email_from_jwt_token,
     build_response,
-    LambdaDynamoDBClass
+    LambdaDynamoDBClass,
+    LambdaS3Class,
+    get_image_from_s3
 )
 
 @lambda_middleware
@@ -35,6 +38,13 @@ def lambda_handler(event, context):
         tickets = dynamodb.table.scan(
             FilterExpression=Attr('sender').eq(email)
         ).get('Items', [])
+
+        # Getting pictures for the tickets
+        global _LAMBDA_S3_CLIENT_FOR_TICKET_PICTURES
+        s3 = LambdaS3Class(_LAMBDA_S3_CLIENT_FOR_TICKET_PICTURES)
+
+        for ticket in tickets:
+            ticket['picture'] = get_image_from_s3(s3.client, s3.bucket_name, ticket['id'])
 
         return build_response(
             200,

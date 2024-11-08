@@ -178,3 +178,49 @@ def build_response(status_code, body, headers=None):
         },
         'body': json.dumps(body)
     }
+
+def get_image_from_s3(s3_client, bucket_name, image_key):
+    logger.info(f"Getting image from S3: {image_key}")
+
+    response = s3_client.get_object(
+        Bucket=bucket_name,
+        Key=image_key,
+    )
+
+    logger.info(f"Response for getting image: {response}")
+
+    if response.get('Body'):
+        return response['Body'].read(), True
+    
+    return None, False
+
+def save_image_to_s3(s3_client, bucket_name, image_key, image_data):
+    try:
+        logger.info(f'Saving image to S3: {image_key}')
+
+        s3_client.put_object(
+            Bucket=bucket_name,
+            Key=image_key,
+            Body=image_data,
+            ContentType='image/jpeg'
+        )
+
+        return True
+    except Exception as e:
+        logger.error(f'Unable to save image to S3: {str(e)}')
+        return False
+
+def delete_image_from_s3(s3_client, bucket_name, image_key):
+    try:
+        logger.info(f'Deleting image from S3: {image_key}')
+
+        s3_client.delete_object(
+            Bucket=bucket_name,
+            Key=image_key
+        )
+
+        return True
+    except Exception as e:
+        logger.error(f'Unable to save image to S3: {str(e)}')
+        return False
+    

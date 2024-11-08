@@ -98,6 +98,39 @@ Resources:
             Method: POST
             ApiId: !Ref SupportServiceApi
 
+  DeleteTicketFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      CodeUri: ./
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      Environment:
+        Variables:
+          JWT_SECRET_NAME: !Ref JwtSecretName
+          SECRETS_REGION_NAME: !Ref SecretsRegionName
+          TICKETS_TABLE_NAME: !Ref TicketsTable
+          TICKETS_PICTURES_BUCKET: !Ref TicketsImageBucket
+      Architectures:
+        - x86_64
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Action:
+                - "dynamodb:*"
+                - "s3:*"
+                - "secretsmanager:GetSecretValue"
+              Resource: "*"
+      Events:
+        DeleteTicketEndpoint:
+          Type: HttpApi
+          Properties:
+            Path: /support
+            Method: DELETE
+            ApiId: !Ref SupportServiceApi
+
   FetchSentTicketsFunction:
     Type: AWS::Serverless::Function
     Metadata:

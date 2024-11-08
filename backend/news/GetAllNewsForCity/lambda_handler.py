@@ -35,18 +35,15 @@ def lambda_handler(event, context):
 
     logger.info(f'Found {len(news)} news for city {city}')
 
-    pictures = {}
-
     for n in news:
-        pictures[n['id']] = get_news_pictures_as_base64(n['id'])
+        news['pictures'] = get_news_pictures_as_base64(n['id'])
 
-    logger.info(f"Returning news and pictures: {pictures}")
+    logger.info(f"Returning news and pictures")
     
     return build_response(
         200,
         {
             'message': 'Get all news for city',
-            'news': news,
-            'pictures': pictures
+            'news': news
         }
     )

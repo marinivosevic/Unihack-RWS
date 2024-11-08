@@ -47,7 +47,7 @@ def lambda_handler(event, context):
 
     id = str(uuid.uuid4())
     # Creating news for city
-    dynamodb.put_item(
+    dynamodb.table.put_item(
         Item={
             'id': id,
             'city': city,

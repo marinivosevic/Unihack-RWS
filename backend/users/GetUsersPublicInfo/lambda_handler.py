@@ -5,7 +5,6 @@ logger.setLevel(logging.INFO)
 
 from common.common import (
     _LAMBDA_USERS_TABLE_RESOURCE,
-    get_profile_picture_as_base64,
     lambda_middleware,
     get_email_from_jwt_token,
     build_response,
@@ -33,9 +32,6 @@ def lambda_handler(event, context):
                     'message': 'We could not find your account. Please try again or contact support.'
                 }
             )
-        
-        # Get user profile picture from S3
-        user_profile_picture = get_profile_picture_as_base64(email)
     except Exception as e:
         logger.error(f"Couldn't get public info: {str(e)}")
 
@@ -53,8 +49,7 @@ def lambda_handler(event, context):
             'info': {
                 'email': user.get('email'),
                 'first_name': user.get('first_name'),
-                'last_name': user.get('last_name'),
-                'profile_picture': user_profile_picture
+                'last_name': user.get('last_name')
             }
         }
     )

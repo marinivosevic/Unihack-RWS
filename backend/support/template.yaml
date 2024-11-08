@@ -74,7 +74,7 @@ Resources:
 
   # Lambda Functions
 
-  # Authentication
+  # Create Ticket
   CreateTicket:
     Type: AWS::Serverless::Function
     Metadata:
@@ -106,6 +106,70 @@ Resources:
             Method: POST
             ApiId: !Ref SupportServiceApi
 
+  # Get all sent tickets for a user
+  FetchSentTickets:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      CodeUri: ./
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      Environment:
+        Variables:
+          # TODO: Change this for the support stack
+          USERS_TABLE_NAME: !Ref UsersTable
+          PROFILE_PICTURES_BUCKET: !Ref ProfileImageBucket
+      Architectures:
+        - x86_64
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Action:
+                - "dynamodb:*"
+                - "s3:*"
+              Resource: "*"
+      Events:
+        FetchSentTicketsEndpoint:
+          Type: HttpApi
+          Properties:
+            Path: /support/fetch/sent/tickets
+            Method: GET
+            ApiId: !Ref SupportServiceApi
+
+  # Get all received tickets for a user
+  FetchReceivedTickets:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      CodeUri: ./
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      Environment:
+        Variables:
+          # TODO: Change this for the support stack
+          USERS_TABLE_NAME: !Ref UsersTable
+          PROFILE_PICTURES_BUCKET: !Ref ProfileImageBucket
+      Architectures:
+        - x86_64
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Action:
+                - "dynamodb:*"
+                - "s3:*"
+              Resource: "*"
+      Events:
+        FetchReceivedTicketsEndpoint:
+          Type: HttpApi
+          Properties:
+            Path: /support/fetch/received/tickets
+            Method: GET
+            ApiId: !Ref SupportServiceApi
+
 #TODO: Change this for the support stack
 Outputs:
   UsersTableArn:
@@ -124,4 +188,4 @@ Outputs:
     Description: "API Endpoint URL"
     Value: !Sub "https://${UserServiceApi}.execute-api.${AWS::Region}.amazonaws.com/api-v1"
     Export:
-      Name: UserServiceApiUrl
+      Name: SupportServiceApi

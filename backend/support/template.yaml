@@ -65,7 +65,7 @@ Resources:
         WriteCapacityUnits: 5
 
   # Lambda Functions
-  CreateTicket:
+  CreateTicketFunction:
     Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile
@@ -97,7 +97,7 @@ Resources:
             Method: POST
             ApiId: !Ref SupportServiceApi
 
-  FetchSentTickets:
+  FetchSentTicketsFunction:
     Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile
@@ -129,7 +129,7 @@ Resources:
             Method: GET
             ApiId: !Ref SupportServiceApi
 
-  FetchReceivedTickets:
+  FetchReceivedTicketsFunction:
     Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile

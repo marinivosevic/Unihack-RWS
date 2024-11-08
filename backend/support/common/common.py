@@ -5,6 +5,7 @@ import logging
 import boto3
 import logging
 import json
+import base64
 
 from aws_lambda_powertools.middleware_factory import lambda_handler_decorator
 
@@ -190,7 +191,7 @@ def get_image_from_s3(s3_client, bucket_name, image_key):
     logger.info(f"Response for getting image: {response}")
 
     if response.get('Body'):
-        return response['Body'].read(), True
+        return base64.encode(response['Body'].read()), True
     
     return None, False
 

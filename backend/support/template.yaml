@@ -88,6 +88,7 @@ Resources:
               Action:
                 - "dynamodb:*"
                 - "s3:*"
+                - "secretsmanager:GetSecretValue"
               Resource: "*"
       Events:
         CreateTicketEndpoint:
@@ -120,6 +121,7 @@ Resources:
               Action:
                 - "dynamodb:*"
                 - "s3:*"
+                - "secretsmanager:GetSecretValue"
               Resource: "*"
       Events:
         FetchSentTicketsEndpoint:
@@ -152,6 +154,7 @@ Resources:
               Action:
                 - "dynamodb:*"
                 - "s3:*"
+                - "secretsmanager:GetSecretValue"
               Resource: "*"
       Events:
         FetchReceivedTicketsEndpoint:

@@ -1,5 +1,6 @@
 import logging
 import uuid
+import json
 
 logger = logging.getLogger("CreateTicket")
 logger.setLevel(logging.INFO)
@@ -15,6 +16,9 @@ from common.common import (
 @lambda_middleware
 def lambda_handler(event, context):
     try:
+        # Getting body from event
+        body = json.loads(event['body'])
+
         # Getting email from jwt token
         jwt_token = event.get('headers').get('x-access-token')
         email = get_email_from_jwt_token(jwt_token)
@@ -32,9 +36,9 @@ def lambda_handler(event, context):
         dynamodb = LambdaDynamoDBClass(_LAMBDA_TICKETS_TABLE_RESOURCE)
         
         try:
-            city = event['city']
-            ticket = event['ticket']
-            picture = event['picture']
+            city = body['city']
+            ticket = body['ticket']
+            picture = body['picture']
         except Exception as e:
             return build_response(
                 400,

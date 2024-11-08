@@ -10,7 +10,6 @@ from common.common import (
 )
 
 def lambda_handler(event, context):
-    # Setting up table for users
     global _LAMBDA_REGIONS_TABLE_RESOURCE
     dynamodb = LambdaDynamoDBClass(_LAMBDA_REGIONS_TABLE_RESOURCE)
 

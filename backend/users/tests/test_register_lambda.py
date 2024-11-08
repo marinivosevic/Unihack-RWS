@@ -94,7 +94,6 @@ class TestRegisterLambdaFunction(BaseAuthTest):
             'password': 'password123',
             'first_name': 'John',
             'last_name': 'Travolta',
-            'age': 30,
             "profile_picture_base64": "base64_encoded_image"
         })
 
@@ -115,26 +114,6 @@ class TestRegisterLambdaFunction(BaseAuthTest):
         body = json.loads(response['body'])
         print(body)
         self.assertEqual(body['message'], 'User with this email already exists. Do you want to login instead?')
-
-    def test_invalid_age(self):
-        print("test_invalid_age")
-        event = {
-            "body": json.dumps({
-                "email": "test@mail.com",
-                "password": "password123",
-                "first_name": "John",
-                "last_name": "Travolta",
-                "age": "string",
-                "profile_picture_base64": "base64_encoded_image"
-            })
-        }
-        response = lambda_handler(event, {})
-
-        self.assertEqual(response['statusCode'], 400)
-        body = json.loads(response['body'])
-        print(body)
-        self.assertEqual(body['message'], 'The parameter age must be an integer.')
-
 
 if __name__ == '__main__':
     unittest.main()

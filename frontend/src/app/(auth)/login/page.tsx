@@ -60,8 +60,8 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="flex h-screen bg-blue-500">
-            <div className="w-full max-w-md m-auto bg-white rounded-lg shadow-lg py-10 px-16">
+        <div className="flex h-screen bg-primary-950">
+            <div className="w-full max-w-md m-auto bg-primary-100 rounded-lg shadow-lg py-10 px-16">
                 <div className="text-center mb-8">
                     <Image
                         src={logo}
@@ -70,8 +70,8 @@ export default function LoginPage() {
                         width={80}
                         height={80}
                     />
-                    <h1 className="text-3xl font-bold text-blue-500">
-                        RiConnect
+                    <h1 className="text-3xl font-bold text-primary-900">
+                        Urban pulse
                     </h1>
                 </div>
                 <Formik
@@ -84,7 +84,7 @@ export default function LoginPage() {
                             <div>
                                 <label
                                     htmlFor="email"
-                                    className="block text-sm font-medium text-gray-700"
+                                    className="block text-sm font-medium text-primary-900"
                                 >
                                     Email
                                 </label>
@@ -102,7 +102,7 @@ export default function LoginPage() {
                             <div>
                                 <label
                                     htmlFor="password"
-                                    className="block text-sm font-medium text-gray-700"
+                                    className="block text-sm font-medium text-primary-900"
                                 >
                                     Password
                                 </label>
@@ -125,7 +125,7 @@ export default function LoginPage() {
                                 <div className=" flex justify-center items-center">
                                     <button
                                         type="submit"
-                                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-300"
+                                        className="bg-primary-900 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-300"
                                     >
                                         Login
                                     </button>
@@ -137,7 +137,7 @@ export default function LoginPage() {
                 <div className="text-center mt-4">
                     <a
                         href="/Register"
-                        className="text-sm text-blue-500 hover:text-blue-700"
+                        className="text-sm text-primary-950 hover:text-blue-700"
                     >
                         Register
                     </a>

@@ -1,3 +1,4 @@
-import logo from '../assets/images/logo.png'
+import logo from '@/app/assets/images/logo.png'
+import onboarding from '@/app/assets/images/onboarding.png'
 
-export { logo }
+export { logo, onboarding }

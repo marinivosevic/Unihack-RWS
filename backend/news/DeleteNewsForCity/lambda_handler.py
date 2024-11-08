@@ -39,6 +39,6 @@ def lambda_handler(event, context):
     return build_response(
         200,
         {
-            'message': 'Delete news for city'
+            'message': f'Deleting news for id: {news_id}'
         }
     )

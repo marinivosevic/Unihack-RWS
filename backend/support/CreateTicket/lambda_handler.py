@@ -97,7 +97,7 @@ def check_if_user_exists(dynamodb, email):
         }
     )
 
-    return response.get('Item')
+    return response.get('Item') is not None
 
 
 def check_if_city_exists(dynamodb, city):
@@ -109,7 +109,7 @@ def check_if_city_exists(dynamodb, city):
         }
     )
 
-    return response.get('Item')
+    return response.get('Item') is not None
 
 
 def add_ticket_to_the_table(dynamodb, ticket_item):

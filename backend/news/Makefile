@@ -19,3 +19,6 @@ build-UpdateNewsForCityFunction:
 
 build-GetAllNewsForCityFunction:
 	$(MAKE) build LAMBDA_FILE=GetAllNewsForCity/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
+
+build-GetNewsByIdFunction:
+	$(MAKE) build LAMBDA_FILE=GetNewsById/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)

@@ -1,5 +1,4 @@
 import logging
-from boto3.dynamodb.conditions import Attr
 
 logger = logging.getLogger("GetAllNewsForCity")
 logger.setLevel(logging.INFO)
@@ -15,13 +14,13 @@ from common.common import (
 @lambda_middleware
 def lambda_handler(event, context):
     # Getting city name
-    city = event.get('pathParameters', {}).get('city')
+    news_id = event.get('pathParameters', {}).get('news_id')
 
-    if not city:
+    if not news_id:
         return build_response(
             400,
             {
-                'message': 'City name is required'
+                'message': 'News id is required'
             }
         )
     
@@ -29,21 +28,22 @@ def lambda_handler(event, context):
     global _LAMBDA_NEWS_TABLE_RESOURCE
     dynamodb = LambdaDynamoDBClass(_LAMBDA_NEWS_TABLE_RESOURCE)
 
-    news = dynamodb.table.scan(
-        FilterExpression=Attr('city').eq(city)
-    ).get('Items', [])
+    news = dynamodb.table.get_item(
+        Key={
+            'id': news_id
+        }
+    ).get('Item')
 
-    logger.info(f'Found {len(news)} news for city {city}')
+    logger.info(f'Found {news}')
 
-    for n in news:
-        n['pictures'] = get_news_pictures_as_base64(n['id'])
+    news['pictures'] = get_news_pictures_as_base64(news['id'])
 
-    logger.info(f"Returning news and pictures")
+    logger.info(f"Returning news and it's pictures")
     
     return build_response(
         200,
         {
-            'message': f'Getting all news for city: {city}',
+            'message': f'Getting news for id: {news_id}',
             'news': news
         }
     )

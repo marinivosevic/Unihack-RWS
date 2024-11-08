@@ -160,7 +160,7 @@ Resources:
         UpdateNewsForCityEndpoint:
           Type: HttpApi
           Properties:
-            Path: /news/{city}
+            Path: /news/{news_id}
             Method: PUT
             ApiId: !Ref NewsServiceApi
 
@@ -194,6 +194,39 @@ Resources:
           Type: HttpApi
           Properties:
             Path: /news/{city}
+            Method: GET
+            ApiId: !Ref NewsServiceApi
+
+  GetNewsByIdFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      CodeUri: ./
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      Environment:
+        Variables:
+          NEWS_TABLE_NAME: !Ref NewsTable
+          NEWS_PICTURES_BUCKET: !Ref NewsImagesBucket
+          JWT_SECRET_NAME: !Ref JwtSecretName
+          SECRETS_REGION_NAME: !Ref SecretsRegionName
+      Architectures:
+        - x86_64
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Action:
+                - "dynamodb:*"
+                - "s3:*"
+                - "secretsmanager:GetSecretValue"
+              Resource: "*"
+      Events:
+        GetNewsByIdEndpoint:
+          Type: HttpApi
+          Properties:
+            Path: /news/id/{news_id}
             Method: GET
             ApiId: !Ref NewsServiceApi
 

@@ -44,7 +44,7 @@ def lambda_handler(event, context):
         s3 = LambdaS3Class(_LAMBDA_S3_CLIENT_FOR_TICKET_PICTURES)
 
         for ticket in tickets:
-            ticket['picture'] = get_image_from_s3(s3.client, s3.bucket_name, ticket['id'])
+            ticket['picture'], _ = get_image_from_s3(s3.client, s3.bucket_name, ticket['id'])
 
         return build_response(
             200,

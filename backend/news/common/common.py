@@ -60,17 +60,36 @@ def get_news_pictures_as_base64(title):
     
     return None
     
-def delete_news_pictures(title):
-    # Setting up s3 client
+def delete_news_pictures(news_id):
+    # Setting up S3 client
     s3_class = LambdaS3Class(_LAMBDA_S3_CLIENT_FOR_NEWS_PICTURES)
+    s3_client = s3_class.client
+    bucket_name = s3_class.bucket_name
 
-    return delete_image_from_s3(
-        s3_class.client, 
-        s3_class.bucket_name,
-        f"{title}/TODO.jpg" # TODO: need to determine how to bulk delete whole folder
-    )
+    # Define the prefix (the folder path for the news_id)
+    prefix = f"{news_id}/"
+    
+    # List all objects in the specified folder (prefix)
+    objects_to_delete = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
+    
+    if 'Contents' in objects_to_delete:
+        # Prepare a list of objects to delete
+        delete_list = [{'Key': obj['Key']} for obj in objects_to_delete['Contents']]
+        
+        # Perform a bulk delete operation
+        s3_client.delete_objects(
+            Bucket=bucket_name,
+            Delete={
+                'Objects': delete_list,
+                'Quiet': True
+            }
+        )
+        
+        return f"Successfully deleted all images in folder {news_id}."
+    else:
+        return f"No images found in folder {news_id}."
 
-def save_news_pictures(pictures, title, city, should_convert_from_base64=True):
+def save_news_pictures(pictures, id, should_convert_from_base64=True):
     # Setting up s3 client
     s3_class = LambdaS3Class(_LAMBDA_S3_CLIENT_FOR_NEWS_PICTURES)
     
@@ -82,7 +101,7 @@ def save_news_pictures(pictures, title, city, should_convert_from_base64=True):
         is_saved = save_image_to_s3(
             s3_class.client, 
             s3_class.bucket_name,
-            f"{city}/{title}-{i}.jpg",
+            f"{id}/{i}.jpg",
             picture_data
         )
 

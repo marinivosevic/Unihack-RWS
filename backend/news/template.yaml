@@ -127,7 +127,7 @@ Resources:
         DeleteNewsForCityEndpoint:
           Type: HttpApi
           Properties:
-            Path: /news/{city}
+            Path: /news/{news_id}
             Method: DELETE
             ApiId: !Ref NewsServiceApi
 

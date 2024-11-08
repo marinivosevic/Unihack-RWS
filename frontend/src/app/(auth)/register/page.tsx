@@ -5,7 +5,7 @@ import * as Yup from 'yup'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
-import { logo } from '../constants/images'
+import { logo } from '@/app/constants/images'
 
 const StepOneSchema = Yup.object().shape({
     email: Yup.string().required('Required'),

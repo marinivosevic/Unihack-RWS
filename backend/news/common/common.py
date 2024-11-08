@@ -70,7 +70,7 @@ def delete_news_pictures(title):
         f"{title}/TODO.jpg" # TODO: need to determine how to bulk delete whole folder
     )
 
-def save_news_pictures(pictures, title, should_convert_from_base64=True):
+def save_news_pictures(pictures, title, city, should_convert_from_base64=True):
     # Setting up s3 client
     s3_class = LambdaS3Class(_LAMBDA_S3_CLIENT_FOR_NEWS_PICTURES)
     
@@ -82,7 +82,7 @@ def save_news_pictures(pictures, title, should_convert_from_base64=True):
         is_saved = save_image_to_s3(
             s3_class.client, 
             s3_class.bucket_name,
-            f"{title}/{i}.jpg",
+            f"{city}/{title}-{i}.jpg",
             picture_data
         )
 

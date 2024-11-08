@@ -14,6 +14,11 @@ const Sidebar: React.FC = () => {
 
     const navLinks = [
         { name: 'Home', href: '/dashboard', icon: <FaHome /> },
+        {
+            name: 'Bill prediction',
+            href: '/dashboard/bill_prediction',
+            icon: <FaUser />,
+        },
         { name: 'Profile', href: '/dashboard/profile', icon: <FaUser /> },
         { name: 'Settings', href: '/dashboard/settings', icon: <FaCog /> },
         { name: 'Logout', href: '/logout', icon: <FaSignOutAlt /> },

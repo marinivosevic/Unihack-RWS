@@ -20,11 +20,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             <div className="flex-1 flex flex-col">
                 {/* Main Content Area */}
                 <main className="flex-1 p-6">
-                    {/* Weather Widget at the Top */}
-                    <div className="mb-6 items-center ml-8">
-                        <WeatherWidget />
-                    </div>
-
                     {/* Page Content */}
                     {children}
                 </main>

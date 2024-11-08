@@ -3,10 +3,15 @@
 'use client'
 
 import React from 'react'
+import WeatherWidget from '@/components/WeatherWidget'
 
 const DashboardHome: React.FC = () => {
     return (
         <div>
+            {/* Weather Widget at the Top */}
+            <div className="mb-6 items-center ml-8">
+                <WeatherWidget />
+            </div>
             <h1 className="text-2xl font-semibold mb-4 text-white">
                 Welcome to Your Dashboard
             </h1>

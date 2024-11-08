@@ -17,7 +17,7 @@ function Page() {
     return (
         <div className="w-full min-h-screen flex flex-row justify-center bg-primary-950">
             {/* Hero */}
-            <div className="flex flex-col items-center w-1/2 p-12 mt-12">
+            <div className="flex flex-col items-center w-1/2 p-12 mt-24">
                 <h1 className="text-5xl text-center font-bold text-white">
                     Welcome to{' '}
                     <span className="bg-gradient-to-r from-gradient-100 to-gradient-200 bg-clip-text text-transparent">
@@ -30,12 +30,18 @@ function Page() {
                 </h2>
                 <button
                     onClick={handleGetStarted}
-                    className="bg-gradient-to-t from-gradient-100 via-primary-400 to-gradient-200 text-white font-bold text-lg rounded-lg py-2 px-4 mt-12 w-1/4 z-50"
+                    className="
+                    bg-gradient-to-t from-gradient-100 via-primary-400 to-gradient-200 text-white 
+                    font-bold text-lg rounded-lg py-2 px-4 mt-12 w-1/4 z-50                                                 
+                    transform 
+                    transition 
+                    duration-300 
+                    ease-in-out 
+                    hover:scale-110"
                 >
                     Get Started
                 </button>
             </div>
-
             <Image
                 src={images.onboarding}
                 alt="onboard"

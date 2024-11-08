@@ -41,7 +41,6 @@ class TestRegisterLambdaFunction(BaseAuthTest):
                 "password": "password123",
                 "first_name": "John",
                 "last_name": "Travolta",
-                "age": 30,
                 "profile_picture_base64": "base64_encoded_image"
             })
         }
@@ -58,7 +57,6 @@ class TestRegisterLambdaFunction(BaseAuthTest):
                 "password": "password123",
                 "first_name": "John",
                 "last_name": "Travolta",
-                "age": 30,
                 "profile_picture_base64": "base64_encoded_image"
             })
         }
@@ -76,7 +74,6 @@ class TestRegisterLambdaFunction(BaseAuthTest):
                 "password": "password123",
                 "first_name": "",
                 "last_name": "",
-                "age": 30,
                 "profile_picture_base64": "base64_encoded_image"
             })
         }
@@ -104,7 +101,6 @@ class TestRegisterLambdaFunction(BaseAuthTest):
                 "password": "password123",
                 "first_name": "John",
                 "last_name": "Travolta",
-                "age": 30,
                 "profile_picture_base64": "base64_encoded_image"
             })
         }

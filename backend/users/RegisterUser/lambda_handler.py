@@ -40,10 +40,10 @@ def lambda_handler(event, context):
     global _LAMBDA_USERS_TABLE_RESOURCE
     dynamodb = LambdaDynamoDBClass(_LAMBDA_USERS_TABLE_RESOURCE)
 
-    return register_user(dynamodb, email, password, first_name, last_name, age, profile_picture_base64)
+    return register_user(dynamodb, email, password, first_name, last_name, profile_picture_base64)
 
 
-def register_user(dynamodb, email, password, first_name, last_name, age, profile_picture_base64):
+def register_user(dynamodb, email, password, first_name, last_name, profile_picture_base64):
     # Getting user by email
     is_user_found = check_if_user_exists(dynamodb, email)
 

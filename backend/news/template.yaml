@@ -160,7 +160,7 @@ Resources:
         UpdateNewsForCityEndpoint:
           Type: HttpApi
           Properties:
-            Path: /news/{city}
+            Path: /news/{news_id}
             Method: PUT
             ApiId: !Ref NewsServiceApi
 

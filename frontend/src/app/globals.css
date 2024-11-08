@@ -9,7 +9,23 @@ body {
     height: 500px; /* Set your desired fixed height */
     overflow-y: hidden; /* Handle overflow if necessary */
 }
-
+.mapContainerWrapper {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: orange;
+}
+/* FILE: globals.css or your main CSS file */
+html,
+body,
+#__next {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
 @layer utilities {
     .text-balance {
         text-wrap: balance;

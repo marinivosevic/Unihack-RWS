@@ -27,6 +27,10 @@ def lambda_handler(event, context):
 
     body = json.loads(event.get('body', '{}'))
     
+    # Setting up table for users
+    global _LAMBDA_NEWS_TABLE_RESOURCE
+    dynamodb = LambdaDynamoDBClass(_LAMBDA_NEWS_TABLE_RESOURCE)
+    
     title = body.get('title')
     description = body.get('description')
     pictures = body.get('pictures')
@@ -36,10 +40,6 @@ def lambda_handler(event, context):
 
     logger.info(f'Saving pictures for news with id: {news_id}')
     save_news_pictures(pictures, news_id)
-    
-    # Setting up table for users
-    global _LAMBDA_NEWS_TABLE_RESOURCE
-    dynamodb = LambdaDynamoDBClass(_LAMBDA_NEWS_TABLE_RESOURCE)
     
     return build_response(
         200,

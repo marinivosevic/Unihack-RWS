@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: 'AWS::Serverless-2016-10-31'
+Description: >
+  ChatGPT Lambda Function for answering questions
+
+Parameters:
+  JwtSecretName:
+    Type: String
+    Description: Name of the secret in Secrets Manager that contains the JWT secret
+    Default: python-lambda-app/prod/jwt-secret
+
+  SecretsRegionName:
+    Type: String
+    Description: Region name where the secrets are stored
+    Default: "eu-central-1"
+
+# Global Settings
+Globals:
+  Function:
+    Timeout: 60
+    MemorySize: 256
+
+Resources:
+  # API Gateway
+  ChatGptApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: api-v1
+      CorsConfiguration:
+        AllowOrigins:
+          - "*"
+        AllowHeaders:
+          - "*"
+        AllowMethods:
+          - "*"
+
+  # Lambda Function
+  ChatGPTFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda_function.lambda_handler  # Assuming your file is named 'lambda_function.py'
+      Runtime: python3.12
+      CodeUri: ./lambda  # Path to the directory containing your lambda_function.py
+      Description: 'ChatGPT Lambda Function'
+      Environment:
+        JWT_SECRET_NAME: !Ref JwtSecretName
+        SECRETS_REGION_NAME: !Ref SecretsRegionName
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: "Allow"
+              Action:
+                - "secretsmanager:GetSecretValue"
+              Resource: "*"
+      Events:
+        ChatGPTApiEndpoint:
+          Type: HttpApi 
+          Properties:
+            Path: /chatgpt/ask
+            Method: POST
+            ApiId: !Ref ChatGptApi
+
+Outputs:
+  EndpointURI:
+    Description: "API Endpoint URL for ChatGPT"
+    Value: !Sub "https://${ChatGptApi}.execute-api.${AWS::Region}.amazonaws.com/api-v1"
+    Export:
+      Name: ChatGptApiUrl

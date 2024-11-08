@@ -38,8 +38,9 @@ def lambda_handler(event, context):
     logger.info(f'Updating news with id: {news_id}')
     update_news(dynamodb, news_id, title, description)
 
-    logger.info(f'Saving pictures for news with id: {news_id}')
-    save_news_pictures(pictures, news_id)
+    if pictures:
+        logger.info(f'Saving pictures for news with id: {news_id}')
+        save_news_pictures(pictures, news_id)
     
     return build_response(
         200,

@@ -4,7 +4,6 @@
 
 import React from 'react'
 import Sidebar from '@/components/SideBar'
-import WeatherWidget from '@/components/WeatherWidget'
 
 interface DashboardLayoutProps {
     children: React.ReactNode

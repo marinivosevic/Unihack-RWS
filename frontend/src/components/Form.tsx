@@ -3,6 +3,7 @@
 
 import { useState } from 'react'
 import { z } from 'zod'
+import { Checkbox } from '@/components/CheckBox' // Import your custom Checkbox component
 
 // Define Zod schema
 const formSchema = z.object({
@@ -21,15 +22,15 @@ type FormData = z.infer<typeof formSchema> // Infer TypeScript type from schema
 
 export default function Form() {
     const [formData, setFormData] = useState<FormData>({
-        num_rooms: 3,
-        num_people: 3,
-        housearea: 75,
-        is_ac: true,
-        is_tv: true,
+        num_rooms: 0,
+        num_people: 0,
+        housearea: 0,
+        is_ac: false,
+        is_tv: false,
         is_flat: false,
-        ave_monthly_income: 3500,
-        num_children: 1,
-        is_urban: true,
+        ave_monthly_income: 0,
+        num_children: 0,
+        is_urban: false,
     })
 
     const [error, setError] = useState<z.ZodIssue[] | null>(null)
@@ -42,6 +43,13 @@ export default function Form() {
         setFormData((prevData) => ({
             ...prevData,
             [name]: type === 'checkbox' ? checked : Number(value) || value,
+        }))
+    }
+
+    const handleCheckboxChange = (name: keyof FormData, checked: boolean) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: checked,
         }))
     }
 
@@ -92,16 +100,16 @@ export default function Form() {
     return (
         <>
             {result && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="w-1/2 h-1/2 bg-primary-600 flex flex-col items-center justify-center p-8 rounded-md">
-                        <h1 className="text-3xl font-bold text-center text-white mb-8">
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300 ease-in-out">
+                    <div className="w-3/4 max-w-lg h-auto bg-primary-600 flex flex-col items-center justify-center p-10 rounded-2xl shadow-lg transform transition-all duration-300 ease-in-out scale-100">
+                        <h1 className="text-4xl font-bold text-center text-white mb-6">
                             Prediction Result
                         </h1>
-                        <p className="text-white font-bold text-center text-xl">
+                        <p className="text-white font-semibold text-center text-2xl mb-6">
                             Electricity Bill Prediction: {result} €
                         </p>
                         <button
-                            className="bg-primary-500 text-white p-2 w-1/2 rounded-md mt-12"
+                            className="bg-primary-500 hover:bg-primary-700 text-white p-3 w-1/3 rounded-lg mt-8 transition-all duration-200 ease-in-out transform hover:scale-105"
                             onClick={() => setResult(null)}
                         >
                             Close
@@ -116,7 +124,7 @@ export default function Form() {
                 <div className="flex flex-col w-1/2 space-y-2 h-auto">
                     <label className="text-white">Number of Rooms:</label>
                     <input
-                        className="p-2 rounded-md bg-gray-300"
+                        className="p-2 rounded-md bg-gray-300 border border-white shadow-sm shadow-white"
                         type="number"
                         name="num_rooms"
                         value={formData.num_rooms}
@@ -126,7 +134,7 @@ export default function Form() {
                 <div className="flex flex-col w-1/2 space-y-2 h-auto">
                     <label className="text-white">Number of People:</label>
                     <input
-                        className="p-2 rounded-md bg-gray-300"
+                        className="p-2 rounded-md bg-gray-300 border border-white shadow-sm shadow-white"
                         type="number"
                         name="num_people"
                         value={formData.num_people}
@@ -136,7 +144,7 @@ export default function Form() {
                 <div className="flex flex-col w-1/2 space-y-2 h-auto">
                     <label className="text-white">House Area (sq m):</label>
                     <input
-                        className="p-2 rounded-md bg-gray-300"
+                        className="p-2 rounded-md bg-gray-300 border border-white shadow-sm shadow-white"
                         type="number"
                         name="housearea"
                         value={formData.housearea}
@@ -145,40 +153,40 @@ export default function Form() {
                 </div>
                 <div className="flex flex-row w-1/2 space-x-2 h-auto">
                     <label className="text-white">Air Conditioning:</label>
-                    <input
-                        className="p-2 rounded-md bg-gray-300"
-                        type="checkbox"
-                        name="is_ac"
+                    <Checkbox
                         checked={formData.is_ac}
-                        onChange={handleChange}
+                        onCheckedChange={(checked) =>
+                            handleCheckboxChange('is_ac', checked as boolean)
+                        }
+                        className="m-1 bg-white"
                     />
                 </div>
                 <div className="flex flex-row w-1/2 space-x-2 h-auto">
                     <label className="text-white">TV:</label>
-                    <input
-                        className="p-2 rounded-md bg-gray-300"
-                        type="checkbox"
-                        name="is_tv"
+                    <Checkbox
                         checked={formData.is_tv}
-                        onChange={handleChange}
+                        onCheckedChange={(checked) =>
+                            handleCheckboxChange('is_tv', checked as boolean)
+                        }
+                        className="m-1 bg-white"
                     />
                 </div>
                 <div className="flex flex-row w-1/2 space-x-2 h-auto">
-                    <label className="text-white">Flat:</label>
-                    <input
-                        className="p-2 rounded-md bg-gray-300"
-                        type="checkbox"
-                        name="is_flat"
+                    <label className="text-white">Do you live in a flat:</label>
+                    <Checkbox
                         checked={formData.is_flat}
-                        onChange={handleChange}
+                        onCheckedChange={(checked) =>
+                            handleCheckboxChange('is_flat', checked as boolean)
+                        }
+                        className="m-1 bg-white"
                     />
                 </div>
                 <div className="flex flex-col w-1/2 space-y-2 h-auto">
                     <label className="text-white">
-                        Average Monthly Income:
+                        Average Monthly Income(€):
                     </label>
                     <input
-                        className="p-2 rounded-md bg-gray-300"
+                        className="p-2 rounded-md bg-gray-300 border border-white shadow-sm shadow-white"
                         type="number"
                         name="ave_monthly_income"
                         value={formData.ave_monthly_income}
@@ -188,7 +196,7 @@ export default function Form() {
                 <div className="flex flex-col w-1/2 space-y-2 h-auto">
                     <label className="text-white">Number of Children:</label>
                     <input
-                        className="p-2 rounded-md bg-gray-300"
+                        className="p-2 rounded-md bg-gray-300 border border-white shadow-sm shadow-white"
                         type="number"
                         name="num_children"
                         value={formData.num_children}
@@ -196,13 +204,15 @@ export default function Form() {
                     />
                 </div>
                 <div className="flex flex-row w-1/2 space-x-2 h-auto">
-                    <label className="text-white">Urban Area:</label>
-                    <input
-                        className="p-2 rounded-full bg-gray-300"
-                        type="checkbox"
-                        name="is_urban"
+                    <label className="text-white">
+                        Do you live in an urban area:
+                    </label>
+                    <Checkbox
                         checked={formData.is_urban}
-                        onChange={handleChange}
+                        onCheckedChange={(checked) =>
+                            handleCheckboxChange('is_urban', checked as boolean)
+                        }
+                        className="m-1 bg-white"
                     />
                 </div>
 

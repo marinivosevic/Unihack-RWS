@@ -72,6 +72,8 @@ def create_ticket(dynamodb, sender, city, ticket, picture):
 
     global _LAMBDA_S3_CLIENT_FOR_TICKET_PICTURES
     s3 = LambdaS3Class(_LAMBDA_S3_CLIENT_FOR_TICKET_PICTURES)
+    
+    id = str(uuid.uuid4())
 
     is_saved = save_image_to_s3(s3.client, s3.bucket_name, id, decoded_picture)
 
@@ -82,8 +84,6 @@ def create_ticket(dynamodb, sender, city, ticket, picture):
                 'message': 'We could not create your ticket. Please try again or contact support.'
             }
         )
-    
-    id = str(uuid.uuid4())
     
     add_ticket_to_the_table(dynamodb, {
         'id': id,

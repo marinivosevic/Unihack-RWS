@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: 'AWS::Serverless-2016-10-31'
 Description: >
-  Electricity Prediction AI
+  Stack for ai deployments
 
 # Global Settings
 Globals:
@@ -24,13 +24,12 @@ Resources:
           - "*"
 
   # Lambda Function
-  ElectricityBillPredictor:
+  CostOfLivingPredictor:
     Type: AWS::Serverless::Function
     Properties:
       Handler: lambda_handler.lambda_handler
       Runtime: python3.12
-      CodeUri: ./lambda
-      Description: 'Electricity Predictor'
+      CodeUri: ./cost_of_living_predictor
       Policies:
         - Version: '2012-10-17'
           Statement:
@@ -39,10 +38,10 @@ Resources:
               Action:
                 - "dynamodb:*"
       Events:
-        ElectricityBillPredictorEndpoint:
+        CostOfLivingEndpoint:
           Type: HttpApi 
           Properties:
-            Path: /bill/electricity/predict
+            Path: /bill/predict
             Method: POST
             ApiId: !Ref AiModelApi
   

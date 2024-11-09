@@ -1,12 +1,12 @@
-import Form from '@/components/Form'
+import FormElectricity from '@/components/Form'
 
 export default function Page() {
     return (
         <div>
             <h1 className="text-3xl font-bold text-start text-white mb-8">
-                Household Information Form
+                Cost of living prediction
             </h1>
-            <Form />
+            <FormElectricity />
         </div>
     )
 }

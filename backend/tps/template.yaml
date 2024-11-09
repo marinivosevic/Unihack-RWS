@@ -54,6 +54,7 @@ Resources:
               Resource: "*"
               Action:
                 - "dynamodb:*"
+                - "secretsmanager:GetSecretValue"
       Events:
         GetAllSuperchargersInACityEndpoint:
           Type: HttpApi 

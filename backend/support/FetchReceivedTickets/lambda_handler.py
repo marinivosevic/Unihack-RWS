@@ -1,4 +1,5 @@
 from boto3.dynamodb.conditions import Attr
+from datetime import datetime
 import logging
 
 logger = logging.getLogger("FetchReceivedTickets")
@@ -44,10 +45,12 @@ def lambda_handler(event, context):
         for ticket in tickets:
             ticket['picture'], _ = get_image_from_s3(s3.client, s3.bucket_name, ticket['id'])
 
+        sorted_tickets = sort_tickets(tickets)
+
         return build_response(
             200,
             {
-                'tickets': tickets
+                'tickets': sorted_tickets
             }
         )
 
@@ -60,3 +63,10 @@ def lambda_handler(event, context):
                 'message': 'We could not fetch tickets sent to you. Please try again or contact support.'
             }
         )
+
+def sort_tickets(tickets):
+    logger.info("Sorting tickets.")
+    sorted_tickets = sorted(tickets, key=lambda x: datetime.strptime(x.get('published_at', '2024-01-01 10:10:10'), "%Y-%m-%d %H:%M:%S"), reverse=True)
+
+    logger.info(f"Sorted tickets: {sorted_tickets}")
+    return sorted_tickets

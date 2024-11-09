@@ -53,7 +53,7 @@ def lambda_handler(event, context):
 
 def sort_news(news):
     logger.info("Sorting news.")
-    news_users = sorted(news, key=lambda x: datetime.strptime(x.get('published_at', '2024-01-01 10:10:10'), "%Y-%m-%d %H:%M:%S"), reverse=True)
+    sorted_news = sorted(news, key=lambda x: datetime.strptime(x.get('published_at', '2024-01-01 10:10:10'), "%Y-%m-%d %H:%M:%S"), reverse=True)
 
-    logger.info(f"Sorted news: {news_users}")
-    return news_users
+    logger.info(f"Sorted news: {sorted_news}")
+    return sorted_news

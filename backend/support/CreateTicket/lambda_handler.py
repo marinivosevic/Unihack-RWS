@@ -2,6 +2,7 @@ import logging
 import uuid
 import json
 import base64
+from datetime import datetime
 
 logger = logging.getLogger("CreateTicket")
 logger.setLevel(logging.INFO)
@@ -65,15 +66,6 @@ def lambda_handler(event, context):
 
 
 def create_ticket(dynamodb, sender, city, ticket, picture):
-    id = str(uuid.uuid4())
-    
-    add_ticket_to_the_table(dynamodb, {
-        'id': id,
-        'sender': sender,
-        'city': city,
-        'ticket': ticket
-    })
-
     logger.info('Adding ticket picture to s3.')
 
     decoded_picture = base64.b64decode(picture)
@@ -81,7 +73,25 @@ def create_ticket(dynamodb, sender, city, ticket, picture):
     global _LAMBDA_S3_CLIENT_FOR_TICKET_PICTURES
     s3 = LambdaS3Class(_LAMBDA_S3_CLIENT_FOR_TICKET_PICTURES)
 
-    save_image_to_s3(s3.client, s3.bucket_name, id, decoded_picture)
+    is_saved = save_image_to_s3(s3.client, s3.bucket_name, id, decoded_picture)
+
+    if not is_saved:
+        return build_response(
+            400,
+            {
+                'message': 'We could not create your ticket. Please try again or contact support.'
+            }
+        )
+    
+    id = str(uuid.uuid4())
+    
+    add_ticket_to_the_table(dynamodb, {
+        'id': id,
+        'sender': sender,
+        'city': city,
+        'ticket': ticket,
+        'published_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    })
 
     logger.info('Ticket created successfully.')
 

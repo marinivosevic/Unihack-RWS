@@ -1,5 +1,5 @@
 import logging
-import datetime
+from datetime import datetime
 from boto3.dynamodb.conditions import Attr
 
 logger = logging.getLogger("GetAllNewsForCity")

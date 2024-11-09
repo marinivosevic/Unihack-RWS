@@ -4,10 +4,22 @@ import { ComposableMap, Geographies, Geography } from 'react-simple-maps'
 import croatiaGeo from '../../../app/utils/Croatia.geo.json'
 import serbiaGeo from '../../../app/utils/Serbia.geo.json'
 import romaniaGeo from '../../../app/utils/Romania.geo.json'
+import Link from 'next/link'
 interface CountryMapProps {
     params: {
         name: string
     }
+}
+
+interface SupportedCities {
+    [region: string]: string[]
+}
+
+const supportedCities: SupportedCities = {
+    'Primorsko-goranska': ['Rijeka'],
+    Zagreb: ['Zagreb'],
+    Timis: ['Timisoara'],
+    // Add more regions and their supported cities here
 }
 
 const CountryMap: React.FC<CountryMapProps> = ({ params }) => {
@@ -17,45 +29,72 @@ const CountryMap: React.FC<CountryMapProps> = ({ params }) => {
 
     const [selectedCountry, setSelectedCountry] = useState<string | null>(null)
     const [hoveredCountry, setHoveredCountry] = useState<string | null>(null)
+    let geographies
+    const countryName = params.name
+    if (countryName === 'Croatia') {
+        geographies = croatiaGeo
+    } else if (countryName === 'Serbia') {
+        geographies = serbiaGeo
+    } else if (countryName === 'Romania') {
+        geographies = romaniaGeo
+    }
 
-    const geographies =
-        params.name.toLowerCase() === 'croatia' ? croatiaGeo : serbiaGeo
+    const cities = selectedCountry ? supportedCities[selectedCountry] || [] : []
 
     return (
-        <div className="bg-primary-800" style={{ position: 'relative' }}>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div
+            className="bg-primary-800"
+            style={{ position: 'relative', display: 'flex' }}
+        >
+            <div
+                className="bg-primary-800 relative"
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'end',
+                    alignItems: 'end',
+                    flex: 1,
+                }}
+            >
+                <h1 className="text-4xl text-white flex justify-end items-end mb-4 mr-12">
+                    Choose your Region
+                </h1>
                 <ComposableMap
                     projection="geoMercator"
                     width={800}
                     height={600}
                     projectionConfig={{
-                        scale: 3200,
+                        scale:
+                            params.name.toLowerCase() === 'romania'
+                                ? 2500
+                                : 3200,
                         center:
                             params.name.toLowerCase() === 'croatia'
-                                ? [16.5, 43]
-                                : [21.0, 41.5],
+                                ? [18.5, 43]
+                                : params.name.toLowerCase() === 'serbia'
+                                  ? [25.0, 43.0]
+                                  : [27.5, 44.0],
                     }}
                     stroke="black"
-                    stroke-width={0.25}
+                    strokeWidth={0.25}
                 >
                     <Geographies geography={geographies}>
                         {({ geographies }) =>
                             geographies.map((geo) => {
-                                const countryName = geo.properties.name
+                                const regionName = geo.properties.name
                                 const isSelected =
-                                    selectedCountry === countryName
+                                    selectedCountry === regionName
 
                                 return (
                                     <Geography
                                         key={geo.rsmKey}
                                         geography={geo}
                                         onClick={() => {
-                                            setSelectedCountry(countryName)
-                                            console.log(countryName)
-                                            // Add your routing logic here
+                                            setSelectedCountry(regionName)
+                                            console.log(regionName)
                                         }}
                                         onMouseEnter={() => {
-                                            setHoveredCountry(countryName)
+                                            setHoveredCountry(regionName)
                                         }}
                                         onMouseLeave={() => {
                                             setHoveredCountry(null)
@@ -83,6 +122,26 @@ const CountryMap: React.FC<CountryMapProps> = ({ params }) => {
                     </Geographies>
                 </ComposableMap>
             </div>
+            {selectedCountry && (
+                <div
+                    style={{
+                        width: '200px',
+                        padding: '20px',
+                        backgroundColor: '#f0f0f0',
+                        height: '600px',
+                        overflowY: 'auto',
+                    }}
+                >
+                    <h2 className="text-2xl mb-4">Supported Cities</h2>
+                    <ul>
+                        {cities.map((city) => (
+                            <li key={city} className="mb-2">
+                                <Link href={`/home/${city}`}>{city}</Link>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
             {hoveredCountry && (
                 <div
                     style={{

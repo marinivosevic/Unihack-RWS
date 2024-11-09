@@ -3,18 +3,49 @@
 'use client'
 import React, { useState } from 'react'
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps'
-import { useRouter } from 'next/navigation' // Import useRouter
+import { useRouter } from 'next/navigation'
 import balkan from '../../app/utils/custom.geo.json'
 
 const Map = () => {
-    const router = useRouter() // Initialize router
+    const router = useRouter()
     const [selectedCountry, setSelectedCountry] = useState<string | null>(null)
+    const [tooltip, setTooltip] = useState<{ visible: boolean; name: string }>({
+        visible: false,
+        name: '',
+    })
 
     return (
         <div
-            className="bg-primary-700"
-            style={{ display: 'flex', justifyContent: 'center' }}
+            className="bg-primary-800 relative"
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
         >
+            <h1 className="text-4xl text-white flex justify-center items-center mb-4">
+                Choose your country
+            </h1>
+            {tooltip.visible && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: '10px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        padding: '5px 10px',
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        color: '#fff',
+                        borderRadius: '4px',
+                        pointerEvents: 'none',
+                        fontSize: '14px',
+                    }}
+                >
+                    {tooltip.name}
+                </div>
+            )}
+
             <ComposableMap
                 projection="geoMercator"
                 width={800}
@@ -25,7 +56,7 @@ const Map = () => {
                 }}
                 fill="#284a80"
                 stroke="black"
-                stroke-width={0.25}
+                strokeWidth={0.25}
             >
                 <Geographies geography={balkan}>
                     {({ geographies }) =>
@@ -42,6 +73,15 @@ const Map = () => {
                                         console.log(countryName)
                                         router.push(`/country/${countryName}`)
                                     }}
+                                    onMouseEnter={() =>
+                                        setTooltip({
+                                            visible: true,
+                                            name: countryName,
+                                        })
+                                    }
+                                    onMouseLeave={() =>
+                                        setTooltip({ visible: false, name: '' })
+                                    }
                                     style={{
                                         default: {
                                             fill: isSelected
@@ -50,7 +90,7 @@ const Map = () => {
                                             outline: 'none',
                                         },
                                         hover: {
-                                            fill: '#e34400', //? todO : color
+                                            fill: '#e34400',
                                             outline: 'none',
                                         },
                                         pressed: {

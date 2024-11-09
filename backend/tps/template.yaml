@@ -34,6 +34,21 @@ Resources:
         AllowMethods:
           - "*"
 
+  # DynamoDB Table definition
+  SuperchargersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: superchargers
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
   # Lambda Function
   GetAllSuperchargersInACityFunction:
     Type: AWS::Serverless::Function
@@ -45,6 +60,7 @@ Resources:
       CodeUri: ./
       Environment:
         Variables:
+          SUPERCHARGERS_TABLE_NAME: !Ref SuperchargersTable
           JWT_SECRET_NAME: !Ref JwtSecretName
           SECRETS_REGION_NAME: !Ref SecretsRegionName
       Policies:
@@ -61,6 +77,93 @@ Resources:
           Properties:
             Path: /superchargers/{city}
             Method: GET
+            ApiId: !Ref TpsApi
+
+  CreateNewSuperchargerInACityFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      CodeUri: ./
+      Environment:
+        Variables:
+          SUPERCHARGERS_TABLE_NAME: !Ref SuperchargersTable
+          JWT_SECRET_NAME: !Ref JwtSecretName
+          SECRETS_REGION_NAME: !Ref SecretsRegionName
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: "Allow"
+              Resource: "*"
+              Action:
+                - "dynamodb:*"
+                - "secretsmanager:GetSecretValue"
+      Events:
+        CreateNewSuperchargerInACityEndpoint:
+          Type: HttpApi 
+          Properties:
+            Path: /superchargers/{city}
+            Method: POST
+            ApiId: !Ref TpsApi
+
+  DeleteSuperchargerInACityFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      CodeUri: ./
+      Environment:
+        Variables:
+          SUPERCHARGERS_TABLE_NAME: !Ref SuperchargersTable
+          JWT_SECRET_NAME: !Ref JwtSecretName
+          SECRETS_REGION_NAME: !Ref SecretsRegionName
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: "Allow"
+              Resource: "*"
+              Action:
+                - "dynamodb:*"
+                - "secretsmanager:GetSecretValue"
+      Events:
+        DeleteSuperchargerInACityEndpoint:
+          Type: HttpApi 
+          Properties:
+            Path: /superchargers/{charger_id}
+            Method: DELETE
+            ApiId: !Ref TpsApi
+
+  UpdateSuperchargerInACityFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      CodeUri: ./
+      Environment:
+        Variables:
+          SUPERCHARGERS_TABLE_NAME: !Ref SuperchargersTable
+          JWT_SECRET_NAME: !Ref JwtSecretName
+          SECRETS_REGION_NAME: !Ref SecretsRegionName
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: "Allow"
+              Resource: "*"
+              Action:
+                - "dynamodb:*"
+                - "secretsmanager:GetSecretValue"
+      Events:
+        UpdateSuperchargerInACityEndpoint:
+          Type: HttpApi 
+          Properties:
+            Path: /superchargers/{charger_id}
+            Method: PUT
             ApiId: !Ref TpsApi
 
 Outputs:

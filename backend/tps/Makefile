@@ -10,3 +10,12 @@ build:
 
 build-GetAllSuperchargersInACityFunction:
 	$(MAKE) build LAMBDA_FILE=GetAllSuperchargersInACity/* ARTIFACTS_DIR=$(ARTIFACTS_DIR)
+
+build-CreateNewSuperchargerInACityFunction:
+	$(MAKE) build LAMBDA_FILE=CreateNewSuperchargerInACity/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
+
+build-DeleteSuperchargerInACityFunction:
+	$(MAKE) build LAMBDA_FILE=DeleteSuperchargerInACity/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
+
+build-UpdateSuperchargerInACityFunction:
+	$(MAKE) build LAMBDA_FILE=UpdateSuperchargerInACity/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)

@@ -1,3 +1,4 @@
+from boto3 import resource
 from os import environ
 import jwt
 import logging
@@ -9,6 +10,23 @@ from aws_lambda_powertools.middleware_factory import lambda_handler_decorator
 
 logger = logging.getLogger("TpsCommon")
 logger.setLevel(logging.INFO)
+
+_LAMBDA_SUPERCHARGERS_TABLE_RESOURCE = {
+    "resource" : resource('dynamodb'),
+    "table_name" : environ.get("SUPERCHARGERS_TABLE_NAME", "test_table")
+}
+
+class LambdaDynamoDBClass:
+    """
+    AWS DynamoDB Resource Class
+    """
+    def __init__(self, lambda_dynamodb_resource):
+        """
+        Initialize a DynamoDB Resource
+        """
+        self.resource = lambda_dynamodb_resource["resource"]
+        self.table_name = lambda_dynamodb_resource["table_name"]
+        self.table = self.resource.Table(self.table_name)
 
 @lambda_handler_decorator
 def lambda_middleware(handler, event, context):

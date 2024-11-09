@@ -18,7 +18,11 @@ import {
 
 export default function MyMap() {
     const [selectedType, setSelectedType] = useState<string | null>(null)
-
+    const cityCoordinates = {
+        Rijeka: [45.3271, 14.4422],
+        Zagreb: [45.815, 15.9819],
+        Timisoara: [45.7489, 21.2087],
+    }
     const handleSelectChange = (value: string) => {
         setSelectedType(value)
     }

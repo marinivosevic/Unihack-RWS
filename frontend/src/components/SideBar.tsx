@@ -5,7 +5,13 @@
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { FaHome, FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa' // Using react-icons for icons
+import {
+    FaHome,
+    FaUser,
+    FaCog,
+    FaSignOutAlt,
+    FaTicketAlt,
+} from 'react-icons/fa' // Using react-icons for icons
 import Image from 'next/image'
 import * as images from '@/constants/images'
 import Cookies from 'js-cookie'
@@ -20,6 +26,7 @@ const Sidebar: React.FC = () => {
             href: '/dashboard/bill_prediction',
             icon: <FaUser />,
         },
+        { name: 'Tickets', href: '/dashboard/tickets', icon: <FaTicketAlt /> },
         { name: 'Profile', href: '/dashboard/profile', icon: <FaUser /> },
         { name: 'Settings', href: '/dashboard/settings', icon: <FaCog /> },
     ]

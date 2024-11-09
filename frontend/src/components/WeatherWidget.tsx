@@ -5,6 +5,7 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import DailyForecastItem from '@/components/DailyForecastItem'
 import { fetchCoordinates, WeatherData } from '@/utils/weatherUtils'
+import Cookies from 'js-cookie'
 
 const WeatherWidget: React.FC = () => {
     const [weather, setWeather] = useState<WeatherData[]>([])
@@ -12,7 +13,7 @@ const WeatherWidget: React.FC = () => {
     const [error, setError] = useState<string | null>(null)
 
     const API_KEY = process.env.NEXT_PUBLIC_OPEN_WEATHER_KEY
-    const CITY = 'Rijeka'
+    const CITY = Cookies.get('city') || 'Rijeka'
     const UNITS = 'metric'
     const COUNT = 40
 

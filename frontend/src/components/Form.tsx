@@ -4,6 +4,7 @@
 import { useState } from 'react'
 import { z } from 'zod'
 import { Checkbox } from '@/components/CheckBox' // Import your custom Checkbox component
+import Cookies from 'js-cookie'
 
 // Define Zod schema
 const formSchema = z.object({
@@ -68,6 +69,7 @@ export default function FormElectricity() {
             num_children: data.num_children,
             is_urban: data.is_urban ? 1 : 0,
             year: new Date().getFullYear(),
+            city: Cookies.get('city'),
         }
 
         const response = await fetch(`${API_URL}/bill/electricity`, {

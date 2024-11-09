@@ -4,7 +4,8 @@ import { ComposableMap, Geographies, Geography } from 'react-simple-maps'
 import croatiaGeo from '../../../app/utils/Croatia.geo.json'
 import serbiaGeo from '../../../app/utils/Serbia.geo.json'
 import romaniaGeo from '../../../app/utils/Romania.geo.json'
-import Link from 'next/link'
+import Cookies from 'js-cookie'
+
 interface CountryMapProps {
     params: {
         name: string
@@ -40,6 +41,11 @@ const CountryMap: React.FC<CountryMapProps> = ({ params }) => {
     }
 
     const cities = selectedCountry ? supportedCities[selectedCountry] || [] : []
+
+    const handleCLick = (city: string) => {
+        Cookies.set('city', city)
+        window.location.href = '/dashboard'
+    }
 
     return (
         <div
@@ -136,7 +142,9 @@ const CountryMap: React.FC<CountryMapProps> = ({ params }) => {
                     <ul>
                         {cities.map((city) => (
                             <li key={city} className="mb-2">
-                                <Link href={`/home/${city}`}>{city}</Link>
+                                <button onClick={() => handleCLick(city)}>
+                                    {city}
+                                </button>
                             </li>
                         ))}
                     </ul>

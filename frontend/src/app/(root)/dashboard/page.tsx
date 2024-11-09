@@ -17,7 +17,7 @@ interface NewsItemProps {
 }
 
 const DashboardHome: React.FC = () => {
-    const city = 'Petrinja'
+    const city = Cookies.get('city')
     const [loading, setLoading] = React.useState<boolean>(true)
     const [loaderValue, setLoaderValue] = React.useState<number>(0)
     const [news, setNews] = React.useState<NewsItemProps[]>([])

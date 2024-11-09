@@ -8,10 +8,17 @@ module.exports = {
       colors: {
         ...defaultTheme.colors, // Include default colors
         primary: {
-          0: "#0A5EFE",
-          80: "#0240B4",
-          95: "#01246E",
-          100: "#000D36",
+          50: "#f1f7fd",
+          100: "#deeefb",
+          200: "#c5e2f8",
+          300: "#9dd1f3",
+          400: "#6fb6eb",
+          500: "#4d99e4",
+          600: "#387ed8",
+          700: "#2f69c6",
+          800: "#2c56a1",
+          900: "#284a80",
+          950: "#1c2d4c",
         },
         secondary: {
           0: "#00D0B4",

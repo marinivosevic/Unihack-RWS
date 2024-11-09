@@ -19,23 +19,23 @@ const TabIcon = ({
 }) => (
   <View
     className={`flex flex-row justify-center items-center rounded-full ${
-      focused ? "bg-secondary-100" : ""
+      focused ? "bg-primary-900" : ""
     } ${styles}`}
   >
     <View
       className={`rounded-full w-[30px] h-[30px] items-center justify-center ${
-        focused ? "bg-secondary-100" : ""
+        focused ? "bg-primary-900" : ""
       }`}
     >
       <Image
         source={icon}
-        tintColor={focused ? "black" : "white"}
+        tintColor={focused ? "white" : "black"}
         resizeMode="contain"
         className={`${focused ? "w-6 h-6" : "w-7 h-7"} ${iconStyles}`}
       />
     </View>
     {focused && (
-      <Text className={`text-black text-xs font-medium p-2`}>{title}</Text>
+      <Text className={`text-white text-xs font-medium p-2`}>{title}</Text>
     )}
   </View>
 );
@@ -47,7 +47,7 @@ const TabsLayout = () => {
         screenOptions={{
           tabBarShowLabel: false,
           tabBarStyle: {
-            backgroundColor: "#096B72",
+            backgroundColor: "#9dd1f3",
             position: "absolute",
             borderTopLeftRadius: 32,
             borderTopRightRadius: 32,
@@ -71,12 +71,12 @@ const TabsLayout = () => {
           }}
         />
         <Tabs.Screen
-          name="notifications"
+          name="map"
           options={{
-            title: "Notifications",
+            title: "Map",
             headerShown: false,
             tabBarIcon: ({ focused }) => (
-              <TabIcon focused={focused} icon={icons.bell} title="Activity" />
+              <TabIcon focused={focused} icon={icons.map} title="Map" />
             ),
           }}
         />

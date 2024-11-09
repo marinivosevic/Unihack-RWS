@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import Modal from "react-native-modal";
 
 import * as icons from "@/constants/icons";
 import * as images from "@/constants/images";

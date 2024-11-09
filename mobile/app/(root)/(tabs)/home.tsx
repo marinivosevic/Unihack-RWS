@@ -6,8 +6,8 @@ import { router } from "expo-router";
 
 import * as icons from "@/constants/icons";
 import * as images from "@/constants/images";
-import CustomSearch from "@/components/CustomSearch";
-import EventCard from "@/components/EventCard";
+import WeatherWidget from "@/components/WeatherWidget";
+import NewsItem from "@/components/NewsItem";
 
 const Home = () => {
   const [query, setQuery] = useState<string>("");
@@ -17,36 +17,28 @@ const Home = () => {
   };
 
   return (
-    <SafeAreaView className="h-full bg-primary">
+    <SafeAreaView className="h-full bg-primary-900">
       <ScrollView>
         <View className="flex flex-row items-center justify-between w-full py-2 px-5">
-          <View className="flex flex-row items-center mt-5">
-            <Image source={images.logo} className="h-10 w-10" />
-            <Text className="text-2xl font-bold text-txt-100 ml-2">
-              RiConnect
-            </Text>
+          <View className="flex flex-row items-center justify-center mt-5">
+            <View className="flex flex-row items-center">
+              <Image source={images.logo} className="h-10 w-12" />
+              <Text className="text-2xl font-bold text-white ml-2">
+                UrbanPulse
+              </Text>
+            </View>
           </View>
+          <View className="flex flex-row items-center justify-center bg-white rounded-full w-12 h-12 mt-5" />
         </View>
-        <View className="flex flex-row items-center justify-between w-full px-5 mt-10">
-          <CustomSearch
-            onChangeText={onTextChange}
-            searchValue={query}
-            placeholder="Search artists..."
-          />
-          <TouchableOpacity
-            onPress={() => {
-              router.push("/(root)/chat");
-            }}
-            className="bg-primary-0 p-4 w-[50px] h-[50px] rounded-full items-center justify-center"
-          >
-            <Image source={icons.filter} className="h-4 w-[18px]" />
-          </TouchableOpacity>
-        </View>
-        <View className="flex flex-col items-center justify-center mt-5">
-          <EventCard />
-          <EventCard />
-          <EventCard />
-        </View>
+        <Text className="text-white text-2xl font-bold px-5 mt-5">
+          Weather Forecast
+        </Text>
+        <WeatherWidget />
+        <Text className="text-white text-2xl font-bold px-5 mt-5">
+          News Feed
+        </Text>
+        <NewsItem />
+        <NewsItem />
       </ScrollView>
     </SafeAreaView>
   );

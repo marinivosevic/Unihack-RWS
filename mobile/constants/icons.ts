@@ -9,6 +9,7 @@ import google from "../assets/icons/google.png";
 import arrowDown from "../assets/icons/arrowDown.png";
 import arrowUp from "../assets/icons/arrowUp.png";
 import filter from "../assets/icons/filter.png";
+import map from "../assets/icons/map.png";
 
 export {
   home,
@@ -22,4 +23,5 @@ export {
   arrowDown,
   arrowUp,
   filter,
+  map,
 };

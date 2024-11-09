@@ -1,7 +1,11 @@
 'use client'
 import React, { useState } from 'react'
 import { Map, Marker } from 'pigeon-maps'
-import { BusFront, Trash } from '@vectopus/atlas-icons-react'
+import {
+    BusFront,
+    Trash,
+    ElectricBatteryCharge,
+} from '@vectopus/atlas-icons-react'
 import {
     Select,
     SelectContent,
@@ -41,12 +45,33 @@ export default function MyMap() {
             <Map height={950} defaultCenter={[50.879, 4.6997]} defaultZoom={11}>
                 {selectedType === 'bus' && (
                     <Marker width={25} anchor={[50.879, 4.6997]}>
-                        <BusFront color="#2c56a1" weight="bold" />
+                        <div className="pin-icon">
+                            <div className="icon-container">
+                                <BusFront color="#2c56a1" weight="bold" />
+                            </div>
+                        </div>
                     </Marker>
                 )}
                 {selectedType === 'trash' && (
                     <Marker width={25} anchor={[50.872, 4.6997]}>
-                        <Trash color="#04900b" weight="bold" />
+                        <div className="pin-icon">
+                            <div className="icon-container">
+                                <Trash color="#04900b" weight="bold" />
+                            </div>
+                        </div>
+                    </Marker>
+                )}
+                {selectedType === 'charger' && (
+                    <Marker width={25} anchor={[50.869, 4.6997]}>
+                        <div className="pin-icon">
+                            <div className="icon-container">
+                                <ElectricBatteryCharge
+                                    color="#e7c700"
+                                    size={24}
+                                    weight="bold"
+                                />
+                            </div>
+                        </div>
                     </Marker>
                 )}
             </Map>

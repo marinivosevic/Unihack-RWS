@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: 'AWS::Serverless-2016-10-31'
+Description: >
+  Stack for third party services
+
+# Global Settings
+Globals:
+  Function:
+    Timeout: 60
+    MemorySize: 256
+
+Resources:
+  # API Gateway
+  TpsApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: api-v1
+      CorsConfiguration:
+        AllowOrigins:
+          - "*"
+        AllowHeaders:
+          - "*"
+        AllowMethods:
+          - "*"
+
+  # Lambda Function
+  GetAllSuperchargersInACityFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      CodeUri: ./
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: "Allow"
+              Resource: "*"
+              Action:
+                - "dynamodb:*"
+      Events:
+        GetAllSuperchargersInACityEndpoint:
+          Type: HttpApi 
+          Properties:
+            Path: /superchargers/{city}
+            Method: GET
+            ApiId: !Ref TpsApi
+
+Outputs:
+  EndpointURI:
+    Description: "API Endpoint URL"
+    Value: !Sub "https://${TpsApi}.execute-api.${AWS::Region}.amazonaws.com/api-v1"
+    Export:
+      Name: TpsApiUrl

@@ -7,7 +7,7 @@ import WeatherWidget from '@/components/WeatherWidget'
 import Cookies from 'js-cookie'
 import NewsItem from '@/components/NewsItem'
 import { Progress } from '@/components/ui/progress'
-
+import Chatbot from '@/components/chatbot'
 interface NewsItemProps {
     city: string
     description: string
@@ -40,6 +40,7 @@ const DashboardHome: React.FC = () => {
             const data = await response.json()
             setNews(data.news)
             setLoaderValue(100)
+            console.log(data)
             setTimeout(() => {
                 setLoading(false)
             }, 500)
@@ -63,16 +64,22 @@ const DashboardHome: React.FC = () => {
             </h1>
             {loading && <Progress value={loaderValue} className="w-full" />}
             <div className="grid grid-cols-1 gap-4 p-4">
-                {news.map((item) => (
-                    <NewsItem
-                        key={item.id}
-                        id={item.id}
-                        title={item.title}
-                        description={item.description}
-                        city={item.city}
-                        pictures={item.pictures} // Pass base64-encoded images
-                    />
-                ))}
+                {news
+                    .slice()
+                    .reverse()
+                    .map((item) => (
+                        <NewsItem
+                            key={item.id}
+                            id={item.id}
+                            title={item.title}
+                            description={item.description}
+                            city={item.city}
+                            pictures={item.pictures} // Pass base64-encoded images
+                        />
+                    ))}
+            </div>
+            <div className="mt-8">
+                <Chatbot />
             </div>
         </div>
     )

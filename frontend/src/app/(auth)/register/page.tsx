@@ -80,7 +80,7 @@ export default function RegisterPage() {
 
             // Store the user data in context and navigate to dashboard
             setUser(data) // Set user data
-            router.push('/dashboard') // Redirect to the dashboard
+            router.push('/login') // Redirect to the dashboard
             setIsSubmitting(false)
         } catch (error: any) {
             console.error('Error:', error)

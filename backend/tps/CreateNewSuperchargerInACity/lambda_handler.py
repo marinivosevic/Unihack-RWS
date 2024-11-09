@@ -1,6 +1,7 @@
 import logging
 import json
 import uuid
+from boto3.dynamodb.types import Decimal
 
 logger = logging.getLogger("CreateNewSuperchargerInACity")
 logger.setLevel(logging.INFO)
@@ -45,8 +46,8 @@ def lambda_handler(event, context):
         Item={
             'id': charger_id,
             'city': city,
-            'longitude': longitude,
-            'latitude': latitude,
+            'longitude': Decimal(longitude),
+            'latitude': Decimal(latitude),
             'charger_name': charger_name
         }
     )

@@ -1,0 +1,3 @@
+xgboost
+scikit-learn
+requests==2.32.3

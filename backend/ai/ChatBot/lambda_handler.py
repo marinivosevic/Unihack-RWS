@@ -4,8 +4,11 @@ import logging
 import requests
 import boto3
 
-logger = logging.getLogger("ChatGPTLambdaHandler")
+logger = logging.getLogger("ChatBotLambda")
 logger.setLevel(logging.INFO)
+
+API_URL = "https://api.openai.com/v1/chat/completions"
+STARTING_PROMPT = "You are a helpful assistant. Please answer the following question about city of Rijeka in Croatia. Don't mention you are ChatGPT or that your dataset is limited by time. Question: "
 
 def get_secrets_from_aws_secrets_manager(secret_id, region_name):
     try:
@@ -38,27 +41,30 @@ def lambda_handler(event, context):
         api_key = secrets['openai_api_key']
 
         if not api_key:
-            raise ValueError("API key is missing.")
-
-        api_url = "https://api.openai.com/v1/chat/completions"
-
-        # Pre-made starting prompt part
-        starting_prompt = "You are a helpful assistant. Please answer the following question about city of Rijeka in Croatia. Don't mention you are ChatGPT or that your dataset is limited by time. Question: "
+            return {
+                'statusCode': 400,
+                'headers': {
+                    'Content-Type': 'application/json'
+                },
+                'body': json.dumps({
+                    'message': 'Cannot find api key'
+                })
+            }
 
         # Extract the question from the body
         question = body.get('question', 'What is the capital of Croatia?')
 
         # Prepare the prompt for the API
-        prompt = f"{starting_prompt} {question}"
+        prompt = f"{STARTING_PROMPT} {question}"
 
         # Create the payload for the OpenAI API
         payload = {
-            "model": "gpt-4o-mini",  # Use 'gpt-3.5-turbo' if GPT-4 is not available
+            "model": "gpt-4o-mini",
             "messages": [
                 {"role": "user", "content": prompt}
             ],
-            "max_tokens": 500,  # Adjust as needed
-            "temperature": 0.7   # Adjust as needed
+            "max_tokens": 500,
+            "temperature": 0.7
         }
 
         # Set headers for the request
@@ -68,7 +74,7 @@ def lambda_handler(event, context):
         }
 
         # Make the API request
-        response = requests.post(api_url, headers=headers, json=payload)
+        response = requests.post(API_URL, headers=headers, json=payload)
 
         # Check for a successful response
         if response.status_code == 200:
@@ -93,7 +99,7 @@ def lambda_handler(event, context):
                     'Content-Type': 'application/json'
                 },
                 'body': json.dumps({
-                    'error': response.text
+                    'message': response.text
                 })
             }
 
@@ -105,6 +111,6 @@ def lambda_handler(event, context):
                 'Content-Type': 'application/json'
             },
             'body': json.dumps({
-                'error': str(e)
+                'message': str(e)
             })
         }

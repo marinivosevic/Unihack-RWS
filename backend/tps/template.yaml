@@ -3,6 +3,17 @@ Transform: 'AWS::Serverless-2016-10-31'
 Description: >
   Stack for third party services
 
+Parameters:
+  JwtSecretName:
+    Type: String
+    Description: Name of the secret in Secrets Manager that contains the JWT secret
+    Default: python-lambda-app/prod/jwt-secret
+
+  SecretsRegionName:
+    Type: String
+    Description: Region name where the secrets are stored
+    Default: eu-central-1
+
 # Global Settings
 Globals:
   Function:
@@ -32,6 +43,10 @@ Resources:
       Handler: lambda_handler.lambda_handler
       Runtime: python3.12
       CodeUri: ./
+      Environment:
+        Variables:
+          JWT_SECRET_NAME: !Ref JwtSecretName
+          SECRETS_REGION_NAME: !Ref SecretsRegionName
       Policies:
         - Version: '2012-10-17'
           Statement:

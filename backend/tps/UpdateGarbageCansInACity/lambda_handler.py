@@ -57,10 +57,6 @@ def update_container(dynamodb, container_id, X, Y):
         update_expression += "Y = :Y, "
         expression_attribute_values[':Y'] = Decimal(str(Y))
 
-    if container_id is not None:
-        update_expression += "container_id = :container_id, "
-        expression_attribute_values[':container_id'] = container_id
-
     # Check if there is anything to update
     if expression_attribute_values:
         update_expression = update_expression.rstrip(', ')

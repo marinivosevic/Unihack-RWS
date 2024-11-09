@@ -52,7 +52,7 @@ Resources:
   GarbageCansTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: superchargers
+      TableName: garbage_cans
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: S

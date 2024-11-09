@@ -21,7 +21,7 @@ build-UpdateSuperchargerInACityFunction:
 	$(MAKE) build LAMBDA_FILE=UpdateSuperchargerInACity/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
 
 build-GetAllGarbageCansInACityFunction:
-	$(MAKE) build LAMBDA_FILE=GetAllGarbageCansInACity/* ARTIFACTS_DIR=$(ARTIFACTS_DIR)
+	$(MAKE) build LAMBDA_FILE=GetAllGarbageCansInACity/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
 
 build-CreateNewGarbageCansInACityFunction:
 	$(MAKE) build LAMBDA_FILE=CreateNewGarbageCansInACity/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)

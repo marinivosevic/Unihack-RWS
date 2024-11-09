@@ -49,10 +49,10 @@ const Chatbot: React.FC = () => {
     return (
         <>
             <button
-                className="fixed bottom-4 right-4 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none"
+                className="fixed bottom-4  right-4 bg-quinterny-500 text-white p-4 rounded-full shadow-lg hover:bg-quinterny-700 focus:outline-none"
                 onClick={() => setIsOpen(true)}
             >
-                <ChatDots size={24} />
+                <ChatDots size={32} />
             </button>
 
             {isOpen && (
@@ -76,7 +76,7 @@ const Chatbot: React.FC = () => {
                                 <span
                                     className={`px-3 py-1 rounded ${
                                         msg.sender === 'user'
-                                            ? 'bg-blue-500 text-white'
+                                            ? 'bg-quinterny-500 text-white'
                                             : 'bg-gray-200 text-gray-800'
                                     }`}
                                 >

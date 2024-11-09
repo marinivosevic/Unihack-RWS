@@ -32,6 +32,7 @@ const Sidebar: React.FC = () => {
         { name: 'Tickets', href: '/dashboard/tickets', icon: <FaTicketAlt /> },
         { name: 'Profile', href: '/dashboard/profile', icon: <FaUser /> },
         { name: 'Settings', href: '/dashboard/settings', icon: <FaCog /> },
+        { name: 'Logout', href: '/login', icon: <FaSignOutAlt /> },
     ]
 
     const logout = () => {
@@ -40,10 +41,15 @@ const Sidebar: React.FC = () => {
     }
 
     return (
-        <div className="w-64 h-screen bg-primary-200/20 text-white flex flex-col fixed">
+        <div className="w-64  bg-primary-200/20 text-white flex flex-col ">
             {/* Logo or Brand Name */}
             <div className="flex flex-row items-center justify-start h-16 border-b border-primary-800 px-2">
-                <Image src={images.logo} alt="Logo" width={40} height={40} />
+                <Image
+                    src={images.noviLogo}
+                    alt="Logo"
+                    width={40}
+                    height={40}
+                />
                 <span className="text-2xl font-bold ml-2">UrbanPulse</span>
             </div>
 
@@ -52,8 +58,8 @@ const Sidebar: React.FC = () => {
                 {navLinks.map((link) => (
                     <Link key={link.name} href={link.href}>
                         <p
-                            className={`flex items-center p-2 rounded hover:bg-primary-800 transition-colors ${
-                                pathname === link.href ? 'bg-primary-800' : ''
+                            className={`flex items-center p-2 rounded hover:bg-quinterny-600 transition-colors ${
+                                pathname === link.href ? 'bg-quinterny-800' : ''
                             }`}
                         >
                             <span className="mr-3">{link.icon}</span>
@@ -71,14 +77,6 @@ const Sidebar: React.FC = () => {
                         </p>
                     </Link>
                 )}
-                <button onClick={logout} className="absolute bottom-2 w-[85%]">
-                    <p className="flex items-center p-2 rounded hover:bg-primary-800 transition-colors w-full">
-                        <span className="mr-3">
-                            <FaSignOutAlt />
-                        </span>
-                        Logout
-                    </p>
-                </button>
             </nav>
         </div>
     )

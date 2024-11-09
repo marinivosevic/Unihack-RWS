@@ -10,6 +10,9 @@ const config: Config = {
     ],
     theme: {
         extend: {
+            fontFamily: {
+                roboto: ['Roboto', 'sans-serif'],
+            },
             colors: {
                 ...defaultTheme.colors, // Include default colors
                 quinterny: {

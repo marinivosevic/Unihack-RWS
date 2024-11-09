@@ -61,7 +61,7 @@ export default function LoginPage() {
 
             // Store the user data in context
             setUser(data)
-            router.push('/Map')
+            router.push('/map')
             setIsSubmitting(false)
         } catch (error) {
             console.error('Error:', error)

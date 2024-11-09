@@ -16,6 +16,38 @@ import {
     SelectValue,
 } from '@/components/ui/select'
 import Cookies from 'js-cookie'
+import ContainersJson from '@/constants/container.json'
+
+// Define the interface for trash can records
+interface TrashCan {
+    _id: number
+    'GRAD-OPINA': string
+    NASELJE: string
+    'M_O ODBOR': string
+    'NAZIV ULICE': string
+    KBR: string
+    KBR_DOD: string
+    VRSTA_POSUDE: string
+    'INV.BR.': number
+    VOLUMEN: number
+    LOKACIJA: string
+    POSTOLJE: string
+    'VRSTA OTPADA': string
+    'TIP POSUDE': string
+    'KORISNIK POSUDE': string
+    X: string
+    Y: string
+}
+
+// Define the structure for Containers data
+interface ContainersData {
+    result: {
+        records: TrashCan[]
+    }
+}
+
+// Assert the type of the imported JSON data
+const Containers = ContainersJson as ContainersData
 
 export default function MyMap() {
     const [selectedType, setSelectedType] = useState<string | null>(null)
@@ -53,7 +85,7 @@ export default function MyMap() {
             <Map
                 height={950}
                 defaultCenter={cityCoordinates[city]}
-                defaultZoom={11}
+                defaultZoom={15}
             >
                 {selectedType === 'bus' && (
                     <Marker width={25} anchor={cityCoordinates[city]}>
@@ -64,15 +96,29 @@ export default function MyMap() {
                         </div>
                     </Marker>
                 )}
-                {selectedType === 'trash' && (
-                    <Marker width={25} anchor={cityCoordinates[city]}>
-                        <div className="pin-icon">
-                            <div className="icon-container">
-                                <Trash color="#04900b" weight="bold" />
-                            </div>
-                        </div>
-                    </Marker>
-                )}
+                {selectedType === 'trash' &&
+                    Containers.result.records.map((container) => {
+                        const latitude = parseFloat(
+                            container.Y.replace(',', '.')
+                        )
+                        const longitude = parseFloat(
+                            container.X.replace(',', '.')
+                        )
+
+                        return (
+                            <Marker
+                                key={container._id}
+                                width={25}
+                                anchor={[latitude, longitude]}
+                            >
+                                <div className="pin-icon">
+                                    <div className="icon-container">
+                                        <Trash color="#04900b" weight="bold" />
+                                    </div>
+                                </div>
+                            </Marker>
+                        )
+                    })}
                 {selectedType === 'charger' && (
                     <Marker width={25} anchor={cityCoordinates[city]}>
                         <div className="pin-icon">

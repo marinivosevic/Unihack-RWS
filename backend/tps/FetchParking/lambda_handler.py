@@ -13,12 +13,30 @@ def lambda_handler(event, context):
     
     api_url = "https://www.rijeka-plus.hr/wp-json/restAPI/v1/parkingAPI/"
     
+    # Define headers to mimic a browser request
+    headers = {
+        'User-Agent': (
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+            'AppleWebKit/537.36 (KHTML, like Gecko) '
+            'Chrome/58.0.3029.110 Safari/537.3'
+        ),
+        'Accept': 'application/json, text/javascript, */*; q=0.01',
+        'Accept-Language': 'en-US,en;q=0.9',
+        # Add other headers if necessary
+    }
+    
     try:
-        response = requests.get(api_url, timeout=10)  # Set a timeout for the request
+        response = requests.get(api_url, headers=headers, timeout=10)  # Set a timeout for the request
         
         logger.info(f"External API responded with status code: {response.status_code}")
         
         if response.status_code != 200:
+            if response.status_code == 403:
+                logger.error(f"Access forbidden. Status code: {response.status_code}, Response: {response.text}")
+                return build_response(
+                    403,
+                    {"message": "Access to the parking data service is forbidden."}
+                )
             logger.error(f"Failed to fetch data. Status code: {response.status_code}")
             return build_response(
                 response.status_code,

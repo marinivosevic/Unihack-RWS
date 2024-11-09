@@ -24,9 +24,11 @@ const Map = () => {
                 alignItems: 'center',
             }}
         >
-            <h1 className="text-4xl text-white flex justify-center items-center mb-4">
-                Choose your country
-            </h1>
+            <div className="flex items-start">
+                <h1 className="text-4xl text-white flex justify-start items-center mb-4">
+                    Choose your country
+                </h1>
+            </div>
             {tooltip.visible && (
                 <div
                     style={{

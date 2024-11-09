@@ -2,7 +2,6 @@
 
 import React from 'react'
 import Image from 'next/image'
-import { Roboto } from 'next/font/google'
 
 interface HeroImageProps {
     imageSrc: string

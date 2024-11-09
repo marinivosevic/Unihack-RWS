@@ -20,7 +20,7 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema> // Infer TypeScript type from schema
 
-export default function Form() {
+export default function FormElectricity() {
     const [formData, setFormData] = useState<FormData>({
         num_rooms: 0,
         num_people: 0,
@@ -67,9 +67,10 @@ export default function Form() {
             ave_monthly_income: data.ave_monthly_income,
             num_children: data.num_children,
             is_urban: data.is_urban ? 1 : 0,
+            year: new Date().getFullYear(),
         }
 
-        const response = await fetch(`${API_URL}/bill/electricity/predict`, {
+        const response = await fetch(`${API_URL}/bill/electricity`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

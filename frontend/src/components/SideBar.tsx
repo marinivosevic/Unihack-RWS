@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation'
 import { FaHome, FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa' // Using react-icons for icons
 import Image from 'next/image'
 import * as images from '@/constants/images'
+import Cookies from 'js-cookie'
 
 const Sidebar: React.FC = () => {
     const pathname = usePathname()
@@ -21,11 +22,15 @@ const Sidebar: React.FC = () => {
         },
         { name: 'Profile', href: '/dashboard/profile', icon: <FaUser /> },
         { name: 'Settings', href: '/dashboard/settings', icon: <FaCog /> },
-        { name: 'Logout', href: '/logout', icon: <FaSignOutAlt /> },
     ]
 
+    const logout = () => {
+        Cookies.remove('token')
+        window.location.href = '/login'
+    }
+
     return (
-        <div className="w-64 bg-primary-900/20 text-white flex flex-col">
+        <div className="w-64 h-screen bg-primary-900/20 text-white flex flex-col">
             {/* Logo or Brand Name */}
             <div className="flex flex-row items-center justify-start h-16 border-b border-primary-800 px-2">
                 <Image src={images.logo} alt="Logo" width={40} height={40} />
@@ -33,7 +38,7 @@ const Sidebar: React.FC = () => {
             </div>
 
             {/* Navigation Links */}
-            <nav className="flex-1 p-4 space-y-2">
+            <nav className="flex-1 p-4 space-y-2 relative">
                 {navLinks.map((link) => (
                     <Link key={link.name} href={link.href}>
                         <p
@@ -46,6 +51,14 @@ const Sidebar: React.FC = () => {
                         </p>
                     </Link>
                 ))}
+                <button onClick={logout} className="absolute bottom-2 w-[85%]">
+                    <p className="flex items-center p-2 rounded hover:bg-primary-800 transition-colors w-full">
+                        <span className="mr-3">
+                            <FaSignOutAlt />
+                        </span>
+                        Logout
+                    </p>
+                </button>
             </nav>
         </div>
     )

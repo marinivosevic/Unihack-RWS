@@ -13,8 +13,8 @@ const WeatherWidget: React.FC = () => {
 
     const API_KEY = process.env.NEXT_PUBLIC_OPEN_WEATHER_KEY
     const CITY = 'Rijeka'
-    const UNITS = 'metric' // 'metric' for Celsius, 'imperial' for Fahrenheit
-    const COUNT = 40 // 5 days * 8 data points per day
+    const UNITS = 'metric'
+    const COUNT = 40
 
     const fetchWeather = useCallback(async () => {
         try {
@@ -22,16 +22,13 @@ const WeatherWidget: React.FC = () => {
                 throw new Error('API key is missing')
             }
 
-            // Fetch coordinates for the city
             const coords = await fetchCoordinates(CITY, API_KEY)
-
             if (!coords) {
                 throw new Error('Failed to retrieve coordinates')
             }
 
             const { lat, lon } = coords
 
-            // Fetch weather data using 5 Day / 3 Hour Forecast API
             const response = await fetch(
                 `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=${UNITS}&cnt=${COUNT}`
             )
@@ -41,10 +38,8 @@ const WeatherWidget: React.FC = () => {
             }
 
             const data = await response.json()
+            const timezoneOffset = data.city.timezone
 
-            const timezoneOffset = data.city.timezone // in seconds
-
-            // Parse and filter forecast weather data
             const filteredWeather: WeatherData[] = filterDailyForecasts(
                 data.list,
                 data.city.name,
@@ -63,7 +58,6 @@ const WeatherWidget: React.FC = () => {
         fetchWeather()
     }, [fetchWeather])
 
-    // Function to filter one forecast per day, preferably around 12:00 PM
     const filterDailyForecasts = (
         list: any[],
         cityName: string,
@@ -73,13 +67,9 @@ const WeatherWidget: React.FC = () => {
 
         list.forEach((entry) => {
             const date = new Date((entry.dt + timezoneOffset) * 1000)
-            const dateKey = date.toISOString().split('T')[0] // 'YYYY-MM-DD'
-
-            // Desired time: 12:00 PM
+            const dateKey = date.toISOString().split('T')[0]
             const targetHour = 12
             const entryHour = date.getHours()
-
-            // Calculate the absolute difference in hours
             const diff = Math.abs(entryHour - targetHour)
 
             if (
@@ -99,12 +89,11 @@ const WeatherWidget: React.FC = () => {
                         hour: '2-digit',
                         minute: '2-digit',
                     }),
-                    hour: entryHour, // Temporary property for comparison
+                    hour: entryHour,
                 }
             }
         })
 
-        // Remove the temporary 'hour' property and limit to 5 days
         return Object.values(dailyMap)
             .map(({ hour, ...rest }) => rest)
             .slice(0, 5)
@@ -159,7 +148,17 @@ const WeatherWidget: React.FC = () => {
     return (
         <div className="flex space-x-6 overflow-x-auto p-4 snap-x snap-mandatory">
             {weather.map((day, index) => (
-                <DailyForecastItem key={index} day={day} />
+                <DailyForecastItem
+                    key={index}
+                    day={day}
+                    style={{
+                        animation: `fadeInSlideUp 0.5s ease forwards`,
+                        animationDelay: `${index * 0.2}s`,
+                        animationFillMode: 'forwards', // Ensure final state is retained
+                        animationTimingFunction: 'ease',
+                        animationIterationCount: 1,
+                    }}
+                />
             ))}
         </div>
     )

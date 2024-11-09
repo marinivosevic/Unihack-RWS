@@ -33,7 +33,7 @@ def lambda_handler(event, context):
         latitude = body['latitude']
         charger_name = body['charger_name']
     except Exception as e:
-        logger.info(f'Error happened while predicting {e}')
+        logger.info(f'longitude, latitude, charger_name are required')
 
     # Create database instance
     global _LAMBDA_SUPERCHARGERS_TABLE_RESOURCE

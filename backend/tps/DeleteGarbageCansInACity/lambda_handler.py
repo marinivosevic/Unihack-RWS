@@ -1,6 +1,6 @@
 import logging
 
-logger = logging.getLogger("DeleteSuperchargerInACity")
+logger = logging.getLogger("DeleteGarbageCansInACity")
 logger.setLevel(logging.INFO)
 
 from common.common import (
@@ -36,6 +36,6 @@ def lambda_handler(event, context):
     return build_response(
         200,
         {
-            'message': 'Deleting container'
+            'message': 'Deleted garbage can'
         }
     )

@@ -1,8 +1,7 @@
 import logging
-import pandas as pd
 from boto3.dynamodb.conditions import Attr
 
-logger = logging.getLogger("GetAllSuperchargersInACity")
+logger = logging.getLogger("GetAllGarbageCansInACity")
 logger.setLevel(logging.INFO)
 
 from common.common import (
@@ -33,8 +32,12 @@ def lambda_handler(event, context):
     garbage_cans = dynamodb.table.scan(
         FilterExpression=Attr('city').eq(city)
     ).get('Items', [])
+
+    for g in garbage_cans:
+        g['X'] = float(str(g['X']))
+        g['Y'] = float(str(g['Y']))
     
-    logger.info(f"Returning garbage cans")
+    logger.info("Returning garbage cans")
 
     return build_response(
         200,

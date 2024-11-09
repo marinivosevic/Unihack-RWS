@@ -2,7 +2,7 @@ import logging
 import json
 from boto3.dynamodb.types import Decimal
 
-logger = logging.getLogger("UpdateSuperchargerInACity")
+logger = logging.getLogger("UpdateGarbageCansInACity")
 logger.setLevel(logging.INFO)
 
 from common.common import (
@@ -51,11 +51,11 @@ def update_container(dynamodb, container_id, X, Y):
 
     if X is not None:
         update_expression += "X = :X, "
-        expression_attribute_values[':X'] = X
+        expression_attribute_values[':X'] = Decimal(str(X))
 
     if Y is not None:
         update_expression += "Y = :Y, "
-        expression_attribute_values[':Y'] = Y
+        expression_attribute_values[':Y'] = Decimal(str(Y))
 
     if container_id is not None:
         update_expression += "container_id = :container_id, "

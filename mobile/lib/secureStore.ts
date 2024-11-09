@@ -9,7 +9,7 @@ export const storeTokens = async (jwtToken: string, refreshToken: string) => {
     // Store Refresh Token
     await SecureStore.setItemAsync("refreshToken", refreshToken);
 
-    console.log("Tokens stored successfully");
+    return true;
   } catch (error) {
     console.error("Error storing tokens:", error);
   }

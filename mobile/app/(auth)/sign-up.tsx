@@ -65,10 +65,10 @@ const SignUp = () => {
   };
 
   return (
-    <SafeAreaView className="h-full w-full bg-primary border">
+    <SafeAreaView className="h-full w-full bg-black/90 border">
       <ScrollView className="w-full h-full py-2">
         <View className="w-full h-full flex items-center justify-center gap-y-5">
-          <Text className="text-txt-100 text-start w-full pl-5 pt-5 text-2xl font-bold">
+          <Text className="text-white text-start w-full pl-5 pt-5 text-2xl font-bold">
             Create you account
           </Text>
 
@@ -76,12 +76,13 @@ const SignUp = () => {
           <View className="w-full items-center justify-center gap-y-4 px-5">
             {/* First Name */}
             <View className="flex flex-col gap-y-2 w-full">
-              <Text>First Name</Text>
+              <Text className="text-white/80">First Name</Text>
               <TextInput
-                className="bg-primary border border-primary-80 p-2 rounded-lg w-full"
+                className="bg-primary border border-quinterny-500 p-2 rounded-lg w-full"
                 placeholder="First Name"
                 onChangeText={(text) => setValue("first_name", text)}
                 {...register("first_name")}
+                placeholderTextColor={"gray"}
               />
               {errors.firstName && (
                 <Text className="text-danger">
@@ -92,12 +93,13 @@ const SignUp = () => {
 
             {/* Last Name */}
             <View className="flex flex-col gap-y-2 w-full">
-              <Text>Last Name</Text>
+              <Text className="text-white/80">Last Name</Text>
               <TextInput
-                className="bg-primary border border-primary-80 p-2 rounded-lg w-full"
+                className="bg-primary border border-quinterny-500 p-2 rounded-lg w-full"
                 placeholder="Last Name"
                 onChangeText={(text) => setValue("last_name", text)}
                 {...register("last_name")}
+                placeholderTextColor={"gray"}
               />
               {errors.lastName && (
                 <Text className="text-danger">
@@ -108,13 +110,14 @@ const SignUp = () => {
 
             {/* Age */}
             <View className="flex flex-col gap-y-2 w-full">
-              <Text>Age</Text>
+              <Text className="text-white/80">Age</Text>
               <TextInput
-                className="bg-primary border border-primary-80 p-2 rounded-lg w-full"
+                className="bg-primary border border-quinterny-500 p-2 rounded-lg w-full"
                 placeholder="Age"
                 onChangeText={(text) => setValue("age", parseInt(text))}
                 keyboardType="numeric"
                 {...register("age")}
+                placeholderTextColor={"gray"}
               />
               {errors.age && (
                 <Text className="text-danger">
@@ -125,14 +128,15 @@ const SignUp = () => {
 
             {/* Email */}
             <View className="flex flex-col gap-y-2 w-full">
-              <Text>Email</Text>
+              <Text className="text-white/80">Email</Text>
               <TextInput
                 autoCapitalize="none"
                 keyboardType="email-address"
-                className="bg-primary border border-primary-80 p-2 rounded-lg w-full"
+                className="bg-primary border border-quinterny-500 p-2 rounded-lg w-full"
                 placeholder="Email"
                 onChangeText={(text) => setValue("email", text)}
                 {...register("email")}
+                placeholderTextColor={"gray"}
               />
               {errors.email && (
                 <Text className="text-danger">
@@ -143,13 +147,14 @@ const SignUp = () => {
 
             {/* Password */}
             <View className="flex flex-col gap-y-2 w-full">
-              <Text>Password</Text>
+              <Text className="text-white/80">Password</Text>
               <TextInput
-                className="bg-primary border border-primary-80 p-2 rounded-lg w-full"
+                className="bg-primary border border-quinterny-500 p-2 rounded-lg w-full"
                 placeholder="Password"
                 onChangeText={(text) => setValue("password", text)}
                 secureTextEntry={true}
                 {...register("password")}
+                placeholderTextColor={"gray"}
               />
               {errors.password && (
                 <Text className="text-danger">
@@ -160,13 +165,14 @@ const SignUp = () => {
 
             {/* Confirm Password */}
             <View className="flex flex-col gap-y-2 w-full">
-              <Text>Confirm Password</Text>
+              <Text className="text-white/80">Confirm Password</Text>
               <TextInput
-                className="bg-primary border border-primary-80 p-2 rounded-lg w-full"
+                className="bg-primary border border-quinterny-500 p-2 rounded-lg w-full"
                 placeholder="Confirm Password"
                 onChangeText={(text) => setValue("confirmPassword", text)}
                 secureTextEntry={true}
                 {...register("confirmPassword")}
+                placeholderTextColor={"gray"}
               />
               {errors.confirmPassword && (
                 <Text className="text-danger">
@@ -186,7 +192,7 @@ const SignUp = () => {
                 router.push("/sign-in");
               }}
             >
-              <Text className="text-base font-medium text-primary-95">
+              <Text className="text-base font-medium text-quinterny-800">
                 Sign-in
               </Text>
             </TouchableOpacity>
@@ -196,7 +202,7 @@ const SignUp = () => {
           <View className="w-full items-center justify-center px-5">
             <TouchableOpacity
               onPress={handleSubmit(handleSignUp)}
-              className="bg-primary-0 p-2 rounded-lg w-full items-center justify-center mt-16"
+              className="bg-quinterny-500 p-2 rounded-lg w-full items-center justify-center mt-16"
             >
               <Text className="text-lg text-white font-semibold">Sign-up</Text>
             </TouchableOpacity>

@@ -16,31 +16,32 @@ export default function Onboarding() {
   };
 
   return (
-    <SafeAreaView className="h-full flex flex-col justify-between items-center bg-primary-950">
+    <SafeAreaView className="h-full flex flex-col justify-between items-center bg-black/90">
       <View className="flex flex-col items-center justify-center h-1/2 mt-40">
-        <Image source={images.logo} className="h-29 w-28" />
-        <Text className="text-4xl font-bold text-center text-white mx-5">
-          UrbanPulse
+        <Image source={images.logo} className="h-28 w-24" />
+        <Text className="text-4xl font-bold text-center text-white mx-5 mt-1">
+          Urban<Text className="text-quinterny-500">Pulse</Text>
         </Text>
         <Text className="text-3xl font-semibold text-center text-white m-5 mt-10">
-          All the information
+          <Text className="text-quinterny-500">All</Text> the information
         </Text>
         <Text className="text-3xl font-semibold text-center text-white mx-5">
-          One place, Few clicks
+          <Text className="text-quinterny-500">One</Text> place,{" "}
+          <Text className="text-quinterny-500">Few</Text> clicks
         </Text>
       </View>
       <View className="w-full items-center justify-center gap-y-4 px-5">
         <TouchableOpacity
           onPress={handleSignIn}
-          className="bg-primary-500 p-2 rounded-lg w-full items-center justify-center"
+          className="bg-quinterny-600 p-2 rounded-lg w-full items-center justify-center"
         >
           <Text className="text-lg font-semibold text-white">Sign-in</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={handleSignUp}
-          className="bg-white border border-primary-500 p-2 rounded-lg w-full items-center justify-center"
+          className="bg-white border border-quinterny-600 p-2 rounded-lg w-full items-center justify-center"
         >
-          <Text className="text-lg font-semibold text-primary-500">
+          <Text className="text-lg font-semibold text-quinterny-600">
             Sign-up
           </Text>
         </TouchableOpacity>

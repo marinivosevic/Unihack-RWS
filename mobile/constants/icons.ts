@@ -10,6 +10,8 @@ import arrowDown from "../assets/icons/arrowDown.png";
 import arrowUp from "../assets/icons/arrowUp.png";
 import filter from "../assets/icons/filter.png";
 import map from "../assets/icons/map.png";
+import plus from "../assets/icons/plus.png";
+import bill from "../assets/icons/bill.png";
 
 export {
   home,
@@ -24,4 +26,6 @@ export {
   arrowUp,
   filter,
   map,
+  plus,
+  bill,
 };

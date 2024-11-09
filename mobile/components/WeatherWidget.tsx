@@ -65,7 +65,7 @@ const WeatherWidget: React.FC = () => {
           <MaterialCommunityIcons
             name="weather-cloudy"
             size={40}
-            color={"gray"}
+            color={"white"}
           />
         );
       case "Rain":
@@ -104,7 +104,7 @@ const WeatherWidget: React.FC = () => {
       {forecast.map((day, index) => (
         <View
           key={index}
-          className="flex items-center my-2 w-32 bg-primary-300/20 pt-2 pb-1 rounded-xl"
+          className="flex items-center my-2 w-32 bg-quinterny-300/70 pt-2 pb-1 rounded-xl"
         >
           <Text className="text-lg text-white font-bold">
             {new Date(day.dt_txt).toLocaleDateString("en-US", {
@@ -115,7 +115,7 @@ const WeatherWidget: React.FC = () => {
           <Text className="text-xl text-white font-semibold">
             {Math.round(day.main.temp)}°C
           </Text>
-          <Text className="italic text-gray-500">
+          <Text className="italic text-white/50">
             {day.weather[0].description}
           </Text>
         </View>

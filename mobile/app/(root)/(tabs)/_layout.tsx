@@ -19,12 +19,12 @@ const TabIcon = ({
 }) => (
   <View
     className={`flex flex-row justify-center items-center rounded-full ${
-      focused ? "bg-primary-900" : ""
+      focused ? "bg-quinterny-800" : ""
     } ${styles}`}
   >
     <View
       className={`rounded-full w-[30px] h-[30px] items-center justify-center ${
-        focused ? "bg-primary-900" : ""
+        focused ? "bg-quinterny-800" : ""
       }`}
     >
       <Image
@@ -47,7 +47,7 @@ const TabsLayout = () => {
         screenOptions={{
           tabBarShowLabel: false,
           tabBarStyle: {
-            backgroundColor: "#9dd1f3",
+            backgroundColor: "#8077f6",
             position: "absolute",
             borderTopLeftRadius: 32,
             borderTopRightRadius: 32,
@@ -81,6 +81,26 @@ const TabsLayout = () => {
           }}
         />
         <Tabs.Screen
+          name="plus"
+          options={{
+            title: "Ticket",
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <TabIcon focused={focused} icon={icons.plus} title="Ticket" />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="bills"
+          options={{
+            title: "Bills",
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <TabIcon focused={focused} icon={icons.bill} title="Bills" />
+            ),
+          }}
+        />
+        <Tabs.Screen
           name="profile"
           options={{
             title: "Profile",
@@ -90,7 +110,7 @@ const TabsLayout = () => {
                 focused={focused}
                 icon={icons.person}
                 title="Profile"
-                iconStyles={`${focused ? "w-5 h-5" : "w-6 h-6"}`}
+                styles={`${focused ? "mr-2" : ""}`}
               />
             ),
           }}

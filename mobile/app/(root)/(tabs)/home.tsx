@@ -1,8 +1,7 @@
-import { Text, View, Image } from "react-native";
+import { Text, View, Image, StatusBar } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import { router } from "expo-router";
+import { ScrollView } from "react-native-gesture-handler";
 
 import * as icons from "@/constants/icons";
 import * as images from "@/constants/images";
@@ -17,12 +16,12 @@ const Home = () => {
   };
 
   return (
-    <SafeAreaView className="h-full bg-primary-900">
+    <SafeAreaView className="h-full bg-black/90">
       <ScrollView>
         <View className="flex flex-row items-center justify-between w-full py-2 px-5">
           <View className="flex flex-row items-center justify-center mt-5">
             <View className="flex flex-row items-center">
-              <Image source={images.logo} className="h-10 w-12" />
+              <Image source={images.logo} className="h-12 w-10 mb-1" />
               <Text className="text-2xl font-bold text-white ml-2">
                 UrbanPulse
               </Text>
@@ -40,6 +39,7 @@ const Home = () => {
         <NewsItem />
         <NewsItem />
       </ScrollView>
+      <StatusBar barStyle="light-content" />
     </SafeAreaView>
   );
 };

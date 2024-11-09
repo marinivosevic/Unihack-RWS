@@ -61,11 +61,16 @@ const SignIn: React.FC = () => {
       const refreshToken = responseData.refresh_token;
 
       try {
-        await storeTokens(jwtToken, refreshToken);
+        const result = await storeTokens(jwtToken, refreshToken);
         await storeInfo("email", email);
 
         setModalVisible(false);
         setCode(["", "", "", "", "", ""]);
+
+        if (!result) {
+          console.error("Error storing tokens.");
+          return;
+        }
 
         router.push("/home");
       } catch (error) {
@@ -85,38 +90,40 @@ const SignIn: React.FC = () => {
   };
 
   return (
-    <SafeAreaView className="h-full w-full bg-primary">
+    <SafeAreaView className="h-full w-full bg-black/90">
       <ScrollView className="w-full h-full">
         <View className="w-full flex items-center justify-center gap-y-5 mt-5">
           <View className="flex items-center justify-center">
             <Image source={images.logo} className="h-14 w-14" />
-            <Text className="text-txt-100 text-2xl font-bold ml-2 mt-1">
-              RiConnect
+            <Text className="text-white text-2xl font-bold ml-2 mt-1">
+              UrbanPulse
             </Text>
           </View>
-          <Text className="text-txt-100 text-2xl text-start w-full pl-5 font-medium pt-4">
+          <Text className="text-white text-2xl text-start w-full pl-5 font-medium pt-4">
             Sign-in
           </Text>
           <View className="w-full items-center justify-center gap-y-4 px-5">
             <View className="flex flex-col gap-y-2 w-full">
-              <Text className="font-medium text-base text-txt-200">Email</Text>
+              <Text className="font-medium text-base text-white/80">Email</Text>
               <TextInput
-                className="bg-primary p-2 rounded-lg w-full border border-primary-80"
+                className="bg-primary p-2 rounded-lg w-full border border-quinterny-400 text-white"
                 placeholder="Email"
                 onChangeText={(text) => setEmail(text)}
                 autoCapitalize="none"
                 keyboardType="email-address"
+                placeholderTextColor={"gray"}
               />
             </View>
             <View className="flex flex-col gap-y-2 w-full">
-              <Text className="font-medium text-base text-txt-200">
+              <Text className="font-medium text-base text-white/80">
                 Password
               </Text>
               <TextInput
-                className="bg-primary p-2 rounded-lg w-full border border-primary-80"
+                className="bg-primary p-2 rounded-lg w-full border border-quinterny-400 text-white"
                 placeholder="Password"
                 secureTextEntry={showPassword}
                 onChangeText={(text) => setPassword(text)}
+                placeholderTextColor={"gray"}
               />
             </View>
           </View>
@@ -125,7 +132,7 @@ const SignIn: React.FC = () => {
           onPress={() => setShowPassword(!showPassword)}
           className="flex items-start justify-start w-full px-5"
         >
-          <Text className="text-primary-80 text-base font-light mt-1">
+          <Text className="text-quinterny-300 text-base font-light mt-1">
             Forgot Password?
           </Text>
         </TouchableOpacity>
@@ -133,39 +140,39 @@ const SignIn: React.FC = () => {
         <View className="flex w-full items-center justify-center px-5 mt-24">
           <TouchableOpacity
             onPress={handleSignIn}
-            className="bg-primary-0 p-2 rounded-lg w-full items-center justify-center"
+            className="bg-quinterny-500 p-2 rounded-lg w-full items-center justify-center"
           >
             <Text className="text-lg font-semibold text-white">Sign-in</Text>
           </TouchableOpacity>
           <View className="flex flex-row items-center justify-center w-full my-5">
-            <View className="border border-primary-80 w-[40%]" />
-            <Text className="text-txt-200 text-base font-medium px-5 opacity-70">
+            <View className="border border-quinterny-400 w-[40%]" />
+            <Text className="text-white/80 text-base font-medium px-5 opacity-70">
               or
             </Text>
-            <View className="border border-primary-80 w-[40%]" />
+            <View className="border border-quinterny-400 w-[40%]" />
           </View>
           <TouchableOpacity
             onPress={handleGoogleSignIn}
-            className="bg-primary border border-primary-0 w-full p-2 rounded-lg items-center justify-center"
+            className="bg-transparent border border-quinterny-500 w-full p-2 rounded-lg items-center justify-center"
           >
             <View className="flex flex-row items-center justify-center">
               <Image
                 source={icons.google}
                 className="h-5 w-5 mx-2"
-                tintColor={"#0240B4"}
+                tintColor={"#7864f0"}
               />
-              <Text className="text-lg font-semibold text-primary-0">
+              <Text className="text-lg font-semibold text-white">
                 Sign-in with Google
               </Text>
             </View>
           </TouchableOpacity>
         </View>
         <View className="flex flex-row items-center justify-center w-full px-5 mt-1">
-          <Text className="text-txt-200 text-base font-medium">
+          <Text className="text-white/80 text-base font-medium">
             Don't have an account?
           </Text>
           <TouchableOpacity onPress={() => router.push("/sign-up")}>
-            <Text className="text-primary-95 text-base font-medium">
+            <Text className="text-quinterny-800 text-base font-medium">
               {" "}
               Sign-up
             </Text>

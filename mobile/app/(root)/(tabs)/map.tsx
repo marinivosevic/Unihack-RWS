@@ -40,31 +40,33 @@ export default function Map() {
     <View style={styles.container}>
       <TouchableOpacity
         onPress={() => setDropdown(!dropdown)}
-        className={`absolute top-24 right-5 bg-white p-2 ${
+        className={`absolute top-24 right-5 bg-black/90 p-2 ${
           !dropdown ? "rounded-lg" : "rounded-t-lg"
         } z-50 w-32 items-center`}
       >
-        <Text>{selected ? `${selected}` : "Select filter"}</Text>
+        <Text className="text-white">
+          {selected ? `${selected}` : "Select filter"}
+        </Text>
       </TouchableOpacity>
       {dropdown && (
-        <View className="absolute top-32 bg-white right-5 z-50 rounded-b-lg w-32 items-center">
+        <View className="absolute top-32 bg-black/90 right-5 z-50 rounded-b-lg w-32 items-center">
           <TouchableOpacity
             onPress={() => {
               setSelected("Busses");
               setDropdown(false);
             }}
-            className="border-t border-b border-primary-900 w-full p-2 items-center"
+            className="border-t border-b border-quinterny-600 w-full p-2 items-center"
           >
-            <Text>Busses</Text>
+            <Text className="text-white">Busses</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
               setSelected("Trash cans");
               setDropdown(false);
             }}
-            className="border-b border-primary-900 w-full p-2 items-center"
+            className="border-b border-quinterny-600 w-full p-2 items-center"
           >
-            <Text>Trash Cans</Text>
+            <Text className="text-white">Trash Cans</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
@@ -73,7 +75,7 @@ export default function Map() {
             }}
             className="w-full p-2 items-center"
           >
-            <Text>Superchargers</Text>
+            <Text className="text-white">Superchargers</Text>
           </TouchableOpacity>
         </View>
       )}

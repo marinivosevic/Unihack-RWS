@@ -29,7 +29,7 @@ Resources:
     Properties:
       Handler: lambda_handler.lambda_handler
       Runtime: python3.12
-      CodeUri: ./cost_of_living_predictor
+      CodeUri: ./CostOfLivingPredictor
       Policies:
         - Version: '2012-10-17'
           Statement:

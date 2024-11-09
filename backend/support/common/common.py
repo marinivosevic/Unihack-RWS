@@ -191,7 +191,7 @@ def get_image_from_s3(s3_client, bucket_name, image_key):
     logger.info(f"Response for getting image: {response}")
 
     if response.get('Body'):
-        return base64.encode(response['Body'].read()), True
+        return base64.b64encode(response['Body'].read()).decode('utf-8'), True
     
     return None, False
 

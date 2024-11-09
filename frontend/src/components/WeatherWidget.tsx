@@ -147,7 +147,7 @@ const WeatherWidget: React.FC = () => {
     }
 
     return (
-        <div className="flex space-x-6 overflow-x-auto p-4 snap-x snap-mandatory">
+        <div className="flex space-x-8 overflow-x-auto p-4 snap-x snap-mandatory">
             {weather.map((day, index) => (
                 <DailyForecastItem
                     key={index}

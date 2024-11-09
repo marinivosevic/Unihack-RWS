@@ -55,7 +55,7 @@ const DashboardHome: React.FC = () => {
     return (
         <div>
             {/* Weather Widget at the Top */}
-            <div className="mb-6 items-center ml-8">
+            <div className="mb-6 items-center ml-28">
                 <WeatherWidget />
             </div>
             <h1 className="text-3xl font-semibold text-start text-white mx-4 mt-4">

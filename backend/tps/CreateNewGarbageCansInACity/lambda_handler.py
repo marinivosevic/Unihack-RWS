@@ -9,7 +9,7 @@ logger.setLevel(logging.INFO)
 from common.common import (
     lambda_middleware,
     build_response,
-    _LAMBDA_SUPERCHARGERS_TABLE_RESOURCE,
+    _LAMBDA_GARBAGECANS_TABLE_RESOURCE,
     LambdaDynamoDBClass
 )
 
@@ -30,31 +30,29 @@ def lambda_handler(event, context):
         )
     
     try:
-        longitude = body['longitude']
-        latitude = body['latitude']
-        charger_name = body['charger_name']
+        longitude = body['X']
+        latitude = body['Y']
     except Exception as e:
-        logger.info(f'longitude, latitude, charger_name are required')
+        logger.info(f'X (longitude) and Y (latitude) are required')
 
     # Create database instance
-    global _LAMBDA_SUPERCHARGERS_TABLE_RESOURCE
-    dynamodb = LambdaDynamoDBClass(_LAMBDA_SUPERCHARGERS_TABLE_RESOURCE)
+    global _LAMBDA_GARBAGECANS_TABLE_RESOURCE
+    dynamodb = LambdaDynamoDBClass(_LAMBDA_GARBAGECANS_TABLE_RESOURCE)
 
-    charger_id = str(uuid.uuid4())
+    container_id = str(uuid.uuid4())
 
     dynamodb.table.put_item(
         Item={
-            'id': charger_id,
+            'id': container_id,
             'city': city,
-            'longitude': Decimal(str(longitude)),
-            'latitude': Decimal(str(latitude)),
-            'charger_name': charger_name
+            'X': longitude,
+            'Y': latitude
         }
     )
     
     return build_response(
         200,
         {
-            'message': f'Creating new supercharger with id: {charger_id}'
+            'message': f'Creating new container with id: {container_id}'
         }
     )

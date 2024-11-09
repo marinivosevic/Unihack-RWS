@@ -72,7 +72,10 @@ const Plus = () => {
           tintColor={"white"}
         />
       </TouchableOpacity>
-      <TouchableOpacity className="flex flex-row justify-between items-center mt-8 bg-quinterny-400/70 border border-white/60 py-2 px-4 rounded-xl">
+      <TouchableOpacity
+        onPress={() => router.push("/charger")}
+        className="flex flex-row justify-between items-center mt-8 bg-quinterny-400/70 border border-white/60 py-2 px-4 rounded-xl"
+      >
         <View className="flex flex-row items-center">
           <Image
             source={icons.bolt}

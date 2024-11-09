@@ -115,7 +115,7 @@ const New = () => {
       <SafeAreaView className="px-5 bg-black/90 h-full">
         <BackButton />
         <Text className="text-2xl font-bold text-white mt-24">
-          Add a new bin to the map
+          Add a new supercharger to the map
         </Text>
 
         <TouchableOpacity onPress={() => setOpenCamera(true)}>

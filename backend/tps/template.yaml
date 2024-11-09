@@ -305,10 +305,6 @@ Resources:
       Runtime: python3.12
       CodeUri: ./  # Ensure your fetch_parking_data.py is in the root directory or adjust the path accordingly
       Environment:
-        Variables:
-          # Add any necessary environment variables here
-          # For example, if you want to parameterize the external API URL:
-          # PARKING_API_URL: "https://www.rijeka-plus.hr/wp-json/restAPI/v1/parkingAPI/"
       Policies:
         - Version: '2012-10-17'
           Statement:

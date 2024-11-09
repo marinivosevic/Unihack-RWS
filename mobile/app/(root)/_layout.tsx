@@ -6,6 +6,8 @@ export default function RootLayout() {
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="chat" options={{ headerShown: false }} />
       <Stack.Screen name="(profile)" options={{ headerShown: false }} />
+      <Stack.Screen name="ticket/index" options={{ headerShown: false }} />
+      <Stack.Screen name="trash" options={{ headerShown: false }} />
     </Stack>
   );
 }

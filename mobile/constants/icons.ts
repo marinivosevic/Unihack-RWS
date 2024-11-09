@@ -12,6 +12,14 @@ import filter from "../assets/icons/filter.png";
 import map from "../assets/icons/map.png";
 import plus from "../assets/icons/plus.png";
 import bill from "../assets/icons/bill.png";
+import arrowRight from "../assets/icons/arrowRight.png";
+import ticket from "../assets/icons/ticket.png";
+import trash1 from "../assets/icons/trash1.png";
+import trash2 from "../assets/icons/trash2.png";
+import bolt from "../assets/icons/bolt.png";
+import close from "../assets/icons/close.png";
+import flip from "../assets/icons/flip.png";
+import camera from "../assets/icons/camera.png";
 
 export {
   home,
@@ -28,4 +36,12 @@ export {
   map,
   plus,
   bill,
+  arrowRight,
+  ticket,
+  trash1,
+  trash2,
+  bolt,
+  close,
+  flip,
+  camera,
 };

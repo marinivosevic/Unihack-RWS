@@ -10,12 +10,14 @@ const TabIcon = ({
   title,
   styles,
   iconStyles,
+  iconContainerStyles,
 }: {
   focused: boolean;
   icon: ImageSourcePropType;
   title: string;
   styles?: string;
   iconStyles?: string;
+  iconContainerStyles?: string;
 }) => (
   <View
     className={`flex flex-row justify-center items-center rounded-full ${
@@ -25,7 +27,7 @@ const TabIcon = ({
     <View
       className={`rounded-full w-[30px] h-[30px] items-center justify-center ${
         focused ? "bg-quinterny-800" : ""
-      }`}
+      } ${iconContainerStyles}`}
     >
       <Image
         source={icon}
@@ -65,7 +67,9 @@ const TabsLayout = () => {
                 focused={focused}
                 icon={icons.home}
                 title="Home"
-                styles="ml-7"
+                styles="ml-5"
+                iconStyles="ml-1"
+                iconContainerStyles="ml-6"
               />
             ),
           }}

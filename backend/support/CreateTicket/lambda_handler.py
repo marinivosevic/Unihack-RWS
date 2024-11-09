@@ -42,6 +42,7 @@ def lambda_handler(event, context):
         
         try:
             city = body['city']
+            tag = body['tag']
             ticket = body['ticket']
             picture = body['picture']
         except Exception as e:
@@ -52,7 +53,7 @@ def lambda_handler(event, context):
                 }
             )
 
-        return create_ticket(dynamodb, email, city, ticket, picture)
+        return create_ticket(dynamodb, email, city, ticket, picture, tag)
 
     except Exception as e:
         logger.error(f"Couldn't create ticket: {str(e)}")
@@ -65,7 +66,7 @@ def lambda_handler(event, context):
         )
 
 
-def create_ticket(dynamodb, sender, city, ticket, picture):
+def create_ticket(dynamodb, sender, city, ticket, picture, tag):
     logger.info('Adding ticket picture to s3.')
 
     decoded_picture = base64.b64decode(picture)
@@ -89,6 +90,7 @@ def create_ticket(dynamodb, sender, city, ticket, picture):
         'id': id,
         'sender': sender,
         'city': city,
+        'tags': tag,
         'ticket': ticket,
         'published_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     })

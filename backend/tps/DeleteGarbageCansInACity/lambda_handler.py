@@ -6,7 +6,7 @@ logger.setLevel(logging.INFO)
 from common.common import (
     lambda_middleware,
     build_response,
-    _LAMBDA_SUPERCHARGERS_TABLE_RESOURCE,
+    _LAMBDA_GARBAGECANS_TABLE_RESOURCE,
     LambdaDynamoDBClass
 )
 
@@ -24,8 +24,8 @@ def lambda_handler(event, context):
         )
     
     # Create database instance
-    global _LAMBDA_SUPERCHARGERS_TABLE_RESOURCE
-    dynamodb = LambdaDynamoDBClass(_LAMBDA_SUPERCHARGERS_TABLE_RESOURCE)
+    global _LAMBDA_GARBAGECANS_TABLE_RESOURCE
+    dynamodb = LambdaDynamoDBClass(_LAMBDA_GARBAGECANS_TABLE_RESOURCE)
 
     dynamodb.table.delete_item(
         Key={

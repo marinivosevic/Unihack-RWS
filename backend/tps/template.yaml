@@ -263,7 +263,7 @@ Resources:
         DeleteGarbageCansInACityEndpoint:
           Type: HttpApi 
           Properties:
-            Path: /garbage/{charger_id}
+            Path: /garbage/{container_id}
             Method: DELETE
             ApiId: !Ref TpsApi
 
@@ -292,7 +292,7 @@ Resources:
         UpdateGarbageCansInACityEndpoint:
           Type: HttpApi 
           Properties:
-            Path: /garbage/{charger_id}
+            Path: /garbage/{container_id}
             Method: PUT
             ApiId: !Ref TpsApi
 

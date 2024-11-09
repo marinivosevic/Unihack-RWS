@@ -16,6 +16,7 @@ interface NewsItemProps {
     description: string
     city: string
     pictures: string[] // Array of base64-encoded images
+    tag: string
 }
 const formatText = (text: string) => {
     const formattedText = text
@@ -34,6 +35,7 @@ const NewsItem: React.FC<NewsItemProps> = ({
     description,
     city,
     pictures,
+    tag,
 }) => {
     return (
         <Link href={`/dashboard/${id}`}>
@@ -63,6 +65,7 @@ const NewsItem: React.FC<NewsItemProps> = ({
                 </h2>
                 <p>{truncateText(description, 100)}</p>
                 <p className="text-gray-500 text-sm mt-2">City: {city}</p>
+                <p>{tag}</p>
             </div>
         </Link>
     )

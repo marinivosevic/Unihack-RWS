@@ -14,6 +14,7 @@ interface NewsItemProps {
     id: number
     title: string
     pictures: string[] // Array of base64-encoded images
+    tag: string
 }
 
 const DashboardHome: React.FC = () => {
@@ -75,6 +76,7 @@ const DashboardHome: React.FC = () => {
                             description={item.description}
                             city={item.city}
                             pictures={item.pictures} // Pass base64-encoded images
+                            tag={item.tag}
                         />
                     ))}
             </div>

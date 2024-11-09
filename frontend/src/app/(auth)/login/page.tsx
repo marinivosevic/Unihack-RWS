@@ -58,7 +58,11 @@ export default function LoginPage() {
                 secure: process.env.NODE_ENV === 'production', // Only use secure cookies in production
                 sameSite: 'strict', // To prevent CSRF
             })
-
+            Cookies.set('isAdmin', data.isAdmin, {
+                expires: 7,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+            })
             // Store the user data in context
             setUser(data)
             router.push('/map')

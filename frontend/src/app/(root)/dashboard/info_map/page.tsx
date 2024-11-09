@@ -15,14 +15,18 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
+import Cookies from 'js-cookie'
 
 export default function MyMap() {
     const [selectedType, setSelectedType] = useState<string | null>(null)
-    const cityCoordinates = {
+    const cityCoordinates: Record<string, [number, number]> = {
         Rijeka: [45.3271, 14.4422],
         Zagreb: [45.815, 15.9819],
         Timisoara: [45.7489, 21.2087],
     }
+    type CityName = keyof typeof cityCoordinates
+    const city = (Cookies.get('city') || 'Rijeka') as CityName
+
     const handleSelectChange = (value: string) => {
         setSelectedType(value)
     }
@@ -46,9 +50,13 @@ export default function MyMap() {
                     </SelectContent>
                 </Select>
             </div>
-            <Map height={950} defaultCenter={[50.879, 4.6997]} defaultZoom={11}>
+            <Map
+                height={950}
+                defaultCenter={cityCoordinates[city]}
+                defaultZoom={11}
+            >
                 {selectedType === 'bus' && (
-                    <Marker width={25} anchor={[50.879, 4.6997]}>
+                    <Marker width={25} anchor={cityCoordinates[city]}>
                         <div className="pin-icon">
                             <div className="icon-container">
                                 <BusFront color="#2c56a1" weight="bold" />
@@ -57,7 +65,7 @@ export default function MyMap() {
                     </Marker>
                 )}
                 {selectedType === 'trash' && (
-                    <Marker width={25} anchor={[50.872, 4.6997]}>
+                    <Marker width={25} anchor={cityCoordinates[city]}>
                         <div className="pin-icon">
                             <div className="icon-container">
                                 <Trash color="#04900b" weight="bold" />
@@ -66,7 +74,7 @@ export default function MyMap() {
                     </Marker>
                 )}
                 {selectedType === 'charger' && (
-                    <Marker width={25} anchor={[50.869, 4.6997]}>
+                    <Marker width={25} anchor={cityCoordinates[city]}>
                         <div className="pin-icon">
                             <div className="icon-container">
                                 <ElectricBatteryCharge

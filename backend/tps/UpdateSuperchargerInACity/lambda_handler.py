@@ -1,5 +1,6 @@
 import logging
 import json
+from boto3.dynamodb.types import Decimal
 
 logger = logging.getLogger("UpdateSuperchargerInACity")
 logger.setLevel(logging.INFO)
@@ -51,11 +52,11 @@ def update_supercharger(dynamodb, charger_id, longitude, latitude, charger_name)
 
     if longitude is not None:
         update_expression += "longitude = :longitude, "
-        expression_attribute_values[':longitude'] = longitude
+        expression_attribute_values[':longitude'] = Decimal(longitude)
 
     if latitude is not None:
         update_expression += "latitude = :latitude, "
-        expression_attribute_values[':latitude'] = latitude
+        expression_attribute_values[':latitude'] = Decimal(latitude)
 
     if charger_name is not None:
         update_expression += "charger_name = :charger_name, "

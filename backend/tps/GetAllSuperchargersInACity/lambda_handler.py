@@ -73,8 +73,8 @@ def get_all_superchargers_in_a_city(city, db_superchargers):
         for charger in db_superchargers:
             merged_list.append({
                 'name': charger['charger_name'],
-                'latitude': charger['latitude'],
-                'longitude': charger['longitude']
+                'latitude': float(charger['latitude']),
+                'longitude': float(charger['longitude'])
             })
 
         return build_response(

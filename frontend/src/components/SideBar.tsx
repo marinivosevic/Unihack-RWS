@@ -11,6 +11,7 @@ import {
     FaCog,
     FaSignOutAlt,
     FaTicketAlt,
+    FaMap,
 } from 'react-icons/fa' // Using react-icons for icons
 import Image from 'next/image'
 import * as images from '@/constants/images'
@@ -21,6 +22,7 @@ const Sidebar: React.FC = () => {
 
     const navLinks = [
         { name: 'Home', href: '/dashboard', icon: <FaHome /> },
+        { name: 'Map', href: '/dashboard/info_map', icon: <FaMap /> },
         {
             name: 'Bill prediction',
             href: '/dashboard/bill_prediction',

@@ -26,13 +26,22 @@ def lambda_handler(event, context):
             }
         )
     
+    # Extract the code and state parameters from the query string
+    query_params = event.get('queryStringParameters', {})
+    tag = query_params.get('tag')
+    
     # Setting up table for users
     global _LAMBDA_NEWS_TABLE_RESOURCE
     dynamodb = LambdaDynamoDBClass(_LAMBDA_NEWS_TABLE_RESOURCE)
 
-    news = dynamodb.table.scan(
-        FilterExpression=Attr('city').eq(city)
-    ).get('Items', [])
+    if tag:
+        news = dynamodb.table.scan(
+            FilterExpression=Attr('city').eq(city) & Attr('tag').eq(tag)
+        ).get('Items', [])
+    else:
+        news = dynamodb.table.scan(
+            FilterExpression=Attr('city').eq(city)
+        ).get('Items', [])
 
     logger.info(f'Found {len(news)} news for city {city}')
 

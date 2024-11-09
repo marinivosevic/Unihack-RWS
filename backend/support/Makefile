@@ -12,7 +12,7 @@ build-CreateTicketFunction:
 	$(MAKE) build LAMBDA_FILE=CreateTicket/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
 
 build-DeleteTicketFunction:
-	$(MAKE) build LAMBDA_FILE=CreateTicket/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
+	$(MAKE) build LAMBDA_FILE=DeleteTicket/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
 
 build-FetchReceivedTicketsFunction:
 	$(MAKE) build LAMBDA_FILE=FetchReceivedTickets/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)

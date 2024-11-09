@@ -51,7 +51,7 @@ def lambda_handler(event, context):
 
         total_cost = (electricity_prediction.tolist()[0] + rent_prediction.tolist()[0])
         
-        # 30% of the total cost for electricity and rent is considered as other costs for 90% of the towns by the data on the internet
+        # 20% of the total cost for electricity and rent is considered as other costs for 90% of the towns by the data on the internet
         other_costs = (total_cost * 0.2)
         total_cost += other_costs
 

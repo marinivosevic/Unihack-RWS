@@ -240,7 +240,7 @@ export default function RegisterPage() {
                                         <button
                                             type="submit"
                                             className="
-                                                bg-gradient-to-t from-gradient-100 via-gradient-100 to-primary-400 
+                                                bg-gradient-to-t from-quinterny-600 to-quinterny-900
                                                 text-white 
                                                 px-4 py-2 
                                                 rounded 

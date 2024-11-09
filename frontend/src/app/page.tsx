@@ -41,7 +41,7 @@ function Page() {
                     <button
                         onClick={handleGetStarted}
                         className="
-                    bg-gradient-to-t from-quinterny-500 via-blue-950 to-quinterny-700 text-white
+                    bg-gradient-to-t from-quinterny-600 to-quinterny-900 text-white
                     font-bold text-lg rounded-lg py-2 px-4 mt-12 w-1/4 z-50                                                 
                     transform 
                     transition 

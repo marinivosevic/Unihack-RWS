@@ -1,6 +1,7 @@
 import logging
 import json
 import uuid
+import datetime
 
 logger = logging.getLogger("CreateNewsForCity")
 logger.setLevel(logging.INFO)
@@ -52,6 +53,7 @@ def lambda_handler(event, context):
             'id': id,
             'city': city,
             'title': title,
+            'published_at': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'description': description
         }
     )

@@ -1,5 +1,6 @@
 import logging
 import json
+import uuid
 
 logger = logging.getLogger("CreateNewSuperchargerInACity")
 logger.setLevel(logging.INFO)
@@ -38,8 +39,11 @@ def lambda_handler(event, context):
     global _LAMBDA_SUPERCHARGERS_TABLE_RESOURCE
     dynamodb = LambdaDynamoDBClass(_LAMBDA_SUPERCHARGERS_TABLE_RESOURCE)
 
+    charger_id = str(uuid.uuid4())
+
     dynamodb.table.put_item(
         Item={
+            'id': charger_id,
             'city': city,
             'longitude': longitude,
             'latitude': latitude,
@@ -50,6 +54,6 @@ def lambda_handler(event, context):
     return build_response(
         200,
         {
-            'message': 'Creating supercharger data'
+            'message': f'Creating new supercharger with id: {charger_id}'
         }
     )

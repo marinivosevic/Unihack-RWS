@@ -1,12 +1,15 @@
 import logging
 import pandas as pd
+from boto3.dynamodb.conditions import Attr
 
 logger = logging.getLogger("GetAllSuperchargersInACity")
 logger.setLevel(logging.INFO)
 
 from common.common import (
     lambda_middleware,
-    build_response
+    build_response,
+    LambdaDynamoDBClass,
+    _LAMBDA_SUPERCHARGERS_TABLE_RESOURCE
 )
 
 @lambda_middleware
@@ -22,9 +25,18 @@ def lambda_handler(event, context):
             }
         )
     
-    return get_all_superchargers_in_a_city(city)
+    # Create database instance
+    global _LAMBDA_SUPERCHARGERS_TABLE_RESOURCE
+    dynamodb = LambdaDynamoDBClass(_LAMBDA_SUPERCHARGERS_TABLE_RESOURCE)
 
-def get_all_superchargers_in_a_city(city):
+    # Get all superchargers in a city
+    db_superchargers = dynamodb.table.scan(
+        FilterExpression=Attr('city').eq(city)
+    ).get('Items', [])
+    
+    return get_all_superchargers_in_a_city(city, db_superchargers)
+
+def get_all_superchargers_in_a_city(city, db_superchargers):
     try:
         csv = pd.read_csv('data/supercharge_locations.csv', encoding='ISO-8859-1')
 
@@ -48,11 +60,28 @@ def get_all_superchargers_in_a_city(city):
         ], axis=1)
 
         list_of_chargers = chargers.to_dict(orient='records')
+
+        merged_list = []
+
+        for charger in list_of_chargers:
+            merged_list.append({
+                'name': charger['Supercharger'],
+                'latitude': charger['latitude'],
+                'longitude': charger['longitude']
+            })
+
+        for charger in db_superchargers:
+            merged_list.append({
+                'name': charger['charger_name'],
+                'latitude': charger['latitude'],
+                'longitude': charger['longitude']
+            })
+
         return build_response(
             200,
             {
                 'message': 'Returning all superchargers in your area',
-                'chargers': list_of_chargers
+                'chargers': merged_list
             }
         )
     except Exception as e:

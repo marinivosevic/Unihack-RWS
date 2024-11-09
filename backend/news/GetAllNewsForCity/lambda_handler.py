@@ -1,4 +1,5 @@
 import logging
+import datetime
 from boto3.dynamodb.conditions import Attr
 
 logger = logging.getLogger("GetAllNewsForCity")
@@ -37,6 +38,8 @@ def lambda_handler(event, context):
 
     for n in news:
         n['pictures'] = get_news_pictures_as_base64(n['id'])
+    
+    sorted_news = sort_news(news)
 
     logger.info(f"Returning news and pictures")
     
@@ -44,6 +47,13 @@ def lambda_handler(event, context):
         200,
         {
             'message': f'Getting all news for city: {city}',
-            'news': news
+            'news': sorted_news
         }
     )
+
+def sort_news(news):
+    logger.info("Sorting news.")
+    news_users = sorted(news, key=lambda x: datetime.strptime(x.get('published_at', '2024-01-01 10:10:10'), "%Y-%m-%d %H:%M:%S"), reverse=True)
+
+    logger.info(f"Sorted news: {news_users}")
+    return news_users

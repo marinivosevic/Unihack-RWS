@@ -18,7 +18,7 @@ def lambda_handler(event, context):
     city = event.get('pathParameters', {}).get('city')
 
     # Getting body data
-    body = json.load(event.get('body'))
+    body = json.loads(event.get('body'))
 
     if not city:
         return build_response(

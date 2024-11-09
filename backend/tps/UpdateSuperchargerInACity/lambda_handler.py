@@ -17,7 +17,7 @@ def lambda_handler(event, context):
     charger_id = event.get('pathParameters', {}).get('charger_id')
 
     # Getting body data
-    body = json.load(event.get('body'))
+    body = json.loads(event.get('body'))
 
     if not charger_id:
         return build_response(

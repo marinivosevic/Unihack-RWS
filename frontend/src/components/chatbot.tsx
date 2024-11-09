@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import ChatIcon from '@mui/icons-material/Chat'
+import { ChatDots } from '@vectopus/atlas-icons-react'
 interface Message {
     sender: 'user' | 'bot'
     text: string
@@ -52,7 +52,7 @@ const Chatbot: React.FC = () => {
                 className="fixed bottom-4 right-4 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none"
                 onClick={() => setIsOpen(true)}
             >
-                <ChatIcon />
+                <ChatDots size={24} />
             </button>
 
             {isOpen && (

@@ -49,6 +49,20 @@ Resources:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
 
+  GarbageCansTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: superchargers
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
   # Lambda Function
   GetAllSuperchargersInACityFunction:
     Type: AWS::Serverless::Function
@@ -163,6 +177,122 @@ Resources:
           Type: HttpApi 
           Properties:
             Path: /superchargers/{charger_id}
+            Method: PUT
+            ApiId: !Ref TpsApi
+
+  GetAllGarbageCansInACityFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      CodeUri: ./
+      Environment:
+        Variables:
+          GARBAGE_CANS_TABLE_NAME: !Ref GarbageCansTable
+          JWT_SECRET_NAME: !Ref JwtSecretName
+          SECRETS_REGION_NAME: !Ref SecretsRegionName
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: "Allow"
+              Resource: "*"
+              Action:
+                - "dynamodb:*"
+                - "secretsmanager:GetSecretValue"
+      Events:
+        GetAllGarbageCansInACityEndpoint:
+          Type: HttpApi 
+          Properties:
+            Path: /garbage/{city}
+            Method: GET
+            ApiId: !Ref TpsApi
+
+  CreateNewGarbageCansInACityFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      CodeUri: ./
+      Environment:
+        Variables:
+          GARBAGE_CANS_TABLE_NAME: !Ref GarbageCansTable
+          JWT_SECRET_NAME: !Ref JwtSecretName
+          SECRETS_REGION_NAME: !Ref SecretsRegionName
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: "Allow"
+              Resource: "*"
+              Action:
+                - "dynamodb:*"
+                - "secretsmanager:GetSecretValue"
+      Events:
+        CreateNewGarbageCansInACityEndpoint:
+          Type: HttpApi 
+          Properties:
+            Path: /garbage/{city}
+            Method: POST
+            ApiId: !Ref TpsApi
+
+  DeleteGarbageCansInACityFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      CodeUri: ./
+      Environment:
+        Variables:
+          GARBAGE_CANS_TABLE_NAME: !Ref GarbageCansTable
+          JWT_SECRET_NAME: !Ref JwtSecretName
+          SECRETS_REGION_NAME: !Ref SecretsRegionName
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: "Allow"
+              Resource: "*"
+              Action:
+                - "dynamodb:*"
+                - "secretsmanager:GetSecretValue"
+      Events:
+        DeleteGarbageCansInACityEndpoint:
+          Type: HttpApi 
+          Properties:
+            Path: /garbage/{charger_id}
+            Method: DELETE
+            ApiId: !Ref TpsApi
+
+  UpdateGarbageCansInACityFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      CodeUri: ./
+      Environment:
+        Variables:
+          GARBAGE_CANS_TABLE_NAME: !Ref GarbageCansTable
+          JWT_SECRET_NAME: !Ref JwtSecretName
+          SECRETS_REGION_NAME: !Ref SecretsRegionName
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: "Allow"
+              Resource: "*"
+              Action:
+                - "dynamodb:*"
+                - "secretsmanager:GetSecretValue"
+      Events:
+        UpdateGarbageCansInACityEndpoint:
+          Type: HttpApi 
+          Properties:
+            Path: /garbage/{charger_id}
             Method: PUT
             ApiId: !Ref TpsApi
 

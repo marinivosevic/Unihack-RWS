@@ -16,6 +16,11 @@ _LAMBDA_SUPERCHARGERS_TABLE_RESOURCE = {
     "table_name" : environ.get("SUPERCHARGERS_TABLE_NAME", "test_table")
 }
 
+_LAMBDA_GARBAGECANS_TABLE_RESOURCE = {
+    "resource" : resource('dynamodb'),
+    "table_name" : environ.get("GARBAGE_CANS_TABLE_NAME", "test_table")
+}
+
 class LambdaDynamoDBClass:
     """
     AWS DynamoDB Resource Class

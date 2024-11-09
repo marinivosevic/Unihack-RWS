@@ -19,3 +19,15 @@ build-DeleteSuperchargerInACityFunction:
 
 build-UpdateSuperchargerInACityFunction:
 	$(MAKE) build LAMBDA_FILE=UpdateSuperchargerInACity/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
+
+build-GetAllGarbageCansInACityFunction:
+	$(MAKE) build LAMBDA_FILE=GetAllGarbageCansInACity/* ARTIFACTS_DIR=$(ARTIFACTS_DIR)
+
+build-CreateNewGarbageCansInACityFunction:
+	$(MAKE) build LAMBDA_FILE=CreateNewGarbageCansInACity/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
+
+build-DeleteGarbageCansInACityFunction:
+	$(MAKE) build LAMBDA_FILE=DeleteGarbageCansInACity/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
+
+build-UpdateGarbageCansInACityFunction:
+	$(MAKE) build LAMBDA_FILE=UpdateGarbageCansInACity/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)

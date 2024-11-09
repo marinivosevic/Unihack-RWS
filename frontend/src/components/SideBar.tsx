@@ -32,15 +32,6 @@ const Sidebar: React.FC = () => {
         { name: 'Tickets', href: '/dashboard/tickets', icon: <FaTicketAlt /> },
         { name: 'Profile', href: '/dashboard/profile', icon: <FaUser /> },
         { name: 'Settings', href: '/dashboard/settings', icon: <FaCog /> },
-        ...(isAdmin
-            ? [
-                  {
-                      name: 'Add News',
-                      href: '/dashboard/addNews',
-                      icon: <FaPlus />,
-                  },
-              ]
-            : []),
     ]
 
     const logout = () => {
@@ -49,7 +40,7 @@ const Sidebar: React.FC = () => {
     }
 
     return (
-        <div className="w-64 h-screen bg-primary-900/20 text-white flex flex-col">
+        <div className="w-64 h-screen bg-primary-200/20 text-white flex flex-col fixed">
             {/* Logo or Brand Name */}
             <div className="flex flex-row items-center justify-start h-16 border-b border-primary-800 px-2">
                 <Image src={images.logo} alt="Logo" width={40} height={40} />
@@ -70,6 +61,16 @@ const Sidebar: React.FC = () => {
                         </p>
                     </Link>
                 ))}
+                {isAdmin === 'true' && (
+                    <Link href="/dashboard/addNews">
+                        <p className="flex items-center p-2 rounded hover:bg-primary-800 transition-colors">
+                            <span className="mr-3">
+                                <FaPlus />
+                            </span>
+                            Add News
+                        </p>
+                    </Link>
+                )}
                 <button onClick={logout} className="absolute bottom-2 w-[85%]">
                     <p className="flex items-center p-2 rounded hover:bg-primary-800 transition-colors w-full">
                         <span className="mr-3">

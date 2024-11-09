@@ -64,9 +64,11 @@ export default function LoginPage() {
                 sameSite: 'strict',
             })
             // Store the user data in context
-            setUser(data)
-            router.push('/Map')
-            setIsSubmitting(false)
+            if (response.ok) {
+                setUser(data)
+                router.push('/Map')
+                setIsSubmitting(false)
+            }
         } catch (error) {
             console.error('Error:', error)
             setIsSubmitting(false)

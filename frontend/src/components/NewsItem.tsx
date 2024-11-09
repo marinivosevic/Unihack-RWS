@@ -23,7 +23,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
     }
 
     return (
-        <div className="bg-primary-800 rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105">
+        <div className="bg-primary-800 rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105 hover:cursor-pointer">
             <img
                 src={`data:image/jpeg;base64,/${imageSrc.replace(/^dataimage\/jpegbase64\//, '')}`}
                 alt={title}

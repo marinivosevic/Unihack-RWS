@@ -16,7 +16,7 @@ const Map = () => {
 
     return (
         <div
-            className="bg-primary-800 relative"
+            className="bg-primary-950 relative"
             style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -56,7 +56,7 @@ const Map = () => {
                 }}
                 fill="#284a80"
                 stroke="black"
-                strokeWidth={0.25}
+                strokeWidth={0.45}
             >
                 <Geographies geography={balkan}>
                     {({ geographies }) =>
@@ -85,13 +85,16 @@ const Map = () => {
                                     style={{
                                         default: {
                                             fill: isSelected
-                                                ? '#6fb6eb'
+                                                ? '#a6a7fb'
                                                 : '#deeefb',
                                             outline: 'none',
+                                            transition: 'transform 0.3s ease',
                                         },
                                         hover: {
-                                            fill: '#e34400',
+                                            fill: '#8077f6',
                                             outline: 'none',
+                                            transform:
+                                                'scale(1.01) translateY(-5px)',
                                         },
                                         pressed: {
                                             fill: '#E42',

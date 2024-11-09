@@ -38,6 +38,14 @@ const CountryMap: React.FC<CountryMapProps> = ({ params }) => {
         geographies = serbiaGeo
     } else if (countryName === 'Romania') {
         geographies = romaniaGeo
+    } else {
+        return (
+            <div className="bg-primary-950">
+                <div className=" text-white flex items-center justify-center">
+                    Country not currently supported
+                </div>
+            </div>
+        )
     }
 
     const cities = selectedCountry ? supportedCities[selectedCountry] || [] : []
@@ -53,7 +61,7 @@ const CountryMap: React.FC<CountryMapProps> = ({ params }) => {
             style={{ position: 'relative', display: 'flex' }}
         >
             <div
-                className="bg-primary-800 relative"
+                className="bg-primary-950 relative"
                 style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -82,7 +90,7 @@ const CountryMap: React.FC<CountryMapProps> = ({ params }) => {
                                   : [27.5, 44.0],
                     }}
                     stroke="black"
-                    strokeWidth={0.25}
+                    strokeWidth={0.45}
                 >
                     <Geographies geography={geographies}>
                         {({ geographies }) =>
@@ -108,13 +116,17 @@ const CountryMap: React.FC<CountryMapProps> = ({ params }) => {
                                         style={{
                                             default: {
                                                 fill: isSelected
-                                                    ? '#6fb6eb'
+                                                    ? '#a6a7fb'
                                                     : '#deeefb',
                                                 outline: 'none',
+                                                transition:
+                                                    'transform 0.3s ease',
                                             },
                                             hover: {
-                                                fill: '#e34400',
+                                                fill: '#8077f6',
                                                 outline: 'none',
+                                                transform:
+                                                    'scale(1.01) translateY(-5px)',
                                             },
                                             pressed: {
                                                 fill: '#E42',

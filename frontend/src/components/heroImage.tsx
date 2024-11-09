@@ -13,7 +13,7 @@ interface HeroImageProps {
 const HeroImage: React.FC<HeroImageProps> = ({ imageSrc, title, content }) => {
     console.log(imageSrc)
     return (
-        <div className=" rounded-xl flex flex-row bg-primary-900 p-5 mr-5">
+        <div className=" rounded-xl flex flex-row  p-5 mr-5">
             <Image
                 src={`data:image/jpeg;base64,/${imageSrc.replace(/^dataimage\/jpegbase64\//, '')}`}
                 alt="Hero"

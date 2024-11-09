@@ -52,11 +52,11 @@ def update_supercharger(dynamodb, charger_id, longitude, latitude, charger_name)
 
     if longitude is not None:
         update_expression += "longitude = :longitude, "
-        expression_attribute_values[':longitude'] = Decimal(longitude)
+        expression_attribute_values[':longitude'] = Decimal(str(longitude))
 
     if latitude is not None:
         update_expression += "latitude = :latitude, "
-        expression_attribute_values[':latitude'] = Decimal(latitude)
+        expression_attribute_values[':latitude'] = Decimal(str(latitude))
 
     if charger_name is not None:
         update_expression += "charger_name = :charger_name, "

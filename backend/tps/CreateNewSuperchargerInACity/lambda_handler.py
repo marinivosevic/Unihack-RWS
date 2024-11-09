@@ -46,8 +46,8 @@ def lambda_handler(event, context):
         Item={
             'id': charger_id,
             'city': city,
-            'longitude': Decimal(longitude),
-            'latitude': Decimal(latitude),
+            'longitude': Decimal(str(longitude)),
+            'latitude': Decimal(str(latitude)),
             'charger_name': charger_name
         }
     )

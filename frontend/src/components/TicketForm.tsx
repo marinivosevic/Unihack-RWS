@@ -10,7 +10,20 @@ import Cookies from 'js-cookie'
 import { z } from 'zod'
 import { ticketSchema } from '@/schemas/ticketSchema'
 
-function TicketForm() {
+interface TicketFormProps {
+    onClose: () => void
+}
+
+interface Ticket {
+    id: string
+    sender: string
+    city: string
+    ticket: string
+    published_at: string
+    picture?: string
+}
+
+function TicketForm({ onClose }: TicketFormProps) {
     const city = Cookies.get('city') || 'Unknown' // Fallback if city is not set
 
     // Form state
@@ -73,18 +86,20 @@ function TicketForm() {
                 picture: formData.picture,
             })
 
-            // Convert image to Base64
-            const base64Image = await convertToBase64(validatedData.picture)
+            // Convert image to Base64 if present
+            let base64Image = ''
+            if (validatedData.picture) {
+                base64Image = await convertToBase64(validatedData.picture)
+            }
 
-            // Prepare data for submission (e.g., send to API)
-            const submissionData = {
+            // Create a new ticket object
+            const newTicket = {
                 city,
                 ticket: validatedData.ticket,
                 picture: base64Image.replace(/^data:image\/\w+;base64,/, ''),
             }
 
-            console.log('Submitting ticket:', submissionData)
-
+            // Submit to API
             const API_URL = process.env.NEXT_PUBLIC_SUPPORT_API
             const token = Cookies.get('token')
 
@@ -94,7 +109,7 @@ function TicketForm() {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(submissionData),
+                body: JSON.stringify(newTicket),
             })
 
             if (!response.ok) {
@@ -102,10 +117,13 @@ function TicketForm() {
             }
 
             const data = await response.json()
-            alert('Ticket submitted successfully!')
+            console.log('Ticket created:', data)
+
             // Reset form
             setFormData({ ticket: '', picture: null })
             setSubmitSuccess(true)
+            // Close the modal
+            onClose()
         } catch (err) {
             if (err instanceof z.ZodError) {
                 // Map Zod errors to form errors
@@ -117,6 +135,7 @@ function TicketForm() {
                 setErrors((prev) => ({ ...prev, ...fieldErrors }))
             } else {
                 console.error('Submission Error:', err)
+                alert('Failed to submit the ticket. Please try again.')
             }
         } finally {
             setIsSubmitting(false)
@@ -173,7 +192,6 @@ function TicketForm() {
                     className={`bg-gray-300 placeholder:text-black/40 ${
                         errors.picture ? 'border border-red-500' : ''
                     }`}
-                    required
                 />
                 {errors.picture && (
                     <span className="text-red-500 text-sm">
@@ -194,6 +212,13 @@ function TicketForm() {
             >
                 {isSubmitting ? 'Submitting...' : 'Submit'}
             </button>
+
+            {/* Success Message */}
+            {submitSuccess && (
+                <div className="mt-4 text-green-500 font-semibold">
+                    Ticket submitted successfully!
+                </div>
+            )}
         </form>
     )
 }

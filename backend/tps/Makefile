@@ -9,4 +9,4 @@ build:
 	rm -rf $(ARTIFACTS_DIR)/bin
 
 build-GetAllSuperchargersInACityFunction:
-	$(MAKE) build LAMBDA_FILE=GetAllSuperchargersInACity/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
+	$(MAKE) build LAMBDA_FILE=GetAllSuperchargersInACity/* ARTIFACTS_DIR=$(ARTIFACTS_DIR)

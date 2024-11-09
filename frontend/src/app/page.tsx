@@ -20,10 +20,17 @@ function Page() {
             <NavBar />
             <div className="w-full min-h-screen flex flex-row justify-center bg-primary-950">
                 {/* Hero */}
-                <div className="flex flex-col items-center w-1/2 p-12 mt-24">
+                <div className="flex flex-col items-center w-1/2 p-12 mt-23">
+                    <Image
+                        src={images.noviLogo}
+                        alt="Novi Logo"
+                        width={160}
+                        height={160}
+                        className="mb-4"
+                    />
                     <h1 className="text-5xl text-center font-bold text-white">
                         Welcome to{' '}
-                        <span className="bg-gradient-to-r from-gradient-100 to-gradient-200 bg-clip-text text-transparent">
+                        <span className="bg-gradient-to-r from-quinterny-400 to-quinterny-700 bg-clip-text text-transparent">
                             UrbanPulse
                         </span>
                     </h1>
@@ -34,7 +41,7 @@ function Page() {
                     <button
                         onClick={handleGetStarted}
                         className="
-                    bg-gradient-to-t from-gradient-100 via-primary-400 to-gradient-200 text-white 
+                    bg-gradient-to-t from-quinterny-500 via-blue-950 to-quinterny-700 text-white
                     font-bold text-lg rounded-lg py-2 px-4 mt-12 w-1/4 z-50                                                 
                     transform 
                     transition 

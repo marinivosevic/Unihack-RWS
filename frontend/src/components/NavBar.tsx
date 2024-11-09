@@ -13,7 +13,7 @@ function NavBar() {
         <div className="w-full h-16 bg-primary-950 flex justify-between items-center px-5 py-2">
             {/* Left Side - Logo and Brand Name */}
             <div className="flex flex-row items-center mt-2">
-                <Image src={images.logo} alt="Logo" width={60} height={60} />
+                <Image src={images.noviLogo} alt="Logo" width={60} height={60} />
                 <h1 className="text-3xl font-bold text-white ml-2">
                     UrbanPulse
                 </h1>

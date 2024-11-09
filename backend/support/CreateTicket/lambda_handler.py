@@ -42,7 +42,6 @@ def lambda_handler(event, context):
         
         try:
             city = body['city']
-            tag = body['tag']
             ticket = body['ticket']
             picture = body['picture']
         except Exception as e:
@@ -90,7 +89,6 @@ def create_ticket(dynamodb, sender, city, ticket, picture, tag):
         'id': id,
         'sender': sender,
         'city': city,
-        'tags': tag,
         'ticket': ticket,
         'published_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     })

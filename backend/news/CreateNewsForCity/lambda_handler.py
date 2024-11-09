@@ -32,6 +32,7 @@ def lambda_handler(event, context):
 
     try:
         title = body['title']
+        tag = body['tag']
         description = body['description']
         pictures = body['pictures']
     except Exception as e:
@@ -52,6 +53,7 @@ def lambda_handler(event, context):
         Item={
             'id': id,
             'city': city,
+            'tag': tag,
             'title': title,
             'published_at': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'description': description

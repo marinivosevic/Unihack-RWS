@@ -36,33 +36,27 @@ export const getWeatherIcon = (
 
     if (id >= 200 && id <= 232) {
         color = 'text-yellow-300'
-        return <WiThunderstorm size={size} className={color} />
+        return 'https://openweathermap.org/img/wn/10d@2x.png'
     } else if (id >= 300 && id <= 321) {
         color = 'text-blue-400'
-        return <WiRain size={size} className={color} />
+        return 'https://openweathermap.org/img/wn/09d@2x.png'
     } else if (id >= 500 && id <= 531) {
         color = 'text-blue-400'
-        return <WiRain size={size} className={color} />
+        return 'https://openweathermap.org/img/wn/10d@2x.png'
     } else if (id >= 600 && id <= 622) {
         color = 'text-blue-200'
-        return <WiSnow size={size} className={color} />
+        return 'https://openweathermap.org/img/wn/13d@2x.png'
     } else if (id >= 700 && id <= 781) {
         color = 'text-gray-400'
-        return <WiFog size={size} className={color} />
+        return 'https://openweathermap.org/img/wn/50d@2x.png'
     } else if (id === 800) {
         color = isDay ? 'text-yellow-300' : 'text-gray-300'
-        return isDay ? (
-            <WiDaySunny size={size} className={color} />
-        ) : (
-            <WiNightClear size={size} className={color} />
-        )
+        return 'https://openweathermap.org/img/wn/01d@2x.png'
     } else if (id >= 801 && id <= 804) {
         color = isDay ? 'text-gray-300' : 'text-gray-300'
-        return isDay ? (
-            <WiDayCloudy size={size} className={color} />
-        ) : (
-            <WiNightCloudy size={size} className={color} />
-        )
+        return isDay
+            ? 'https://openweathermap.org/img/wn/02d@2x.png'
+            : 'https://openweathermap.org/img/wn/02n@2x.png'
     } else {
         // Default icon
         return <WiDaySunny size={size} className={color} />

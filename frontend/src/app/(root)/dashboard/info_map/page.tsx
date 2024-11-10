@@ -401,7 +401,7 @@ export default function MyMap() {
                     <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Select info type" />
                     </SelectTrigger>
-                    <SelectContent className="bg-white/50">
+                    <SelectContent className="bg-white">
                         <SelectGroup>
                             <SelectLabel>Types</SelectLabel>
                             <SelectItem value="bus">Busses</SelectItem>

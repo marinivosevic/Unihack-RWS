@@ -21,7 +21,7 @@ const Chatbot: React.FC = () => {
 
         try {
             const response = await fetch(
-                'https://dsu1qzfodk.execute-api.eu-central-1.amazonaws.com/api-v1/chat/ask',
+                'https://bz1cbiyquc.execute-api.eu-central-1.amazonaws.com/api-v1/chat/ask',
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },

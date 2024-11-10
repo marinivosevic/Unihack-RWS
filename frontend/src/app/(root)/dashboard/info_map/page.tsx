@@ -109,14 +109,12 @@ interface ParkingPaymentTime {
     dani_i_sati: string
     vrijeme_start: string
     vrijeme_kraj: string
-<<<<<<< HEAD
-=======
 }
 interface Charger {
     name: string
     latitude: number
     longitude: number
->>>>>>> 85b90365b87b48d32a206364d170e3a31110d0ca
+
 }
 
 // Helper function to calculate distance between two lat/lng points in meters
@@ -134,9 +132,9 @@ const getDistanceFromLatLonInMeters = (
     const a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
         Math.cos(toRadians(lat1)) *
-            Math.cos(toRadians(lat2)) *
-            Math.sin(dLon / 2) *
-            Math.sin(dLon / 2)
+        Math.cos(toRadians(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2)
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
     const distance = R * c
     return distance
@@ -154,178 +152,6 @@ export default function MyMap() {
     const [parkingError, setParkingError] = useState<string | null>(null)
 
     const [selectedParking, setSelectedParking] = useState<Parking | null>(null)
-<<<<<<< HEAD
-
-    const cityCoordinates: Record<string, [number, number]> = {
-        Rijeka: [45.3271, 14.4422],
-        Zagreb: [45.815, 15.9819],
-        Timisoara: [45.7489, 21.2087],
-    }
-    type CityName = keyof typeof cityCoordinates
-    const city = (Cookies.get('city') || 'Rijeka') as CityName
-    const initialMapCenter = cityCoordinates[city]
-
-    // New state to track the current center and zoom of the map
-    const [mapCenter, setMapCenter] =
-        useState<[number, number]>(initialMapCenter)
-    const [zoom, setZoom] = useState<number>(15) // Initialize zoom state
-
-    const handleSelectChange = (value: string) => {
-        setSelectedType(value)
-        setSelectedParking(null) // Close any open popups when changing selection
-    }
-
-    // Fetch buses
-    useEffect(() => {
-        let intervalId: NodeJS.Timeout | null = null
-
-        const fetchBuses = async () => {
-            setLoading(true)
-            setError(null)
-            try {
-                const response = await apiClient.getAutobusi()
-                console.log(response)
-                if (!response.err && response.res) {
-                    setBuses(response.res)
-                } else {
-                    setError(response.msg || 'Failed to fetch buses.')
-                }
-            } catch (err: any) {
-                setError(err.message || 'An unexpected error occurred.')
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        if (selectedType === 'bus') {
-            // Fetch immediately
-            fetchBuses()
-            // Set up polling every 10 seconds
-            intervalId = setInterval(fetchBuses, 10000)
-        }
-
-        // Cleanup function to clear the interval
-        return () => {
-            if (intervalId) {
-                clearInterval(intervalId)
-            }
-        }
-    }, [selectedType])
-
-    // Fetch parking data
-    useEffect(() => {
-        let intervalId: NodeJS.Timeout | null = null
-
-        const fetchParking = async () => {
-            setParkingLoading(true)
-            setParkingError(null)
-            try {
-                const response = await fetch(
-                    'https://67l89bzn2b.execute-api.eu-central-1.amazonaws.com/api-v1/parking-data',
-                    {
-                        method: 'GET',
-                    }
-                )
-                if (!response.ok) {
-                    throw new Error('Failed to fetch parking data.')
-                }
-                const data: ParkingAPIResponse[] = await response.json()
-                console.log(data)
-                // Process and map the data to Parking interface
-                const processedData: Parking[] = data
-                    .filter((item) => item.parking_data.lokacija) // Filter out entries without lokacija
-                    .map((item) => {
-                        const highestCijena =
-                            item.parking_data.cijena.length > 0
-                                ? Math.max(
-                                      ...item.parking_data.cijena.map(
-                                          (c) => c.cijena
-                                      )
-                                  )
-                                : 0 // Default value or handle as needed
-                        return {
-                            parking_name: item.parking_name,
-                            slobodno: item.parking_data.slobodno,
-                            kapacitet: item.parking_data.kapacitet,
-                            lokacija: item.parking_data.lokacija, // Safe to assign now
-                            highest_cijena: highestCijena,
-                            vrijeme_naplate: item.parking_data.vrijeme_naplate,
-                            live_status:
-                                item.parking_data.status_sustava === 'OK'
-                                    ? true
-                                    : false,
-                        }
-                    })
-
-                setParkingData(processedData)
-            } catch (err: any) {
-                setParkingError(err.message || 'An unexpected error occurred.')
-            } finally {
-                setParkingLoading(false)
-            }
-        }
-
-        if (selectedType === 'parking') {
-            // Fetch immediately
-            fetchParking()
-            // Set up polling every 30 seconds
-            intervalId = setInterval(fetchParking, 30000)
-        }
-
-        // Cleanup function to clear the interval
-        return () => {
-            if (intervalId) {
-                clearInterval(intervalId)
-            }
-        }
-    }, [selectedType])
-
-    // Helper function to determine marker color based on availability
-    const getParkingMarkerColor = (
-        slobodno: number,
-        kapacitet: number,
-        live_status: boolean
-    ): string => {
-        if (!live_status) {
-            return 'gray'
-        }
-        const availability = slobodno / kapacitet
-        if (availability > 0.7) {
-            return 'green'
-        } else if (availability > 0.3) {
-            return 'orange'
-        } else {
-            return 'red'
-        }
-    }
-
-    // Helper function to format working hours
-    const formatWorkingHours = (
-        vrijeme_naplate: ParkingPaymentTime[]
-    ): string => {
-        return vrijeme_naplate
-            .map((time) => {
-                const { dani_i_sati, vrijeme_start, vrijeme_kraj } = time
-                let days = ''
-                let workingHours = ''
-
-                if (dani_i_sati.includes('Radnim danom')) {
-                    days += 'Mon-Fri '
-                }
-                if (dani_i_sati.includes('Subotom')) {
-                    days += 'Sat '
-                }
-                if (dani_i_sati.includes('nedjeljom')) {
-                    days += 'Sun '
-                }
-
-                workingHours = `${vrijeme_start} - ${vrijeme_kraj}`
-
-                return `${days.trim()}: ${workingHours}`
-            })
-            .join('; ')
-    }
-=======
     const [chargers, setChargers] = useState<Charger[]>([])
     const [chargersLoading, setChargersLoading] = useState<boolean>(false)
     const [chargersError, setChargersError] = useState<string | null>(null)
@@ -360,6 +186,7 @@ export default function MyMap() {
                 console.log(response)
                 if (!response.err && response.res) {
                     setBuses(response.res)
+                    console.log(response.res)
                 } else {
                     setError(response.msg || 'Failed to fetch buses.')
                 }
@@ -370,9 +197,11 @@ export default function MyMap() {
             }
         }
 
-        if (selectedType === 'charger') {
-            fetchChargers()
-            intervalId = setInterval(fetchChargers, 60000) // Poll every 60 seconds
+        if (selectedType === 'bus') {
+            // Fetch immediately
+            fetchBuses()
+            // Set up polling every 10 seconds
+            intervalId = setInterval(fetchBuses, 10000)
         }
 
         return () => {
@@ -381,12 +210,7 @@ export default function MyMap() {
             }
         }
     }, [selectedType])
-    if (selectedType === 'bus') {
-        // Fetch immediately
-        fetchBuses()
-        // Set up polling every 10 seconds
-        intervalId = setInterval(fetchBuses, 10000)
-    }
+
     const fetchChargers = async () => {
         setChargersLoading(true)
         setChargersError(null)
@@ -454,10 +278,10 @@ export default function MyMap() {
                         const highestCijena =
                             item.parking_data.cijena.length > 0
                                 ? Math.max(
-                                      ...item.parking_data.cijena.map(
-                                          (c) => c.cijena
-                                      )
-                                  )
+                                    ...item.parking_data.cijena.map(
+                                        (c) => c.cijena
+                                    )
+                                )
                                 : 0 // Default value or handle as needed
                         return {
                             parking_name: item.parking_name,
@@ -541,7 +365,6 @@ export default function MyMap() {
             })
             .join('; ')
     }
->>>>>>> 85b90365b87b48d32a206364d170e3a31110d0ca
 
     // Memoize the filtered trash containers to optimize performance
     const filteredTrashContainers = useMemo(() => {
@@ -561,9 +384,9 @@ export default function MyMap() {
 
     // Handler to update mapCenter and zoom when the map view changes
     const handleBoundsChanged = ({
-        center,
-        zoom,
-    }: {
+                                     center,
+                                     zoom,
+                                 }: {
         center: [number, number]
         zoom: number
     }) => {
@@ -644,34 +467,28 @@ export default function MyMap() {
                             </Marker>
                         )
                     })}
-<<<<<<< HEAD
-                {selectedType === 'charger' && (
-                    <Marker width={25} anchor={mapCenter}>
-                        <div className="pin-icon">
-                            <div className="icon-container">
-                                <ElectricBatteryCharge
-                                    color="#e7c700"
-                                    size={24}
-                                    weight="bold"
-                                />
-                            </div>
-                        </div>
-                    </Marker>
-                )}
-=======
                 {selectedType === 'charger' &&
-                    chargers.map((charger) => (
-                        <Marker
-                            key={charger.name}
-                            width={25}
-                            anchor={[charger.latitude, charger.longitude]}
-                        >
-                            <div className="pin-icon">
-                                <div className="icon-container">naofnoasnd</div>
-                            </div>
-                        </Marker>
-                    ))}
->>>>>>> 85b90365b87b48d32a206364d170e3a31110d0ca
+                    chargers.map((charger) => {
+                        const latitude =  parseFloat(charger.latitude.toFixed(6))
+                        const longitude = parseFloat(charger.longitude.toFixed(6))
+                        console.log(latitude, longitude)
+                        return(
+                            <Marker
+                                key={charger.name}
+                                width={25}
+                                anchor={[longitude, latitude]}
+                            >
+                                <div className="pin-icon">
+                                    <div className="icon-container">
+                                        <ElectricBatteryCharge
+                                            color="#f7c744"
+                                            weight="bold"
+                                        />
+                                    </div>
+                                </div>
+                            </Marker>
+                        )
+                    })}
                 {selectedType === 'parking' &&
                     parkingData.map((parking) => {
                         if (!parking.lokacija) return null // Skip if lokacija is undefined
@@ -721,18 +538,11 @@ export default function MyMap() {
                 {infoModal && selectedParking && (
                     <Overlay
                         anchor={[
-<<<<<<< HEAD
-                            selectedParking.lokacija?.lat!,
-                            selectedParking.lokacija?.lng!,
-                        ]}
-                        offset={[120, 79]}
-=======
                             selectedParking.lokacija.lat,
                             selectedParking.lokacija.lng,
                         ]}
                         offset={[120, 79]}
                         onClickOutside={() => setInfoModal(false)}
->>>>>>> 85b90365b87b48d32a206364d170e3a31110d0ca
                     >
                         <div className="bg-white p-4 rounded shadow-lg">
                             <h3 className="text-lg font-bold">

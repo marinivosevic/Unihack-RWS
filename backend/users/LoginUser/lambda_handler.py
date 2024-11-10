@@ -61,12 +61,15 @@ def login_user(dynamodb, email, password):
     
     update_refresh_token(dynamodb, email, refresh_token)
 
+    isAdmin = user.get('city') is not None
+
     return build_response(
         200,
         {
             'message': 'Logged in successfully, welcome!',
             'token': access_token,
-            'refresh_token': refresh_token
+            'refresh_token': refresh_token,
+            'isAdmin': isAdmin
         }
     )
 

@@ -3,7 +3,6 @@ from boto3 import resource, client
 from os import environ
 import jwt
 import logging
-import base64
 import bcrypt
 import boto3
 import logging
@@ -35,6 +34,19 @@ class LambdaS3Class:
         self.client = lambda_s3_resource["client"]
         self.bucket_name = lambda_s3_resource["bucket_name"]
 
+
+class LambdaDynamoDBClass:
+    """
+    AWS DynamoDB Resource Class
+    """
+    def __init__(self, lambda_dynamodb_resource):
+        """
+        Initialize a DynamoDB Resource
+        """
+        self.resource = lambda_dynamodb_resource["resource"]
+        self.table_name = lambda_dynamodb_resource["table_name"]
+        self.table = self.resource.Table(self.table_name)
+
 def generate_jwt_token(email):
     secrets = get_secrets_from_aws_secrets_manager(
             environ.get('JWT_SECRET_NAME'),
@@ -54,57 +66,6 @@ def generate_refresh_token(email):
     expiration_time = int((datetime.now(timezone.utc) + timedelta(days=1)).timestamp())
 
     return jwt.encode({"email": email, "exp": expiration_time}, secrets['refresh_secret'], algorithm="HS256")
-
-def get_profile_picture_as_base64(user_email):
-    # Setting up s3 client
-    s3_class = LambdaS3Class(_LAMBDA_S3_CLIENT_FOR_PROFILE_PICTURES)
-
-    image, is_fetched = get_image_from_s3(
-        s3_class.client, 
-        s3_class.bucket_name,
-        f"{user_email}.jpg"
-    )
-
-    if is_fetched:
-        return base64.b64encode(image).decode('utf-8')
-    
-    return None
-    
-def delete_profile_picture(user_email):
-    # Setting up s3 client
-    s3_class = LambdaS3Class(_LAMBDA_S3_CLIENT_FOR_PROFILE_PICTURES)
-
-    return delete_image_from_s3(
-        s3_class.client, 
-        s3_class.bucket_name,
-        f"{user_email}.jpg"
-    )
-
-def save_profile_picture(profile_picture, user_email, should_convert_from_base64=True):
-    # Setting up s3 client
-    s3_class = LambdaS3Class(_LAMBDA_S3_CLIENT_FOR_PROFILE_PICTURES)
-    
-    logger.info('Converting profile picture to data.')
-    profile_picture_data = base64.b64decode(profile_picture) if should_convert_from_base64 else profile_picture
-
-    return save_image_to_s3(
-        s3_class.client, 
-        s3_class.bucket_name,
-        f"{user_email}.jpg",
-        profile_picture_data
-    )
-
-class LambdaDynamoDBClass:
-    """
-    AWS DynamoDB Resource Class
-    """
-    def __init__(self, lambda_dynamodb_resource):
-        """
-        Initialize a DynamoDB Resource
-        """
-        self.resource = lambda_dynamodb_resource["resource"]
-        self.table_name = lambda_dynamodb_resource["table_name"]
-        self.table = self.resource.Table(self.table_name)
 
 @lambda_handler_decorator
 def lambda_middleware(handler, event, context):
@@ -243,49 +204,3 @@ def build_response(status_code, body, headers=None):
 def hash_password(password, salt_rounds=5):
     salt = bcrypt.gensalt(rounds=salt_rounds)
     return bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
-
-def get_image_from_s3(s3_client, bucket_name, image_key):
-    logger.info(f"Getting image from S3: {image_key}")
-
-    response = s3_client.get_object(
-        Bucket=bucket_name,
-        Key=image_key,
-    )
-
-    logger.info(f"Response for getting image: {response}")
-
-    if response.get('Body'):
-        return response['Body'].read(), True
-    
-    return None, False
-
-def save_image_to_s3(s3_client, bucket_name, image_key, image_data):
-    try:
-        logger.info(f'Saving image to S3: {image_key}')
-
-        s3_client.put_object(
-            Bucket=bucket_name,
-            Key=image_key,
-            Body=image_data,
-            ContentType='image/jpeg'
-        )
-
-        return True
-    except Exception as e:
-        logger.error(f'Unable to save image to S3: {str(e)}')
-        return False
-
-def delete_image_from_s3(s3_client, bucket_name, image_key):
-    try:
-        logger.info(f'Deleting image from S3: {image_key}')
-
-        s3_client.delete_object(
-            Bucket=bucket_name,
-            Key=image_key
-        )
-
-        return True
-    except Exception as e:
-        logger.error(f'Unable to save image to S3: {str(e)}')
-        return False
-    

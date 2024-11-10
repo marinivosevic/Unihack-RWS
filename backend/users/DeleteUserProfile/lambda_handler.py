@@ -5,7 +5,6 @@ logger.setLevel(logging.INFO)
 
 from common.common import (
     _LAMBDA_USERS_TABLE_RESOURCE,
-    delete_profile_picture,
     lambda_middleware,
     get_email_from_jwt_token,
     build_response,
@@ -47,9 +46,6 @@ def delete_user_from_db(dynamodb, user_email):
             return False
         
         logger.info("User exists, deleting user profile.")
-
-        # Delete user profile picture from S3
-        delete_profile_picture(user_email)
 
         # Delete user from the database
         dynamodb.table.delete_item(

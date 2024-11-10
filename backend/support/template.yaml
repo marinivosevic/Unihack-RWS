@@ -1,0 +1,217 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  stack for managing support lambdas
+
+Parameters:
+  JwtSecretName:
+    Type: String
+    Description: Name of the secret in Secrets Manager that contains the JWT secret
+    Default: python-lambda-app/prod/jwt-secret
+
+  SecretsRegionName:
+    Type: String
+    Description: Region name where the secrets are stored
+    Default: eu-central-1
+
+# Global Settings
+Globals:
+  Function:
+    Timeout: 60
+    MemorySize: 512
+
+Resources:
+  # S3 buckets
+  TicketsImageBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - "*"
+            AllowedMethods:
+              - GET
+              - PUT
+              - POST
+            AllowedOrigins:
+              - "*"
+
+  # API Gateway
+  SupportServiceApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: api-v1
+      CorsConfiguration:
+        AllowOrigins:
+          - "*"
+        AllowHeaders:
+          - "*"
+        AllowMethods:
+          - "*"
+
+  # DynamoDB Table definition
+  TicketsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: tickets
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  # Lambda Functions
+  CreateTicketFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      CodeUri: ./
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      Environment:
+        Variables:
+          JWT_SECRET_NAME: !Ref JwtSecretName
+          SECRETS_REGION_NAME: !Ref SecretsRegionName
+          TICKETS_TABLE_NAME: !Ref TicketsTable
+          TICKETS_PICTURES_BUCKET: !Ref TicketsImageBucket
+      Architectures:
+        - x86_64
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Action:
+                - "dynamodb:*"
+                - "s3:*"
+                - "secretsmanager:GetSecretValue"
+              Resource: "*"
+      Events:
+        CreateTicketEndpoint:
+          Type: HttpApi
+          Properties:
+            Path: /support
+            Method: POST
+            ApiId: !Ref SupportServiceApi
+
+  DeleteTicketFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      CodeUri: ./
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      Environment:
+        Variables:
+          JWT_SECRET_NAME: !Ref JwtSecretName
+          SECRETS_REGION_NAME: !Ref SecretsRegionName
+          TICKETS_TABLE_NAME: !Ref TicketsTable
+          TICKETS_PICTURES_BUCKET: !Ref TicketsImageBucket
+      Architectures:
+        - x86_64
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Action:
+                - "dynamodb:*"
+                - "s3:*"
+                - "secretsmanager:GetSecretValue"
+              Resource: "*"
+      Events:
+        DeleteTicketEndpoint:
+          Type: HttpApi
+          Properties:
+            Path: /support/{ticket_id}
+            Method: DELETE
+            ApiId: !Ref SupportServiceApi
+
+  FetchSentTicketsFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      CodeUri: ./
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      Environment:
+        Variables:
+          JWT_SECRET_NAME: !Ref JwtSecretName
+          SECRETS_REGION_NAME: !Ref SecretsRegionName
+          TICKETS_TABLE_NAME: !Ref TicketsTable
+          TICKETS_PICTURES_BUCKET: !Ref TicketsImageBucket
+      Architectures:
+        - x86_64
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Action:
+                - "dynamodb:*"
+                - "s3:*"
+                - "secretsmanager:GetSecretValue"
+              Resource: "*"
+      Events:
+        FetchSentTicketsEndpoint:
+          Type: HttpApi
+          Properties:
+            Path: /support/sent
+            Method: GET
+            ApiId: !Ref SupportServiceApi
+
+  FetchReceivedTicketsFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      CodeUri: ./
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      Environment:
+        Variables:
+          JWT_SECRET_NAME: !Ref JwtSecretName
+          SECRETS_REGION_NAME: !Ref SecretsRegionName
+          TICKETS_TABLE_NAME: !Ref TicketsTable
+          TICKETS_PICTURES_BUCKET: !Ref TicketsImageBucket
+      Architectures:
+        - x86_64
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Action:
+                - "dynamodb:*"
+                - "s3:*"
+                - "secretsmanager:GetSecretValue"
+              Resource: "*"
+      Events:
+        FetchReceivedTicketsEndpoint:
+          Type: HttpApi
+          Properties:
+            Path: /support/received/{city}
+            Method: GET
+            ApiId: !Ref SupportServiceApi
+
+Outputs:
+  TicketsTableArn:
+    Description: "Tickets table ARN"
+    Value: !GetAtt TicketsTable.Arn
+    Export:
+      Name: !Sub "${AWS::StackName}-TicketsTableArn"
+
+  TicketsTableName:
+    Description: "Tickets table NAME"
+    Value: !Ref TicketsTable
+    Export:
+      Name: !Sub "${AWS::StackName}-TicketsTableName"
+
+  EndpointURI:
+    Description: "API Endpoint URL"
+    Value: !Sub "https://${SupportServiceApi}.execute-api.${AWS::Region}.amazonaws.com/api-v1"
+    Export:
+      Name: SupportServiceApi

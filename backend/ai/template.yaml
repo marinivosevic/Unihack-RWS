@@ -1,0 +1,89 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: 'AWS::Serverless-2016-10-31'
+Description: >
+  Stack for ai deployments
+
+Parameters:
+  JwtSecretName:
+    Type: String
+    Description: Name of the secret in Secrets Manager that contains the JWT secret
+    Default: python-lambda-app/prod/jwt-secret
+
+  SecretsRegionName:
+    Type: String
+    Description: Region name where the secrets are stored
+    Default: "eu-central-1"
+
+# Global Settings
+Globals:
+  Function:
+    Timeout: 60
+    MemorySize: 512
+
+Resources:
+  # API Gateway
+  AiModelApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: api-v1
+      CorsConfiguration:
+        AllowOrigins:
+          - "*"
+        AllowHeaders:
+          - "*"
+        AllowMethods:
+          - "*"
+
+  # Lambda Function
+  CostOfLivingPredictorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      CodeUri: ./CostOfLivingPredictor
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: "Allow"
+              Resource: "*"
+              Action:
+                - "dynamodb:*"
+      Events:
+        CostOfLivingEndpoint:
+          Type: HttpApi 
+          Properties:
+            Path: /bill/predict
+            Method: POST
+            ApiId: !Ref AiModelApi
+
+  ChatBotFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      CodeUri: ./ChatBot
+      Environment:
+        Variables:
+          JWT_SECRET_NAME: !Ref JwtSecretName
+          SECRETS_REGION_NAME: !Ref SecretsRegionName
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: "Allow"
+              Action:
+                - "secretsmanager:GetSecretValue"
+              Resource: "*"
+      Events:
+        ChatBotEndpoint:
+          Type: HttpApi 
+          Properties:
+            Path: /chat/ask
+            Method: POST
+            ApiId: !Ref AiModelApi
+
+Outputs:
+  EndpointURI:
+    Description: "API Endpoint URL"
+    Value: !Sub "https://${AiModelApi}.execute-api.${AWS::Region}.amazonaws.com/api-v1"
+    Export:
+      Name: AiModelApiUrl

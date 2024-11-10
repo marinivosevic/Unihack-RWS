@@ -6,7 +6,6 @@ logger.setLevel(logging.INFO)
 
 from common.common import (
     _LAMBDA_USERS_TABLE_RESOURCE,
-    save_profile_picture,
     lambda_middleware,
     get_email_from_jwt_token,
     build_response,
@@ -51,18 +50,6 @@ def lambda_handler(event, context):
         )
     
     update_user(dynamodb, email, new_first_name, new_last_name)
-    
-    # Update profile picture if it exists
-    if new_profile_picture:
-        successful_upload = save_profile_picture(new_profile_picture, email)
-
-        if not successful_upload:
-            return build_response(
-                400,
-                {
-                    'message': 'Couldn\'t update profile picture. Please try again or contact support.'
-                }
-            )
     
     return build_response(
         200,

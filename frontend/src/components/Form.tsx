@@ -73,7 +73,7 @@ export default function FormElectricity() {
         }
 
         const response = await fetch(
-            `https://dsu1qzfodk.execute-api.eu-central-1.amazonaws.com/api-v1/bill/predict`,
+           " https://bz1cbiyquc.execute-api.eu-central-1.amazonaws.com/api-v1/bill/predict",
             {
                 method: 'POST',
                 headers: {
@@ -85,7 +85,7 @@ export default function FormElectricity() {
 
         const result = await response.json()
         console.log(result)
-        setResult(result.predictionResult.toFixed(2))
+        setResult(result)
         setLoading(false)
     }
 
@@ -107,15 +107,25 @@ export default function FormElectricity() {
         <>
             {result && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300 ease-in-out">
-                    <div className="w-3/4 max-w-lg h-auto bg-primary-600 flex flex-col items-center justify-center p-10 rounded-2xl shadow-lg transform transition-all duration-300 ease-in-out scale-100">
+                    <div
+                        className="w-3/4 max-w-lg h-auto bg-primary-600 flex flex-col items-center justify-center p-10 rounded-2xl shadow-lg transform transition-all duration-300 ease-in-out scale-100">
                         <h1 className="text-4xl font-bold text-center text-white mb-6">
                             Prediction Result
                         </h1>
                         <p className="text-white font-semibold text-center text-2xl mb-6">
-                            Electricity Bill Prediction: {result} €
+                            Electricity Bill Prediction: {result.electricity_bill.toFixed(2)} €
+                        </p>
+                        <p className="text-white font-semibold text-center text-2xl mb-6">
+                            Rent Bill: {result.rent_bill.toFixed(2)} €
+                        </p>
+                        <p className="text-white font-semibold text-center text-2xl mb-6">
+                            Other Costs: {result.other_costs.toFixed(2)} €
+                        </p>
+                        <p className="text-white font-semibold text-center text-2xl mb-6">
+                            Potential Cost Of Living: {result.potential_cost_of_living.toFixed(2)} €
                         </p>
                         <button
-                            className="bg-primary-500 hover:bg-primary-700 text-white p-3 w-1/3 rounded-lg mt-8 transition-all duration-200 ease-in-out transform hover:scale-105"
+                            className="bg-quinterny-600 hover:bg-quinterny-400 text-white p-3 w-1/3 rounded-lg mt-8 transition-all duration-200 ease-in-out transform hover:scale-105"
                             onClick={() => setResult(null)}
                         >
                             Close

@@ -1,7 +1,4 @@
-// app/dashboard/page.tsx
-
 'use client'
-
 import React, { useEffect, useState } from 'react'
 import WeatherWidget from '@/components/WeatherWidget'
 import Cookies from 'js-cookie'
@@ -112,72 +109,64 @@ const DashboardHome: React.FC = () => {
             {loading && <Progress value={loaderValue} className="w-full" />}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
                 {news.map((item) => (
-                    <Dialog
+                    <div
                         key={item.id}
-                        open={isDialogOpen}
-                        onOpenChange={closeModal}
+                        className="cursor-pointer transition"
+                        onClick={() => openModal(item)}
                     >
-                        <DialogTrigger asChild>
-                            <span className="cursor-pointer hover:ring-2 hover:ring-purple-500 transition">
-                                <NewsItem
-                                    title={item.title}
-                                    description={item.description}
-                                    imageSrc={item.pictures[0]}
-                                    tag={item.tag}
-                                    id={item.id}
-                                />
-                            </span>
-                        </DialogTrigger>
-
-                        {selectedNews && (
-                            <DialogContent className="w-full max-w-3xl p-6 bg-white rounded-lg">
-                                <DialogHeader>
-                                    <Carousel className="w-full h-80 mt-4">
-                                        <CarouselContent>
-                                            {selectedNews.pictures.map(
-                                                (pic, index) => (
-                                                    <CarouselItem key={index}>
-                                                        <Image
-                                                            src={`data:image/jpeg;base64,/${pic.replace(/^dataimage\/jpegbase64\//, '').replace(/=+$/, '')}`}
-                                                            alt={`Image ${index}`}
-                                                            className="w-full h-64 object-contain"
-                                                            width={800}
-                                                            height={400}
-                                                        />
-                                                    </CarouselItem>
-                                                )
-                                            )}
-                                        </CarouselContent>
-                                        <CarouselPrevious>
-                                            Previous
-                                        </CarouselPrevious>
-                                        <CarouselNext>Next</CarouselNext>
-                                    </Carousel>
-                                    <DialogTitle className="text-2xl font-bold mt-4">
-                                        {selectedNews.title}
-                                    </DialogTitle>
-                                    <DialogDescription className="mt-2 max-h-64 overflow-y-auto">
-                                        <span
-                                            dangerouslySetInnerHTML={{
-                                                __html: selectedNews.description.replace(
-                                                    /\n/g,
-                                                    '<br />'
-                                                ),
-                                            }}
-                                        />
-                                    </DialogDescription>
-                                </DialogHeader>
-
-                                <DialogClose asChild>
-                                    <Button className="mt-4 btn btn-primary">
-                                        Close
-                                    </Button>
-                                </DialogClose>
-                            </DialogContent>
-                        )}
-                    </Dialog>
+                        <NewsItem
+                            title={item.title}
+                            description={item.description}
+                            imageSrc={item.pictures[0]}
+                            tag={item.tag}
+                            id={item.id}
+                        />
+                    </div>
                 ))}
             </div>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                {selectedNews && (
+                    <DialogContent className="w-full max-w-3xl p-6 bg-white rounded-lg">
+                        <DialogHeader>
+                            <Carousel className="w-full h-80 mt-4">
+                                <CarouselContent>
+                                    {selectedNews.pictures.map((pic, index) => (
+                                        <CarouselItem key={index}>
+                                            <Image
+                                                src={`data:image/jpeg;base64,/${pic.replace(/^dataimage\/jpegbase64\//, '').replace(/=+$/, '')}`}
+                                                alt={`Image ${index}`}
+                                                className="w-full h-64 object-contain"
+                                                width={800}
+                                                height={400}
+                                            />
+                                        </CarouselItem>
+                                    ))}
+                                </CarouselContent>
+                                <CarouselPrevious>Previous</CarouselPrevious>
+                                <CarouselNext>Next</CarouselNext>
+                            </Carousel>
+                            <DialogTitle className="text-2xl font-bold mt-4">
+                                {selectedNews.title}
+                            </DialogTitle>
+                            <DialogDescription className="mt-2 max-h-64 overflow-y-auto">
+                                <span
+                                    dangerouslySetInnerHTML={{
+                                        __html: selectedNews.description.replace(
+                                            /\n/g,
+                                            '<br />'
+                                        ),
+                                    }}
+                                />
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogClose asChild>
+                            <Button className="mt-4 btn btn-primary" onClick={closeModal}>
+                                Close
+                            </Button>
+                        </DialogClose>
+                    </DialogContent>
+                )}
+            </Dialog>
             <div>
                 <Chatbot />
             </div>

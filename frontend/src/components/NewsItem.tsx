@@ -22,6 +22,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
 }) => {
     const fallbackImage = '/default-news.jpg' // Ensure this image exists in your public folder
     const isAdmin = Cookies.get('isAdmin')
+    console.log(isAdmin)
     const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
         e.currentTarget.src = fallbackImage
     }
@@ -75,7 +76,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
                     {description}
                 </p>
             </div>
-            {isAdmin ? (
+            {isAdmin === 'true' ? (
                 <div className="absolute top-2 right-2 flex space-x-2">
                     <button
                         className="bg-white rounded-full p-3 text-red-500 hover:text-red-700"
@@ -86,15 +87,7 @@ const NewsCard: React.FC<NewsCardProps> = ({
                     >
                         <Trash />
                     </button>
-                    <button
-                        className="bg-white rounded-full p-3 text-blue-500 hover:text-blue-700"
-                        onClick={(e) => {
-                            e.stopPropagation() // Stop event propagation
-                            handleEdit(id)
-                        }}
-                    >
-                        edit
-                    </button>
+
                 </div>
             ) : null}
         </div>

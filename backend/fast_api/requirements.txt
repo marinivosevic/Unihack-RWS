@@ -1,3 +1,7 @@
 fastapi
 pydantic
+numpy
+pillow
 uvicorn[standard]
+torch>=1.9.0
+ultralytics

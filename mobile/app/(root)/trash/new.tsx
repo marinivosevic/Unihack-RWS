@@ -14,7 +14,6 @@ import * as ImagePicker from "expo-image-picker";
 import CameraComponent from "@/components/CameraComponent";
 import Modal from "react-native-modal";
 import { router } from "expo-router";
-import { set } from "zod";
 
 interface Location {
   coords: {
@@ -113,12 +112,25 @@ const New = () => {
       }),
     });
     const data = await response.json();
-    if (data.result !== "empty_garbage") {
+    if (data.prediction) {
       setValidatingImage(false);
       setSubmitting(false);
       return;
     } else {
       setValidatingImage(true);
+      const X = location?.coords.longitude;
+      const Y = location?.coords.latitude;
+
+      const response = await fetch(`${base_url}/bins`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          X,
+          Y,
+        }),
+      });
     }
   };
 

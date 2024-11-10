@@ -9,7 +9,23 @@ body {
     height: 500px; /* Set your desired fixed height */
     overflow-y: hidden; /* Handle overflow if necessary */
 }
-
+.mapContainerWrapper {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: orange;
+}
+/* FILE: globals.css or your main CSS file */
+html,
+body,
+#__next {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
 @layer utilities {
     .text-balance {
         text-wrap: balance;
@@ -70,4 +86,35 @@ body {
         --chart-4: 280 65% 60%;
         --chart-5: 340 75% 55%;
     }
+}
+
+@keyframes fadeInSlideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pin-icon {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 50% 50% 50% 0; /* Creates the teardrop shape */
+    transform: rotate(-45deg); /* Rotates it to look like a pin */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Adds shadow for depth */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-container {
+    transform: rotate(45deg); /* Rotates icon back to be upright */
+    background-color: white; /* Ensures a consistent background */
+    border-radius: 50%;
+    padding: 4px;
 }

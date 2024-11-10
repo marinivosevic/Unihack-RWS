@@ -10,6 +10,7 @@ best_xgb_parameters = {
     'gamma': 0.18
 }
 
+
 logger = logging.getLogger("CostOfLivingPredictor")
 logger.setLevel(logging.INFO)
 
@@ -97,3 +98,7 @@ def get_rent_bill_prediction(xgb_reg, features):
 def determine_cities(value):
     if str(value) == 'Rijeka':
         return 1
+    if str(value) == 'Zagreb':
+        return 2
+    if str(value) == 'Timisoara':
+        return 3

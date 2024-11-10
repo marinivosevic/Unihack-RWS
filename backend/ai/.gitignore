@@ -1,5 +1,9 @@
 /.aws-sam/
 /.pytest_cache/
+/data/images/
+/data/classification/
+/runs/
+/yolov8n-cls.pt
 
 # Created by https://www.gitignore.io/api/osx,linux,python,windows,pycharm,visualstudiocode
 

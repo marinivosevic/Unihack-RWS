@@ -31,3 +31,7 @@ build-DeleteGarbageCansInACityFunction:
 
 build-UpdateGarbageCansInACityFunction:
 	$(MAKE) build LAMBDA_FILE=UpdateGarbageCansInACity/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
+
+build-FetchParkingDataFunction:
+	$(MAKE) build LAMBDA_FILE=FetchParking/*.py ARTIFACTS_DIR=$(ARTIFACTS_DIR)
+

@@ -18,7 +18,7 @@ Parameters:
 Globals:
   Function:
     Timeout: 60
-    MemorySize: 256
+    MemorySize: 512
 
 Resources:
   # API Gateway
@@ -294,6 +294,32 @@ Resources:
           Properties:
             Path: /garbage/{container_id}
             Method: PUT
+            ApiId: !Ref TpsApi
+
+  FetchParkingDataFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Handler: lambda_handler.lambda_handler
+      Runtime: python3.12
+      CodeUri: ./  # Ensure your fetch_parking_data.py is in the root directory or adjust the path accordingly
+      Environment:
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: "Allow"
+              Action:
+                - "logs:CreateLogGroup"
+                - "logs:CreateLogStream"
+                - "logs:PutLogEvents"
+              Resource: "arn:aws:logs:*:*:*"
+      Events:
+        FetchParkingDataEndpoint:
+          Type: HttpApi
+          Properties:
+            Path: /parking-data
+            Method: GET
             ApiId: !Ref TpsApi
 
 Outputs:

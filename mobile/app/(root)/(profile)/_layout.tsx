@@ -7,6 +7,7 @@ export default function RootLayout() {
       <Stack.Screen name="preferences" options={{ headerShown: false }} />
       <Stack.Screen name="privacy-policy" options={{ headerShown: false }} />
       <Stack.Screen name="faqs" options={{ headerShown: false }} />
+      <Stack.Screen name="your-tickets" options={{ headerShown: false }} />
     </Stack>
   );
 }

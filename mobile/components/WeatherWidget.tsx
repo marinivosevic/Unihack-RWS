@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator, ScrollView } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as Animatable from "react-native-animatable";
 
 type Weather = {
   main: string;
@@ -102,8 +103,11 @@ const WeatherWidget: React.FC = () => {
       className="p-4 gap-x-5"
     >
       {forecast.map((day, index) => (
-        <View
+        <Animatable.View
           key={index}
+          animation="fadeInUp"
+          delay={index * 200} // Delay each item by 200ms for sequential animation
+          duration={500} // Adjust the duration for each item's animation
           className="flex items-center my-2 w-32 bg-quinterny-300/70 pt-2 pb-1 rounded-xl"
         >
           <Text className="text-lg text-white font-bold">
@@ -118,7 +122,7 @@ const WeatherWidget: React.FC = () => {
           <Text className="italic text-white/50">
             {day.weather[0].description}
           </Text>
-        </View>
+        </Animatable.View>
       ))}
       <View className="w-5" />
     </ScrollView>

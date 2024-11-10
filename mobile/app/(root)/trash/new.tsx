@@ -10,10 +10,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import BackButton from "@/components/BackButton";
 import * as Location from "expo-location";
 import * as ImageManipulator from "expo-image-manipulator";
+import * as ImagePicker from "expo-image-picker";
 import CameraComponent from "@/components/CameraComponent";
 import Modal from "react-native-modal";
-import { set } from "zod";
 import { router } from "expo-router";
+import { set } from "zod";
 
 interface Location {
   coords: {
@@ -25,6 +26,7 @@ interface Location {
 const New = () => {
   const [openCamera, setOpenCamera] = React.useState(false);
   const [photo, setPhoto] = React.useState<string | null>(null);
+  const [galleryPhoto, setGalleryPhoto] = React.useState<string | null>(null);
   const [location, setLocation] = React.useState<Location>();
   const [submitModalVisible, setSubmitModalVisible] = React.useState(false);
   const [validatingImage, setValidatingImage] = React.useState(false);
@@ -51,7 +53,6 @@ const New = () => {
 
   const savePhoto = async (photo: any) => {
     try {
-      // Compress the image to 50% quality before encoding it as base64
       const manipulatedImage = await ImageManipulator.manipulateAsync(
         photo.uri,
         [],
@@ -66,18 +67,59 @@ const New = () => {
     }
   };
 
+  const pickImage = async () => {
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissionResult.granted) {
+      alert("Permission to access gallery is required!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.5,
+      base64: true,
+    });
+
+    if (!result.canceled) {
+      const manipulatedImage = await ImageManipulator.manipulateAsync(
+        result.assets[0].uri,
+        [],
+        { compress: 0.5, base64: true }
+      );
+      setGalleryPhoto(
+        manipulatedImage.base64?.replace(/^data:image\/\w+;base64,/, "") || null
+      );
+    }
+  };
+
   const handleSubmit = async () => {
     setSubmitModalVisible(true);
     setValidatingImage(true);
     setSubmitting(true);
 
-    setTimeout(() => {
-      setValidatingImage(false);
-    }, 2000);
+    const imageToSend = photo || galleryPhoto;
+    const base_url = "https://api.quinternary.com";
 
-    setTimeout(() => {
+    const response = await fetch(`${base_url}/classify`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        statement: "empty_garbage",
+        image: imageToSend,
+      }),
+    });
+    const data = await response.json();
+    if (data.result !== "empty_garbage") {
+      setValidatingImage(false);
       setSubmitting(false);
-    }, 4000);
+      return;
+    } else {
+      setValidatingImage(true);
+    }
   };
 
   return (
@@ -96,7 +138,7 @@ const New = () => {
           <View className="flex flex-row items-center justify-between my-4">
             <Text className="text-lg text-white">Validating Image...</Text>
             {validatingImage ? (
-              <ActivityIndicator size="small" color="#4ADE80" /> // Light green for active state
+              <ActivityIndicator size="small" color="#4ADE80" />
             ) : (
               <View className="flex flex-row items-center">
                 <Text className="text-lg text-green-400">Image Validated</Text>
@@ -143,20 +185,33 @@ const New = () => {
 
         <TouchableOpacity onPress={() => setOpenCamera(true)}>
           <View className="mt-5 flex items-center justify-center bg-quinterny-400 rounded-xl py-2">
-            <Text className="text-lg text-white">Add photo +</Text>
+            <Text className="text-lg text-white">Take Photo +</Text>
           </View>
         </TouchableOpacity>
 
-        {photo && (
+        <TouchableOpacity onPress={pickImage}>
+          <View className="mt-5 flex items-center justify-center bg-quinterny-400 rounded-xl py-2">
+            <Text className="text-lg text-white">Select from Gallery</Text>
+          </View>
+        </TouchableOpacity>
+
+        {(photo || galleryPhoto) && (
           <>
             <Image
-              source={{ uri: `data:image/jpeg;base64,${photo}` }}
+              source={{
+                uri: `data:image/jpeg;base64,${photo || galleryPhoto}`,
+              }}
               className="w-full h-64 mt-4 rounded-xl"
             />
             <View className="mt-5">
-              <Text className="text-lg text-white">Photo ready</Text>
+              <Text className="text-lg text-white">
+                {photo ? "Photo" : "Gallery Photo"} ready
+              </Text>
             </View>
-            <TouchableOpacity onPress={handleSubmit} disabled={!photo}>
+            <TouchableOpacity
+              onPress={handleSubmit}
+              disabled={!photo && !galleryPhoto}
+            >
               <View className="mt-5 flex items-center justify-center bg-quinterny-400 rounded-xl py-2">
                 <Text className="text-lg text-white">Submit</Text>
               </View>

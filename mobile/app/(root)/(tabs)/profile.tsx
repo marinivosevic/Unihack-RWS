@@ -31,6 +31,18 @@ const Profile = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
+              router.push("/your-tickets");
+            }}
+            className="flex flex-row border-b border-quinterny-600 items-center justify-between w-full py-4"
+          >
+            <View className="flex flex-row items-center justify-start">
+              <View className="bg-quinterny-600 rounded-full h-8 w-8 mr-2" />
+              <Text className="text-white text-lg font-bold">Your Tickets</Text>
+            </View>
+            <Text className="text-white text-lg font-bold">{">"}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
               router.push("/preferences");
             }}
             className="flex flex-row items-center justify-between w-full py-4 border-b border-quinterny-600"

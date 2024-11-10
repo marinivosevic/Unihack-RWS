@@ -50,29 +50,60 @@ const CountryMap: React.FC<CountryMapProps> = ({ params }) => {
 
     const cities = selectedCountry ? supportedCities[selectedCountry] || [] : []
 
-    const handleCLick = (city: string) => {
+    const handleClick = (city: string) => {
         Cookies.set('city', city)
         window.location.href = '/dashboard'
     }
 
     return (
-        <div
-            className="bg-primary-800"
-            style={{ position: 'relative', display: 'flex' }}
-        >
+        <div className="bg-primary-800">
             <div
-                className="bg-primary-950 relative"
+                className="bg-primary-950 "
                 style={{
                     display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'end',
-                    alignItems: 'end',
-                    flex: 1,
+                    flexDirection: 'row',
                 }}
             >
-                <h1 className="text-4xl text-white flex justify-end items-end mb-4 mr-12">
-                    Choose your Region
-                </h1>
+                <div className=" flex flex-col">
+                    <div>
+                        <h1 className="text-5xl text-white flex justify-start items-end mb-4 mt-16 ml-12 mr-12">
+                            Choose your Region
+                        </h1>
+                    </div>
+                    <div>
+                        {selectedCountry && (
+                            <div
+                                style={{
+                                    width: '250px',
+                                    marginLeft: '20px',
+                                    padding: '20px',
+                                    height: '600px',
+                                    overflowY: 'auto',
+                                }}
+                            >
+                                <h2 className="text-3xl mb-4 ml-2 text-white">
+                                    Supported Cities
+                                </h2>
+                                <ol>
+                                    {cities.map((city) => (
+                                        <li
+                                            key={city}
+                                            className="mb-3 ml-2 text-xl text-quinterny-500"
+                                        >
+                                            <button
+                                                onClick={() =>
+                                                    handleClick(city)
+                                                }
+                                            >
+                                                {city}
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ol>
+                            </div>
+                        )}
+                    </div>
+                </div>
                 <ComposableMap
                     projection="geoMercator"
                     width={800}
@@ -81,10 +112,10 @@ const CountryMap: React.FC<CountryMapProps> = ({ params }) => {
                         scale:
                             params.name.toLowerCase() === 'romania'
                                 ? 2500
-                                : 3200,
+                                : 3500,
                         center:
                             params.name.toLowerCase() === 'croatia'
-                                ? [18.5, 43]
+                                ? [18.5, 44]
                                 : params.name.toLowerCase() === 'serbia'
                                   ? [25.0, 43.0]
                                   : [27.5, 44.0],
@@ -140,28 +171,7 @@ const CountryMap: React.FC<CountryMapProps> = ({ params }) => {
                     </Geographies>
                 </ComposableMap>
             </div>
-            {selectedCountry && (
-                <div
-                    style={{
-                        width: '200px',
-                        padding: '20px',
-                        backgroundColor: '#f0f0f0',
-                        height: '600px',
-                        overflowY: 'auto',
-                    }}
-                >
-                    <h2 className="text-2xl mb-4">Supported Cities</h2>
-                    <ul>
-                        {cities.map((city) => (
-                            <li key={city} className="mb-2">
-                                <button onClick={() => handleCLick(city)}>
-                                    {city}
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
+
             {hoveredCountry && (
                 <div
                     style={{

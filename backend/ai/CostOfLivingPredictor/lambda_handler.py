@@ -37,6 +37,7 @@ def lambda_handler(event, context):
             body.get('ave_monthly_income'),
             body.get('num_children'),
             body.get('is_urban'),
+            determine_cities(body.get('city'))
         ]]
 
         rent_features = [[

@@ -127,6 +127,19 @@ const Page = () => {
                                 <DropdownMenuRadioItem value="News">
                                     News
                                 </DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem value="Electricity">
+                                    Electricity
+                                </DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem value="Water">
+                                    Water
+                                </DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem value="Maintenance">
+                                    Maintenance
+                                </DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem value="Health">
+                                    Health
+                                </DropdownMenuRadioItem>
+
                             </DropdownMenuRadioGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>

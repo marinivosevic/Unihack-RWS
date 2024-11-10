@@ -40,8 +40,8 @@ export default function Map() {
     <View style={styles.container}>
       <TouchableOpacity
         onPress={() => setDropdown(!dropdown)}
-        className={`absolute top-24 right-5 bg-black/90 p-2 ${
-          !dropdown ? "rounded-lg" : "rounded-t-lg"
+        className={`absolute top-24 right-5 bg-black/60 p-2 ${
+          !dropdown ? "rounded-lg" : "rounded-lg"
         } z-50 w-32 items-center`}
       >
         <Text className="text-white">
@@ -49,13 +49,13 @@ export default function Map() {
         </Text>
       </TouchableOpacity>
       {dropdown && (
-        <View className="absolute top-32 bg-black/90 right-5 z-50 rounded-b-lg w-32 items-center">
+        <View className="absolute top-[135px] bg-black/60 right-5 z-50 rounded-lg w-32 items-center">
           <TouchableOpacity
             onPress={() => {
               setSelected("Busses");
               setDropdown(false);
             }}
-            className="border-t border-b border-quinterny-600 w-full p-2 items-center"
+            className="border-b border-quinterny-600 w-full p-2 items-center"
           >
             <Text className="text-white">Busses</Text>
           </TouchableOpacity>

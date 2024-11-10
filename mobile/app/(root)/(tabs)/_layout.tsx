@@ -69,7 +69,7 @@ const TabsLayout = () => {
                 title="Home"
                 styles="ml-5"
                 iconStyles="ml-1"
-                iconContainerStyles="ml-6"
+                iconContainerStyles={`${focused ? "ml-6" : ""}`}
               />
             ),
           }}

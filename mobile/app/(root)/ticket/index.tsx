@@ -78,7 +78,7 @@ const Index = () => {
   return (
     <>
       <SafeAreaView className="px-5 bg-black/90 h-full">
-        <Modal isVisible={success}>
+        <Modal isVisible={success} className="items-center justify-center">
           <View className="bg-black/90 border border-quinterny-300 w-64 h-64 rounded-xl items-center justify-center">
             <Text className="text-white text-lg font-medium">
               Ticket submitted

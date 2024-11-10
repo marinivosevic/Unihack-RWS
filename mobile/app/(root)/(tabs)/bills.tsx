@@ -2,6 +2,14 @@ import { View, Text, TextInput, ScrollView, Switch, Alert } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import Modal from "react-native-modal";
+
+interface Predictions {
+  electricity_bill: number;
+  other_costs: number;
+  potential_cost_of_living: number;
+  rent_bill: number;
+}
 
 const Bills = () => {
   const city = "Rijeka";
@@ -15,6 +23,8 @@ const Bills = () => {
   const [children, setChildren] = React.useState(0);
   const [urban, setUrban] = React.useState(false);
   const [calculating, setCalculating] = React.useState(false);
+  const [predictions, setPredictions] = React.useState<Predictions>();
+  const [modalVisible, setModalVisible] = React.useState(false);
 
   const validateFields = () => {
     if (isNaN(rooms) || rooms <= 0) {
@@ -47,34 +57,114 @@ const Bills = () => {
     if (!validateFields()) return;
     setCalculating(true);
     const API_URL = process.env.EXPO_PUBLIC_BILL_API;
+    try {
+      const response = await fetch(`${API_URL}/bill/predict`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          num_rooms: rooms,
+          num_people: people,
+          housearea: area,
+          is_ac: ac ? 1 : 0,
+          is_tv: tv ? 1 : 0,
+          is_flat: flat ? 1 : 0,
+          ave_monthly_income: income,
+          num_children: children,
+          is_urban: urban ? 1 : 0,
+          year: new Date().getFullYear(),
+          city: city,
+        }),
+      });
 
-    const response = await fetch(`${API_URL}/bill/electricity`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        num_rooms: rooms,
-        num_people: people,
-        housearea: area,
-        is_ac: ac ? 1 : 0,
-        is_tv: tv ? 1 : 0,
-        is_flat: flat ? 1 : 0,
-        ave_monthly_income: income,
-        num_children: children,
-        is_urban: urban ? 1 : 0,
-        year: new Date().getFullYear(),
-        city: city,
-      }),
-    });
-
-    const result = await response.json();
-    console.log(result);
-    setCalculating(false);
+      const result = await response.json();
+      setPredictions(result);
+      setCalculating(false);
+      setModalVisible(true);
+    } catch (error) {
+      console.error(error);
+      setCalculating(false);
+      Alert.alert("Error", "An error occurred while calculating the bill.");
+    }
   };
 
   return (
     <SafeAreaView className="h-full bg-black/90 px-5">
+      <Modal
+        isVisible={modalVisible}
+        animationIn="slideInUp"
+        animationOut="slideOutDown"
+      >
+        <View className="bg-black/90 p-5 rounded-lg shadow-lg">
+          {/* Title Section with Icon */}
+          <View className="flex flex-row items-center justify-between mb-8">
+            <Text className="text-white font-bold text-2xl">
+              <Text className="text-quinterny-500">💡 </Text>Cost of Living
+              Prediction
+            </Text>
+          </View>
+
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {/* Predictions Section */}
+            <View className="gap-y-6 border-t border-gray-700 pt-4">
+              {/* Predicted Electricity Cost */}
+              <View className="flex flex-row justify-between items-center">
+                <Text className="text-white/70">Electricity:</Text>
+                <Text className="font-bold text-white">
+                  {predictions?.electricity_bill.toFixed(2)} Euros
+                </Text>
+              </View>
+
+              {/* Divider */}
+              <View className="border-b border-gray-700 my-2" />
+
+              {/* Predicted Other Costs */}
+              <View className="flex flex-row justify-between items-center">
+                <Text className="text-white/70">Other Costs:</Text>
+                <Text className="font-bold text-white">
+                  {predictions?.other_costs.toFixed(2)} Euros
+                </Text>
+              </View>
+
+              {/* Divider */}
+              <View className="border-b border-gray-700 my-2" />
+
+              {/* Predicted Rent */}
+              <View className="flex flex-row justify-between items-center">
+                <Text className="text-white/70">Rent:</Text>
+                <Text className="font-bold text-white">
+                  {predictions?.rent_bill.toFixed(2)} Euros
+                </Text>
+              </View>
+
+              {/* Divider */}
+              <View className="border-b border-gray-700 my-2" />
+
+              {/* Predicted Total Cost of Living */}
+              <View className="flex flex-row justify-between items-center mt-4">
+                <Text className="text-white font-semibold">
+                  Total Estimated Cost:
+                </Text>
+                <Text className="font-bold text-quinterny-500 text-lg">
+                  {predictions?.potential_cost_of_living.toFixed(2)} Euros
+                </Text>
+              </View>
+            </View>
+
+            {/* Close Button */}
+            <TouchableOpacity
+              onPress={() => setModalVisible(false)}
+              className="bg-quinterny-500 mt-8 p-4 rounded-full"
+            >
+              <Text className="text-white text-center font-semibold">
+                Close
+              </Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
+      </Modal>
+
       <ScrollView showsVerticalScrollIndicator={false}>
         <Text className="text-white font-bold text-2xl mt-5">
           Cost of living prediction

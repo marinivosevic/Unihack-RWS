@@ -60,7 +60,9 @@ const Home = () => {
               </Text>
             </View>
           </View>
-          <View className="flex flex-row items-center justify-center bg-white rounded-full w-12 h-12 mt-5" />
+          <View className="flex flex-row items-center justify-center bg-white rounded-full w-10 h-10 mt-5">
+            <Image source={icons.person} className="h-6 w-6" />
+          </View>
         </View>
         <Text className="text-white text-2xl font-bold px-5 mt-5">
           Weather Forecast

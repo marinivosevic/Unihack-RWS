@@ -82,36 +82,59 @@ const New = () => {
 
   return (
     <>
-      <Modal isVisible={submitModalVisible}>
-        <View className="bg-black/90 border border-white rounded-xl p-5">
-          <View className="flex flex-row items-center justify-between my-2">
-            <Text className="text-lg text-white">Validating image...</Text>
+      <Modal
+        isVisible={submitModalVisible}
+        animationIn="zoomIn"
+        animationOut="zoomOut"
+      >
+        <View className="bg-black/70 rounded-xl p-5 shadow-lg">
+          <Text className="text-xl font-bold text-white text-center mb-5">
+            Process Status
+          </Text>
+
+          {/* Validation Status */}
+          <View className="flex flex-row items-center justify-between my-4">
+            <Text className="text-lg text-white">Validating Image...</Text>
             {validatingImage ? (
-              <ActivityIndicator size="small" color="white" />
+              <ActivityIndicator size="small" color="#4ADE80" /> // Light green for active state
             ) : (
-              <Text className="text-lg text-green-400">Image validated</Text>
+              <View className="flex flex-row items-center">
+                <Text className="text-lg text-green-400">Image Validated</Text>
+                <Text className="ml-1 text-green-400">✔️</Text>
+              </View>
             )}
           </View>
-          <View className="flex flex-row items-center justify-between my-2">
+
+          {/* Submission Status */}
+          <View className="flex flex-row items-center justify-between my-4">
             <Text className="text-lg text-white">Submitting...</Text>
             {submitting ? (
-              <ActivityIndicator size="small" color="white" />
+              <ActivityIndicator size="small" color="#4ADE80" />
             ) : (
-              <Text className="text-lg text-green-400">Submitted</Text>
+              <View className="flex flex-row items-center">
+                <Text className="text-lg text-green-400">Submitted</Text>
+                <Text className="ml-1 text-green-400">✔️</Text>
+              </View>
             )}
           </View>
+
+          {/* Close Button */}
           <TouchableOpacity
             onPress={() => {
               router.dismiss();
               setSubmitModalVisible(false);
             }}
+            className="mt-5"
           >
-            <View className="mt-5 flex items-center justify-center bg-quinterny-400 rounded-xl py-2">
-              <Text className="text-lg text-white">Close</Text>
+            <View className="bg-quinterny-400 rounded-full py-3 px-6 shadow-md">
+              <Text className="text-lg text-white text-center font-semibold">
+                Close
+              </Text>
             </View>
           </TouchableOpacity>
         </View>
       </Modal>
+
       <SafeAreaView className="px-5 bg-black/90 h-full">
         <BackButton />
         <Text className="text-2xl font-bold text-white mt-24">

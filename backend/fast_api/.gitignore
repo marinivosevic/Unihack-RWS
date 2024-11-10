@@ -1,7 +1,6 @@
 /.aws-sam/
 /.pytest_cache/
-/data/images/
-/data/classification/
+/data/
 /runs/
 /yolov8n-cls.pt
 

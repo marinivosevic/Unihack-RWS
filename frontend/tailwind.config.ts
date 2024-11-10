@@ -1,3 +1,4 @@
+import { nextui } from '@nextui-org/theme'
 import type { Config } from 'tailwindcss'
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const defaultTheme = require('tailwindcss/defaultTheme') // Import the default
@@ -110,6 +111,6 @@ const config: Config = {
         },
     },
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    plugins: [require('tailwindcss-animate')],
+    plugins: [],
 }
 export default config

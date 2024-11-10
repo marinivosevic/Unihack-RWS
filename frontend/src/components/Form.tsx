@@ -57,7 +57,7 @@ export default function FormElectricity() {
     const getPrediction = async (data: FormData) => {
         setLoading(true)
         const API_URL = process.env.NEXT_PUBLIC_BILL_API
-
+        console.log(data)
         const submitData = {
             num_rooms: data.num_rooms,
             num_people: data.num_people,
@@ -72,13 +72,16 @@ export default function FormElectricity() {
             city: Cookies.get('city'),
         }
 
-        const response = await fetch(`${API_URL}/bill/electricity`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(submitData),
-        })
+        const response = await fetch(
+            `https://dsu1qzfodk.execute-api.eu-central-1.amazonaws.com/api-v1/bill/predict`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(submitData),
+            }
+        )
 
         const result = await response.json()
         console.log(result)
@@ -124,7 +127,7 @@ export default function FormElectricity() {
                 className="flex flex-col space-y-4 h-auto"
                 onSubmit={handleSubmit}
             >
-                <div className="flex flex-col w-1/2 space-y-2 h-auto">
+                <div className="flex flex-col w-full space-y-2 h-auto">
                     <label className="text-white">Number of Rooms:</label>
                     <input
                         className="p-2 rounded-md bg-gray-300 border border-white shadow-sm shadow-white"
@@ -134,7 +137,7 @@ export default function FormElectricity() {
                         onChange={handleChange}
                     />
                 </div>
-                <div className="flex flex-col w-1/2 space-y-2 h-auto">
+                <div className="flex flex-col w-full  space-y-2 h-auto">
                     <label className="text-white">Number of People:</label>
                     <input
                         className="p-2 rounded-md bg-gray-300 border border-white shadow-sm shadow-white"
@@ -144,7 +147,7 @@ export default function FormElectricity() {
                         onChange={handleChange}
                     />
                 </div>
-                <div className="flex flex-col w-1/2 space-y-2 h-auto">
+                <div className="flex flex-col w-full  space-y-2 h-auto">
                     <label className="text-white">House Area (sq m):</label>
                     <input
                         className="p-2 rounded-md bg-gray-300 border border-white shadow-sm shadow-white"
@@ -154,37 +157,37 @@ export default function FormElectricity() {
                         onChange={handleChange}
                     />
                 </div>
-                <div className="flex flex-row w-1/2 space-x-2 h-auto">
+                <div className="flex flex-row w-full  space-x-2 h-auto">
                     <label className="text-white">Air Conditioning:</label>
                     <Checkbox
                         checked={formData.is_ac}
                         onCheckedChange={(checked) =>
                             handleCheckboxChange('is_ac', checked as boolean)
                         }
-                        className="m-1 bg-white"
+                        className="m-1 bg-gray-200 text-white data-[state=checked]:bg-quinterny-500 rounded transition-colors"
                     />
                 </div>
-                <div className="flex flex-row w-1/2 space-x-2 h-auto">
+                <div className="flex flex-row w-full  space-x-2 h-auto">
                     <label className="text-white">TV:</label>
                     <Checkbox
                         checked={formData.is_tv}
                         onCheckedChange={(checked) =>
                             handleCheckboxChange('is_tv', checked as boolean)
                         }
-                        className="m-1 bg-white"
+                        className="m-1 bg-gray-200 text-white data-[state=checked]:bg-quinterny-500 rounded transition-colors"
                     />
                 </div>
-                <div className="flex flex-row w-1/2 space-x-2 h-auto">
+                <div className="flex flex-row w-full  space-x-2 h-auto">
                     <label className="text-white">Do you live in a flat:</label>
                     <Checkbox
                         checked={formData.is_flat}
                         onCheckedChange={(checked) =>
                             handleCheckboxChange('is_flat', checked as boolean)
                         }
-                        className="m-1 bg-white"
+                        className="m-1 bg-gray-200 text-white data-[state=checked]:bg-quinterny-500 rounded transition-colors"
                     />
                 </div>
-                <div className="flex flex-col w-1/2 space-y-2 h-auto">
+                <div className="flex flex-col w-full  space-y-2 h-auto">
                     <label className="text-white">
                         Average Monthly Income(€):
                     </label>
@@ -196,7 +199,7 @@ export default function FormElectricity() {
                         onChange={handleChange}
                     />
                 </div>
-                <div className="flex flex-col w-1/2 space-y-2 h-auto">
+                <div className="flex flex-col w-full space-y-2 h-auto">
                     <label className="text-white">Number of Children:</label>
                     <input
                         className="p-2 rounded-md bg-gray-300 border border-white shadow-sm shadow-white"
@@ -206,7 +209,7 @@ export default function FormElectricity() {
                         onChange={handleChange}
                     />
                 </div>
-                <div className="flex flex-row w-1/2 space-x-2 h-auto">
+                <div className="flex flex-row w-full  space-x-2 h-auto">
                     <label className="text-white">
                         Do you live in an urban area:
                     </label>
@@ -231,7 +234,7 @@ export default function FormElectricity() {
                 )}
 
                 <button
-                    className="bg-primary-500 text-white p-2 rounded-md w-1/4 self-start mt-5"
+                    className="bg-quinterny-500 text-white p-2 rounded-md w-1/4 self-start mt-5"
                     type="submit"
                     disabled={loading}
                 >

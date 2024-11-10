@@ -25,6 +25,8 @@ import {
     DialogDescription,
     DialogClose,
 } from '@/components/ui/dialog'
+import Image from 'next/image'
+import { Button } from '@/components/ui/button'
 interface NewsItemProps {
     city: string
     description: string
@@ -113,38 +115,41 @@ const DashboardHome: React.FC = () => {
                             </span>
                         </DialogTrigger>
                         {selectedNews && (
-                            <DialogContent className="w-full max-w-2xl p-4 bg-white rounded-lg">
+                            <DialogContent className="w-full max-w-3xl p-6 bg-white rounded-lg">
                                 <DialogHeader>
-                                    <DialogTitle className="text-xl font-bold">
+                                    <Carousel className="w-full h-80 mt-4">
+                                        <CarouselContent>
+                                            {selectedNews.pictures.map(
+                                                (pic, index) => (
+                                                    <CarouselItem key={index}>
+                                                        <Image
+                                                            src={`data:image/jpeg;base64,/${pic.replace(/^dataimage\/jpegbase64\//, '')}`}
+                                                            alt={`Image ${index}`}
+                                                            className="w-full h-64 object-contain"
+                                                            width={800}
+                                                            height={400}
+                                                        />
+                                                    </CarouselItem>
+                                                )
+                                            )}
+                                        </CarouselContent>
+                                        <CarouselPrevious>
+                                            Previous
+                                        </CarouselPrevious>
+                                        <CarouselNext>Next</CarouselNext>
+                                    </Carousel>
+                                    <DialogTitle className="text-2xl font-bold mt-4">
                                         {selectedNews.title}
                                     </DialogTitle>
-                                    <DialogDescription>
+                                    <DialogDescription className="mt-2">
                                         {selectedNews.description}
                                     </DialogDescription>
                                 </DialogHeader>
-                                <Carousel className="w-full h-64 mt-4">
-                                    <CarouselContent>
-                                        {selectedNews.pictures.map(
-                                            (pic, index) => (
-                                                <CarouselItem key={index}>
-                                                    <img
-                                                        src={pic}
-                                                        alt={`Image ${index}`}
-                                                        className="w-full h-full object-cover"
-                                                    />
-                                                </CarouselItem>
-                                            )
-                                        )}
-                                    </CarouselContent>
-                                    <CarouselPrevious>
-                                        Previous
-                                    </CarouselPrevious>
-                                    <CarouselNext>Next</CarouselNext>
-                                </Carousel>
+
                                 <DialogClose asChild>
-                                    <button className="mt-4 btn btn-primary">
+                                    <Button className="mt-4 btn btn-primary">
                                         Close
-                                    </button>
+                                    </Button>
                                 </DialogClose>
                             </DialogContent>
                         )}

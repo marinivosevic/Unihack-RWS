@@ -7,6 +7,8 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import Cookies from 'js-cookie'
 
+import { Spinner } from '@nextui-org/spinner'
+
 interface Ticket {
     id: string
     sender: string
@@ -90,7 +92,7 @@ function Page() {
                 </h1>
 
                 <button
-                    className="bg-primary-500 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded"
+                    className="bg-quinterny-500 hover:bg-quinterny-400 text-white font-bold py-2 px-4 rounded"
                     onClick={() => setCreateModal(true)}
                 >
                     Create +
@@ -104,14 +106,7 @@ function Page() {
                         fill="none"
                         viewBox="0 0 24 24"
                     >
-                        <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                        ></circle>
+                        <Spinner color="secondary" />
                         <path
                             className="opacity-75"
                             fill="currentColor"

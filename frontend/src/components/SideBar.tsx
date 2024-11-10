@@ -31,7 +31,6 @@ const Sidebar: React.FC = () => {
         },
         { name: 'Tickets', href: '/dashboard/tickets', icon: <FaTicketAlt /> },
         { name: 'Profile', href: '/dashboard/profile', icon: <FaUser /> },
-        { name: 'Settings', href: '/dashboard/settings', icon: <FaCog /> },
         { name: 'Logout', href: '/login', icon: <FaSignOutAlt /> },
     ]
 

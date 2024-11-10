@@ -204,8 +204,8 @@ function TicketForm({ onClose }: TicketFormProps) {
             <button
                 className={`${
                     isSubmitting
-                        ? 'bg-green-300 cursor-not-allowed'
-                        : 'bg-green-500 hover:bg-green-600'
+                        ? 'bg-quinterny-300 cursor-not-allowed'
+                        : 'bg-quinterny-500 hover:bg-quinterny-600'
                 } text-white font-bold self-end py-2 px-4 rounded mt-4`}
                 type="submit"
                 disabled={isSubmitting}

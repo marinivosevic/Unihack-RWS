@@ -27,27 +27,25 @@ const PreferencesScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-secondary-0">
+    <SafeAreaView className="flex-1 bg-black/90">
       {/* Back Button */}
       <BackButton />
 
       <ScrollView className="p-5 mt-20">
-        <Text className="text-2xl text-txt-100 font-bold mb-4">
-          Preferences
-        </Text>
+        <Text className="text-2xl text-white font-bold mb-4">Preferences</Text>
 
         {/* Render Preferences */}
         {preferences.map((pref, index) => (
           <View
             key={index}
-            className="mb-4 flex-row justify-between items-center bg-secondary-50 p-4 rounded-md"
+            className="mb-4 flex-row justify-between items-center bg-quinterny-400 p-4 rounded-md"
           >
-            <Text className="text-base text-txt-100">{pref.label}</Text>
+            <Text className="text-base text-white">{pref.label}</Text>
             <Switch
               value={pref.value}
               onValueChange={() => togglePreference(index)}
-              trackColor={{ false: "#E0E0E0", true: "#096B72" }} // Use theme colors
-              thumbColor={pref.value ? "#FFFFFF" : "#E0E0E0"}
+              trackColor={{ false: "#5b3ac8", true: "#5b3ac8" }} // Use theme colors
+              thumbColor={"white"}
             />
           </View>
         ))}

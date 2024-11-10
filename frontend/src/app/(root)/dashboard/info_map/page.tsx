@@ -229,7 +229,7 @@ export default function MyMap() {
                 throw new Error('Failed to fetch chargers.')
             }
             const data = await response.json()
-            console.log(data.chargers)
+
             setChargers(data.chargers)
         } catch (err: any) {
             setChargersError(err.message || 'An unexpected error occurred.')
@@ -242,7 +242,7 @@ export default function MyMap() {
 
         if (selectedType === 'charger') {
             fetchChargers()
-            intervalId = setInterval(fetchChargers, 60000) // Poll every 60 seconds
+            intervalId = setInterval(fetchChargers, 600000) // Poll every 60 seconds
         }
 
         return () => {
@@ -469,9 +469,9 @@ export default function MyMap() {
                     })}
                 {selectedType === 'charger' &&
                     chargers.map((charger) => {
-                        const latitude =  parseFloat(charger.latitude.toFixed(6))
-                        const longitude = parseFloat(charger.longitude.toFixed(6))
-                        console.log(latitude, longitude)
+                        const latitude =  charger.latitude
+                        const longitude = charger.longitude
+
                         return(
                             <Marker
                                 key={charger.name}

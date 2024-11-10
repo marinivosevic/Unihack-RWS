@@ -112,7 +112,7 @@ export default function RegisterPage() {
                             width={80}
                             height={80}
                         />
-                        <h1 className="text-3xl font-bold text-blue-500">
+                        <h1 className="text-3xl font-bold bg-gradient-to-r from-quinterny-400 to-quinterny-700 bg-clip-text text-transparent">
                             UrbanPulse
                         </h1>
                     </div>
@@ -263,7 +263,7 @@ export default function RegisterPage() {
                     <div className="text-center mt-4">
                         <Link
                             href="/login"
-                            className="text-sm text-blue-500 hover:text-blue-700 transition-colors duration-300"
+                            className="text-sm bg-quinterny-300 bg-clip-text text-transparent hover:bg-quinterny-600 duration-300"
                         >
                             Already have an account? Login
                         </Link>

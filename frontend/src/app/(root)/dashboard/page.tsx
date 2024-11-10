@@ -43,6 +43,7 @@ const DashboardHome: React.FC = () => {
     const [loaderValue, setLoaderValue] = useState(0)
     const [news, setNews] = useState<NewsItemProps[]>([])
     const [selectedNews, setSelectedNews] = useState<NewsItemProps | null>(null)
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
 
     const getAllNews = async () => {
         setLoading(true)
@@ -77,6 +78,11 @@ const DashboardHome: React.FC = () => {
 
     const openModal = (newsItem: NewsItemProps) => {
         setSelectedNews(newsItem)
+        setIsDialogOpen(true)
+    }
+
+    const closeModal = () => {
+        setIsDialogOpen(false)
     }
 
     return (
@@ -96,6 +102,7 @@ const DashboardHome: React.FC = () => {
                     imageSrc={news[0].pictures[0]}
                     title={news[0].title}
                     content={news[0].description}
+                    onShowMore={() => openModal(news[0])}
                 />
             )}
             <hr className="mt-5 w-full opacity-55" />
@@ -105,7 +112,11 @@ const DashboardHome: React.FC = () => {
             {loading && <Progress value={loaderValue} className="w-full" />}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
                 {news.map((item) => (
-                    <Dialog key={item.id} onOpenChange={() => openModal(item)}>
+                    <Dialog
+                        key={item.id}
+                        open={isDialogOpen}
+                        onOpenChange={closeModal}
+                    >
                         <DialogTrigger asChild>
                             <span className="cursor-pointer hover:ring-2 hover:ring-purple-500 transition">
                                 <NewsItem

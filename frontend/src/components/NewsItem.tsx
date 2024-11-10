@@ -76,12 +76,26 @@ const NewsCard: React.FC<NewsCardProps> = ({
                 </p>
             </div>
             {isAdmin ? (
-                <button
-                    className="ml-4 mt-2 text-red-500 hover:text-red-700"
-                    onClick={() => handleDelete(id)}
-                >
-                    <Trash />
-                </button>
+                <div className="absolute top-2 right-2 flex space-x-2">
+                    <button
+                        className="bg-white rounded-full p-3 text-red-500 hover:text-red-700"
+                        onClick={(e) => {
+                            e.stopPropagation() // Stop event propagation
+                            handleDelete(id)
+                        }}
+                    >
+                        <Trash />
+                    </button>
+                    <button
+                        className="bg-white rounded-full p-3 text-blue-500 hover:text-blue-700"
+                        onClick={(e) => {
+                            e.stopPropagation() // Stop event propagation
+                            handleEdit(id)
+                        }}
+                    >
+                        edit
+                    </button>
+                </div>
             ) : null}
         </div>
     )

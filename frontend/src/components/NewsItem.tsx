@@ -1,10 +1,10 @@
-// components/NewsCard.tsx
-
-import React from 'react'
+import React, { useState } from 'react'
 import { FaTags } from 'react-icons/fa'
-import { Badge } from '../components/ui/badge'
+import { Badge } from '@/components/ui/badge'
 import { Trash } from '@vectopus/atlas-icons-react'
 import Cookies from 'js-cookie'
+import DeletePostDialog from '../components/deleteDialog'
+
 interface NewsCardProps {
     title: string
     description: string
@@ -14,18 +14,20 @@ interface NewsCardProps {
 }
 
 const NewsCard: React.FC<NewsCardProps> = ({
-    title,
-    description,
-    imageSrc,
-    tag,
-    id,
-}) => {
+                                               title,
+                                               description,
+                                               imageSrc,
+                                               tag,
+                                               id,
+                                           }) => {
     const fallbackImage = '/default-news.jpg' // Ensure this image exists in your public folder
     const isAdmin = Cookies.get('isAdmin')
-    console.log(isAdmin)
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
+
     const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
         e.currentTarget.src = fallbackImage
     }
+
     const handleDelete = async (id: string) => {
         const token = Cookies.get('token')
         try {
@@ -40,20 +42,24 @@ const NewsCard: React.FC<NewsCardProps> = ({
             )
 
             if (!response.ok) {
-                throw new Error(
-                    `Error: ${response.status} ${response.statusText}`
-                )
+                throw new Error(`Error: ${response.status} ${response.statusText}`)
             }
 
             // Update the state to remove the deleted item
             if (response.ok) {
-                console.log('sucsses')
+                console.log('Deleted successfully')
                 window.location.reload()
             }
         } catch (err) {
             console.error('Failed to delete the news item:', err)
         }
     }
+
+    const confirmDelete = () => {
+        handleDelete(id)
+        setIsDialogOpen(false)
+    }
+
     return (
         <div className="bg-primary-800 rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105 hover:cursor-pointer">
             <img
@@ -69,27 +75,28 @@ const NewsCard: React.FC<NewsCardProps> = ({
                         <span className="text-xs text-gray-300">{tag}</span>
                     </Badge>
                 </div>
-                <h2 className="text-lg font-semibold text-white mb-1">
-                    {title}
-                </h2>
-                <p className="text-xs text-gray-300 line-clamp-2">
-                    {description}
-                </p>
+                <h2 className="text-lg font-semibold text-white mb-1">{title}</h2>
+                <p className="text-xs text-gray-300 line-clamp-2">{description}</p>
             </div>
-            {isAdmin === 'true' ? (
+
+            {isAdmin === 'true' && (
                 <div className="absolute top-2 right-2 flex space-x-2">
                     <button
                         className="bg-white rounded-full p-3 text-red-500 hover:text-red-700"
                         onClick={(e) => {
                             e.stopPropagation() // Stop event propagation
-                            handleDelete(id)
+                            setIsDialogOpen(true)
                         }}
                     >
                         <Trash />
                     </button>
-
+                    <DeletePostDialog
+                        isOpen={isDialogOpen}
+                        onClose={() => setIsDialogOpen(false)}
+                        onConfirm={confirmDelete}
+                    />
                 </div>
-            ) : null}
+            )}
         </div>
     )
 }

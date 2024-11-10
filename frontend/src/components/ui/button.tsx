@@ -12,7 +12,7 @@ const buttonVariants = cva(
                 default:
                     'bg-quinterny-500 text-white shadow hover:bg-quinterny-400',
                 destructive:
-                    'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
+                    'bg-red-500 text-white  shadow-sm hover:bg-destructive/90',
                 outline:
                     'border border-input border-quinterny-500 bg-background shadow-sm hover:bg-quinterny-300 hover:text-black', // Updated color
                 secondary:

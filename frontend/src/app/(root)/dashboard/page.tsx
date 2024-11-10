@@ -27,10 +27,11 @@ import {
 } from '@/components/ui/dialog'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
+
 interface NewsItemProps {
     city: string
     description: string
-    id: number
+    id: string
     title: string
     pictures: string[]
     tag: string
@@ -60,6 +61,7 @@ const DashboardHome: React.FC = () => {
             setLoaderValue(60)
             const data = await response.json()
             setNews(data.news)
+            console.log(data.news)
             setLoaderValue(100)
             setTimeout(() => {
                 setLoading(false)
@@ -111,9 +113,11 @@ const DashboardHome: React.FC = () => {
                                     description={item.description}
                                     imageSrc={item.pictures[0]}
                                     tag={item.tag}
+                                    id={item.id}
                                 />
                             </span>
                         </DialogTrigger>
+
                         {selectedNews && (
                             <DialogContent className="w-full max-w-3xl p-6 bg-white rounded-lg">
                                 <DialogHeader>
@@ -123,7 +127,7 @@ const DashboardHome: React.FC = () => {
                                                 (pic, index) => (
                                                     <CarouselItem key={index}>
                                                         <Image
-                                                            src={`data:image/jpeg;base64,/${pic.replace(/^dataimage\/jpegbase64\//, '')}`}
+                                                            src={`data:image/jpeg;base64,/${pic.replace(/^dataimage\/jpegbase64\//, '').replace(/=+$/, '')}`}
                                                             alt={`Image ${index}`}
                                                             className="w-full h-64 object-contain"
                                                             width={800}
@@ -141,8 +145,15 @@ const DashboardHome: React.FC = () => {
                                     <DialogTitle className="text-2xl font-bold mt-4">
                                         {selectedNews.title}
                                     </DialogTitle>
-                                    <DialogDescription className="mt-2">
-                                        {selectedNews.description}
+                                    <DialogDescription className="mt-2 max-h-64 overflow-y-auto">
+                                        <span
+                                            dangerouslySetInnerHTML={{
+                                                __html: selectedNews.description.replace(
+                                                    /\n/g,
+                                                    '<br />'
+                                                ),
+                                            }}
+                                        />
                                     </DialogDescription>
                                 </DialogHeader>
 

@@ -84,14 +84,14 @@ def lambda_handler(event, context):
 def get_electricity_bill_prediction(xgb_reg, features):
     xgb_reg.load_model('model.json')
 
-    logger.info('Predicting...')
+    logger.info('Predicting electricity...')
 
     return xgb_reg.predict(features)
 
 def get_rent_bill_prediction(xgb_reg, features):
     xgb_reg.load_model('rent_model.json')
 
-    logger.info('Predicting...')
+    logger.info('Predicting rent...')
 
     return xgb_reg.predict(features)
 

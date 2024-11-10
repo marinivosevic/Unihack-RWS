@@ -1,5 +1,3 @@
 fastapi
 pydantic
-ultralytics
-numpy
-PIL
+uvicorn[standard]

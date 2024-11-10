@@ -63,6 +63,11 @@ export default function LoginPage() {
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'strict',
             })
+            Cookies.set('email', formData.email, {
+                expires: 7,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+            })
             // Store the user data in context
             if (response.ok) {
                 setUser(data)

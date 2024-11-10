@@ -19,15 +19,16 @@ interface Ticket {
 }
 
 function Page() {
-    const [createModal, setCreateModal] = React.useState(false)
+    const [createModal, setCreateModal] = useState(false)
     const [tickets, setTickets] = useState<Ticket[]>([])
-    const [loading, setLoading] = React.useState<boolean>(true)
+    const [loading, setLoading] = useState<boolean>(true)
 
     const getAllTickets = async () => {
         const API_URL = process.env.NEXT_PUBLIC_SUPPORT_API
         const token = Cookies.get('token')
         const city = Cookies.get('city')
-
+        const userRole = Cookies.get('isAdmin')
+        const userEmail = Cookies.get('email')
         try {
             const response = await fetch(
                 `${API_URL}/support/received/${city}`,
@@ -40,7 +41,17 @@ function Page() {
                 }
             )
             const data = await response.json()
-            setTickets(data.tickets)
+            if (userRole === 'true') {
+                console.log('Admin')
+
+                setTickets(data.tickets)
+                console.log(tickets)
+            } else {
+                console.log(' not Admin')
+                setTickets(data.tickets.filter((ticket: Ticket) => ticket.sender === userEmail))
+                console.log(tickets)
+            }
+
             setLoading(false)
         } catch (error) {
             console.error(error)
